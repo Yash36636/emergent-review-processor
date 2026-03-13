@@ -1,0 +1,10 @@
+# Core document & spreadsheet
+python-docx>=1.1.0
+openpyxl>=3.1.0
+
+# ML pipeline
+sentence-transformers>=3.0.0
+umap-learn>=0.5.6
+vaderSentiment>=3.3.2
+scikit-learn>=1.4.0      # includes built-in HDBSCAN (no C++ compiler needed)
+numpy>=1.26.0
