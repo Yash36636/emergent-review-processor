@@ -1,0 +1,4 @@
+# Minimal deps for Vercel — web dashboard + Groq API only (no ML pipeline)
+# Full requirements.txt used locally for pipeline + Excel export
+flask>=3.0.0
+python-dotenv>=1.0.0

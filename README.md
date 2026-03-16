@@ -12,7 +12,10 @@ A two-in-one pipeline for processing and analysing app store reviews:
 ```
 review-processor/
 ├── main.py                   ← Unified CLI entry point (run / web)
-├── requirements.txt
+├── app.py                    ← Vercel entry (exports Flask app)
+├── vercel.json               ← Vercel config (slim requirements)
+├── requirements.txt          ← Full deps (local pipeline)
+├── requirements-vercel.txt   ← Slim deps (Vercel deploy)
 │
 ├── src/
 │   ├── parsers/
@@ -106,6 +109,18 @@ AI_PROXY_URL=http://localhost:3001
 ```
 
 Then run the dashboard as usual. Flask will route AI calls through the proxy instead of calling Groq directly.
+
+---
+
+## Vercel Deployment
+
+Deploy the web dashboard to Vercel (serverless, no ML pipeline — dashboard + Groq API only):
+
+1. **Connect repo** — Import the project in [Vercel](https://vercel.com/new)
+2. **Environment variable** — Add `GROQ_API_KEY` in Project Settings → Environment Variables
+3. **Deploy** — Vercel auto-detects Flask via `app.py` and uses `requirements-vercel.txt` (minimal deps)
+
+After deploy, the dashboard is at `https://<project>.vercel.app`. Chat and Generate Insight use Groq directly (no Node proxy needed). The deployed app shows an empty dashboard by default; run the pipeline locally and use `main.py web --json` for data, or add a pre-computed `review_analysis.json` to the repo.
 
 ---
 
