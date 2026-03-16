@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergent · Review Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   EMERGENT INTEL — RAZORPAY-STYLE DESIGN SYSTEM
+   ============================================================ */
+:root {
+  --bg-base:        #08080A;
+  --bg-surface-1:   #0F0F13;
+  --bg-surface-2:   #141418;
+  --bg-surface-3:   #1A1A20;
+  --grid-color:     rgba(255,255,255,0.03);
+  --border-subtle:  rgba(255,255,255,0.06);
+  --border-default: rgba(255,255,255,0.10);
+  --border-strong:  rgba(255,255,255,0.16);
+  --border-focus:   rgba(59,114,255,0.5);
+  --text-primary:   #F0F0F2;
+  --text-secondary: #8A8A9C;
+  --text-tertiary:  #4E4E60;
+  --blue-400: #6B97FF;
+  --blue-500: #3B72FF;
+  --blue-600: #2558E8;
+  --green:    rgba(74,222,128,0.55);
+  --green-bg: rgba(0,200,83,0.08);
+  --red:      rgba(255,122,122,0.55);
+  --red-bg:   rgba(255,68,68,0.08);
+  --amber:    rgba(245,158,11,0.50);
+  --amber-bg: rgba(245,166,35,0.08);
+  --purple:   #9B6DFF;
+  --purple-bg:rgba(155,109,255,0.08);
+  --semantic-problem: rgba(239,68,68,0.7);
+  --semantic-neutral: rgba(59,114,255,0.7);
+  --semantic-muted:   rgba(138,138,156,0.7);
+  --semantic-problem-bg: rgba(239,68,68,0.15);
+  --semantic-neutral-bg: rgba(59,114,255,0.15);
+  --semantic-muted-bg: rgba(138,138,156,0.15);
+  --font-ui: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --text-2xs: 10px; --text-xs: 11px; --text-sm: 12px; --text-base: 13px; --text-md: 14px; --text-lg: 16px; --text-xl: 18px; --text-2xl: 22px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 24px;
+  --radius-sm: 4px; --radius-md: 6px; --radius-lg: 8px; --radius-pill: 999px;
+  --ease-fast: 120ms ease;
+  /* Aliases for compat */
+  --bg: var(--bg-base); --s1: var(--bg-surface-1); --s2: var(--bg-surface-2); --s3: var(--bg-surface-3);
+  --border: var(--border-subtle); --border2: var(--border-default);
+  --text: var(--text-primary); --muted: var(--text-secondary); --muted2: var(--text-secondary); --tertiary: var(--text-tertiary);
+  --accent: var(--blue-500); --act: var(--green); --warn: var(--amber); --crit: var(--red);
+  --c0: #FF4444; --c1: #9B6DFF; --c2: #F5A623; --c3: #f07840; --c4: #00C853; --c5: #3B72FF;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  font-family:var(--font-ui);font-size:var(--text-base);font-weight:400;line-height:1.5;
+  color:var(--text-primary);background:var(--bg-base);
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  height:100vh;overflow:hidden;display:flex;flex-direction:column;
+  background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+  background-size:36px 36px;
+  position:relative;
+}
+.glow-1{position:fixed;width:500px;height:380px;top:-100px;left:-80px;background:radial-gradient(ellipse,rgba(37,88,232,0.18) 0%,transparent 70%);pointer-events:none;z-index:0}
+.glow-2{position:fixed;width:340px;height:300px;top:140px;right:60px;background:radial-gradient(ellipse,rgba(59,114,255,0.10) 0%,transparent 65%);pointer-events:none;z-index:0}
+.glow-3{position:fixed;width:220px;height:200px;bottom:80px;left:220px;background:radial-gradient(ellipse,rgba(37,88,232,0.11) 0%,transparent 70%);pointer-events:none;z-index:0}
+.glow-4{position:fixed;width:280px;height:240px;bottom:-40px;right:-60px;background:radial-gradient(ellipse,rgba(59,114,255,0.07) 0%,transparent 65%);pointer-events:none;z-index:0}
+
+/* ─── NAV (Razorpay full-tab blue) ──────────────────────────────────────────── */
+.nav-wrap{font-family:var(--font-ui);background:#08080A;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:stretch;height:44px;overflow:hidden;flex-shrink:0;z-index:100}
+.logo-block{display:flex;align-items:center;padding:0 18px;border-right:1px solid rgba(255,255,255,0.08);flex-shrink:0;gap:5px}
+.logo-slash{font-size:13px;font-weight:700;color:rgba(255,255,255,0.25)}
+.logo-text{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:#F0F0F2}
+.logo-text em{font-style:normal;color:#3B72FF}
+.tabs{display:flex;flex:1;align-items:stretch}
+.tab{display:flex;align-items:center;justify-content:center;padding:0 28px;flex:1;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.35);border-right:1px solid rgba(255,255,255,0.08);cursor:pointer;white-space:nowrap;transition:background 0.15s,color 0.15s}
+.tab:hover{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.7)}
+.tab.active{background:#3B72FF;color:#fff}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:var(--space-2);padding:0 18px;border-left:1px solid rgba(255,255,255,0.08)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.status-dot.pulse{animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.nav-meta{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-tertiary)}
+
+/* ─── LAYOUT ───────────────────────────────────────────────────────────────── */
+.workspace{display:flex;flex:1;overflow:hidden;position:relative;z-index:1}
+.center{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.center::-webkit-scrollbar{width:5px}
+.center::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}
+.center::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.14)}
+.right-rail{width:260px;backdrop-filter:blur(4px);background:rgba(20,20,24,0.7);border-left:0.5px solid var(--border-subtle);display:flex;flex-direction:column;flex-shrink:0}
+
+/* ─── CLUSTER CHIPS ───────────────────────────────────────────────────────── */
+.cluster-chips-wrap{display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:center}
+.cluster-chip{display:flex;align-items:center;gap:var(--space-2);padding:5px 12px;border-radius:var(--radius-pill);border:0.5px solid var(--border-default);background:var(--bg-surface-2);font-size:var(--text-sm);color:var(--text-secondary);cursor:pointer;transition:all var(--ease-fast)}
+.cluster-chip:hover{background:var(--bg-surface-3);color:var(--text-primary);border-color:var(--border-strong)}
+.cluster-chip.active{background:rgba(59,114,255,0.1);border-color:rgba(59,114,255,0.3);color:var(--blue-400)}
+.cluster-chip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.cluster-chip-label{font-weight:500}
+.cluster-chip-count{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-tertiary);margin-left:2px}
+.cluster-chip.active .cluster-chip-count{color:rgba(107,151,255,0.7)}
+
+/* ─── RAIL ─────────────────────────────────────────────────────────────────── */
+.rail-section{padding:14px 14px 6px;font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:500;color:var(--text-tertiary);letter-spacing:0.08em;text-transform:uppercase}
+.rail-item{padding:8px 14px;cursor:pointer;border-left:2px solid transparent;transition:background var(--ease-fast),border-color var(--ease-fast);display:flex;align-items:center;gap:var(--space-2)}
+.rail-item:hover{background:var(--bg-surface-2)}
+.rail-item.active{background:rgba(59,114,255,0.08);border-left-color:var(--blue-500)}
+.rail-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.rail-label{font-size:var(--text-sm);font-weight:500;color:var(--text-primary);flex:1}
+.rail-count{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-tertiary);background:var(--bg-surface-3);padding:2px 6px;border-radius:var(--radius-md)}
+
+/* ─── VIEW / SECTION ───────────────────────────────────────────────────────── */
+.view{display:none;flex-direction:column;gap:0}
+.view.active{display:flex}
+.view-header{padding:var(--space-4) var(--space-5);border-bottom:0.5px solid var(--border-subtle);display:flex;align-items:flex-end;gap:var(--space-3);flex-shrink:0}
+.view-title{font-size:18px;font-weight:500;line-height:1.3;color:var(--text-primary)}
+.view-sub{font-size:var(--text-sm);color:var(--text-secondary);line-height:1.6;margin-top:4px}
+.view-body{padding:var(--space-4) var(--space-5);display:flex;flex-direction:column;gap:var(--space-4)}
+
+/* ─── CARDS (glass-like, glows bleed through) ───────────────────────────────── */
+.card{backdrop-filter:blur(4px);background:rgba(15,15,19,0.7);border:0.5px solid var(--border-subtle);border-radius:var(--radius-lg);overflow:hidden;transition:border-color var(--ease-fast)}
+.card:hover{border-color:var(--border-default)}
+.card-hd{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);padding:var(--space-2) var(--space-4);border-bottom:0.5px solid var(--border-subtle);background:var(--bg-surface-2);min-height:36px}
+.card-hd-title{font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-tertiary)}
+.card-bd{padding:var(--space-4)}
+
+/* ─── METRIC STRIP (unified, 1px dividers) ──────────────────────────────────── */
+.metric-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-bottom:20px;border:0.5px solid rgba(255,255,255,0.07);border-radius:var(--radius-lg);overflow:hidden}
+.metric-tile,.metric{background:#0F0F14;padding:16px 20px;border-right:0.5px solid rgba(255,255,255,0.06)}
+.metric-tile:last-child,.metric:last-child{border-right:none}
+.metric-val{font-family:var(--font-mono);font-size:26px;font-weight:500;line-height:1;margin-bottom:6px;letter-spacing:-0.02em}
+.metric-lbl{font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:#3A3A4C}
+.val-red{color:rgba(239,100,100,0.82)}
+.val-amber{color:rgba(245,158,11,0.78)}
+.val-green{color:rgba(74,222,128,0.72)}
+.val-blue{color:rgba(107,151,255,0.82)}
+
+/* ─── OPPORTUNITY TABLE ────────────────────────────────────────────────────── */
+.opp-section{background:rgba(15,15,20,0.7);border:0.5px solid rgba(255,255,255,0.06);border-radius:var(--radius-lg);margin-bottom:14px;overflow:hidden;backdrop-filter:blur(4px)}
+.opp-sec-head{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;border-bottom:0.5px solid rgba(255,255,255,0.05);background:rgba(20,20,26,0.6)}
+.opp-sec-lbl{font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:#3A3A50}
+.opp-sec-hint{font-size:10px;color:#2A2A38;font-family:var(--font-mono)}
+.opp-table{width:100%;border-collapse:collapse}
+.opp-table thead tr{border-bottom:0.5px solid rgba(255,255,255,0.05)}
+.opp-table thead th{padding:8px 16px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:#2A2A38;text-align:left;white-space:nowrap}
+.opp-table thead th.r{text-align:right}
+.opp-table tbody tr{border-bottom:0.5px solid rgba(255,255,255,0.035);transition:background 0.1s}
+.opp-table tbody tr:last-child{border-bottom:none}
+.opp-table tbody tr:hover{background:rgba(255,255,255,0.02)}
+.opp-table tbody td{padding:10px 16px;font-size:12px;vertical-align:middle}
+.opp-table tbody td.r{text-align:right}
+.opp-cluster-name{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:#B0B0C0}
+.opp-cdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.opp-rev-pill{font-family:var(--font-mono);font-size:11px;color:#3A3A50;background:rgba(255,255,255,0.04);padding:2px 7px;border-radius:4px;border:0.5px solid rgba(255,255,255,0.06)}
+.opp-score-cell{display:flex;align-items:center;gap:8px}
+.opp-score-bar-bg{width:56px;height:2px;background:rgba(255,255,255,0.06);border-radius:1px;overflow:hidden}
+.opp-score-bar{height:2px;border-radius:1px}
+.opp-score-num{font-family:var(--font-mono);font-size:11px;color:#5A5A70;min-width:20px}
+.opp-sent-pos{font-family:var(--font-mono);font-size:11px;color:rgba(74,222,128,0.55)}
+.opp-sent-neg{font-family:var(--font-mono);font-size:11px;color:rgba(255,100,100,0.55)}
+.opp-sev-num{font-family:var(--font-mono);font-size:11px;color:#4A4A5E}
+.opp-sev-num.hot{color:rgba(239,100,100,0.62)}
+.opp-act-num{font-family:var(--font-mono);font-size:11px;color:rgba(107,151,255,0.5)}
+.opp-signal-tag{font-family:var(--font-mono);font-size:10px;color:#333344;font-style:italic}
+.opp-bar-wrap{width:56px;height:2px;background:rgba(255,255,255,0.06);border-radius:1px;overflow:hidden}
+.opp-bar{height:100%;border-radius:1px;transition:width var(--ease-fast)}
+
+/* ─── TAXONOMY TREE ─────────────────────────────────────────────────────────── */
+.tax-node{margin-bottom:2px}
+.tax-row{display:flex;align-items:center;gap:var(--space-2);padding:4px var(--space-2);border-radius:var(--radius-md);cursor:pointer;transition:background var(--ease-fast);min-height:28px}
+.tax-row:hover{background:var(--bg-surface-3)}
+.tax-row.selected{border-left:2px solid var(--blue-500);padding-left:calc(var(--space-2) - 2px)}
+.tax-chevron{font-size:9px;color:var(--text-tertiary);width:14px;text-align:center;transition:transform .2s}
+.tax-chevron.open{transform:rotate(90deg)}
+.tax-pill{font-family:var(--font-mono);font-size:9px;font-weight:700;padding:1px 5px;border-radius:var(--radius-sm);letter-spacing:0.04em}
+.tax-name{font-size:var(--text-sm);font-weight:500;flex:1}
+.tax-cnt{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-tertiary)}
+.tax-children{margin-left:20px;border-left:0.5px solid var(--border-subtle);padding-left:var(--space-2);margin-top:2px;display:none}
+.tax-children.open{display:block}
+
+/* ─── SIGNAL BARS (TF-IDF) ─────────────────────────────────────────────────── */
+.freq-grid{display:flex;flex-direction:column;gap:5px}
+.freq-row{display:grid;grid-template-columns:110px 1fr 36px 44px;align-items:center;gap:var(--space-2);margin-bottom:5px}
+.freq-word{font-size:var(--text-sm);color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.freq-word.rep{color:var(--amber)}
+.freq-track{flex:1;height:3px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
+.freq-fill{height:3px;background:var(--amber);border-radius:2px;transition:width 350ms cubic-bezier(0.16,1,0.3,1)}
+.freq-n,.freq-pct{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-tertiary);min-width:36px;text-align:right}
+.freq-pct{color:var(--blue-400)}
+
+/* ─── REVIEW CARDS (quiet, recedes into background) ────────────────────────── */
+.rev-card{padding:var(--space-3) 0;border-bottom:0.5px solid rgba(255,255,255,0.04)}
+.rev-card:last-child{border-bottom:none}
+.rev-card.rep{padding-left:var(--space-4);border-left:1px solid rgba(255,255,255,0.07);margin-left:0}
+.rev-hd{font-size:var(--text-xs);color:rgba(255,255,255,0.35);margin-bottom:3px;line-height:1.4}
+.rev-hd .rev-meta-sep{opacity:0.5;margin:0 4px}
+.rev-txt{font-size:12px;font-weight:400;color:#5A5A70;line-height:1.5}
+.pill{display:inline-flex;align-items:center;font-family:var(--font-mono);font-size:var(--text-2xs);padding:2px var(--space-2);border-radius:var(--radius-pill);font-weight:500;background:var(--bg-surface-3);color:var(--text-secondary);border:0.5px solid var(--border-default)}
+.chip{font-family:var(--font-mono);font-size:var(--text-2xs);padding:3px 8px;border-radius:var(--radius-pill);border:0.5px solid;display:inline-block;margin:2px 4px 2px 0}
+
+/* ─── PHRASE TAGS ───────────────────────────────────────────────────────────── */
+.phrase-wrap{display:flex;flex-wrap:wrap;gap:var(--space-2);padding-top:6px}
+.phrase-chip{display:inline-block;padding:3px 10px;border-radius:var(--radius-pill);background:rgba(255,255,255,0.04);border:0.5px solid var(--border-subtle);font-size:var(--text-xs);color:var(--text-secondary);font-family:var(--font-mono);transition:all var(--ease-fast)}
+.phrase-chip:hover{background:rgba(255,255,255,0.07);color:var(--text-primary)}
+.phrase-chip span{color:var(--text-tertiary);margin-left:4px}
+
+/* ─── ALERT CARDS (2px left border) ─────────────────────────────────────────── */
+.alert-card{backdrop-filter:blur(4px);background:rgba(15,15,19,0.7);border:0.5px solid var(--border-subtle);border-radius:var(--radius-lg);padding:var(--space-4) var(--space-5);margin-bottom:var(--space-3);transition:border-color var(--ease-fast)}
+.alert-hd{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2)}
+.alert-icon{width:22px;height:22px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.alert-title{font-size:var(--text-md);font-weight:500;flex:1}
+.alert-stats{display:flex;gap:var(--space-2);align-items:center}
+.alert-stat{font-family:var(--font-mono);font-size:var(--text-2xs);padding:2px 8px;border-radius:var(--radius-md);background:var(--bg-surface-3);color:var(--text-secondary)}
+.alert-body{font-size:var(--text-sm);color:var(--text-secondary);line-height:1.6}
+.alert-signals{font-size:11px;color:var(--text-tertiary);margin-bottom:var(--space-3)}
+.alert-sev{font-weight:600}
+.alert-actions{display:flex;gap:var(--space-2);margin-top:var(--space-3);align-items:center}
+.act-btn{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 var(--space-4);font-family:var(--font-ui);font-size:var(--text-sm);font-weight:500;border-radius:var(--radius-lg);border:0.5px solid var(--border-strong);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all var(--ease-fast)}
+.act-btn:hover{background:var(--bg-surface-3);color:var(--text-primary)}
+.act-btn.primary{background:var(--blue-500);color:#fff;border:none;border-top:1px solid rgba(255,255,255,0.15);box-shadow:0 1px 0 rgba(0,0,0,0.4)}
+.act-btn.primary:hover{background:var(--blue-600)}
+.act-btn.gen{background:var(--blue-500);color:#fff;border:none;border-top:1px solid rgba(255,255,255,0.15);height:34px}
+.act-btn.gen:hover{background:var(--blue-600)}
+.act-btn.gen.loading{opacity:.6;pointer-events:none}
+
+/* ─── INSIGHT REPORT ───────────────────────────────────────────────────────── */
+.insight-report{margin-top:var(--space-4);border-top:0.5px solid var(--border-subtle);padding-top:var(--space-4);animation:insightFadeIn .4s ease}
+@keyframes insightFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.insight-section{margin-bottom:var(--space-4)}
+.insight-label{font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:4px}
+.insight-text{font-size:var(--text-sm);color:var(--text-secondary);line-height:1.6}
+.insight-text ul{margin:6px 0 6px 16px;padding:0}
+.insight-text li{margin-bottom:4px}
+.insight-text blockquote{border-left:2px solid var(--border-default);margin:8px 0;padding:6px 12px;font-style:italic;color:var(--text-secondary)}
+.insight-priority-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--radius-pill);font-size:var(--text-xs);font-weight:600}
+.insight-priority-badge.crit-bg{background:var(--red-bg);color:#FF7A7A;border:0.5px solid rgba(255,68,68,0.25)}
+.insight-priority-badge.high-bg{background:var(--amber-bg);color:#F5C56A;border:0.5px solid rgba(245,166,35,0.25)}
+.insight-priority-badge.med-bg{background:rgba(59,114,255,0.1);color:var(--blue-400);border:0.5px solid rgba(59,114,255,0.2)}
+.insight-priority-badge.low-bg{background:var(--green-bg);color:#4ADE80;border:0.5px solid rgba(0,200,83,0.2)}
+.insight-actions{display:flex;gap:var(--space-2);margin-top:var(--space-3);padding-top:var(--space-3);border-top:0.5px solid var(--border-subtle)}
+.insight-actions .act-btn{height:28px;padding:0 12px;font-size:11px}
+
+/* ─── SLACK COPY BLOCK ─────────────────────────────────────────────────────── */
+.slack-block{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.07);border-radius:var(--radius-lg);padding:var(--space-4);font-family:var(--font-mono);font-size:11px;line-height:1.6;white-space:pre-wrap;color:rgba(255,255,255,0.35);position:relative;margin-top:var(--space-2)}
+.slack-copy-btn{position:absolute;top:8px;right:8px;font-size:var(--text-xs);color:var(--text-secondary);background:var(--bg-surface-3);border:0.5px solid var(--border-default);border-radius:var(--radius-md);padding:2px 8px;cursor:pointer;transition:all var(--ease-fast)}
+.slack-copy-btn:hover{color:var(--text-primary);border-color:var(--border-strong)}
+.slack-copy-btn.copied{background:var(--green);border-color:var(--green);color:#fff}
+
+/* ─── IMPACT / TREND / AGENT ───────────────────────────────────────────────── */
+.impact-row{display:flex;gap:var(--space-3);margin-top:var(--space-2);flex-wrap:wrap}
+.impact-tile{flex:1;min-width:140px;background:var(--bg-surface-2);border:0.5px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3)}
+.impact-tile-val{font-family:var(--font-mono);font-size:var(--text-md);font-weight:500;margin-bottom:4px}
+.impact-tile-lbl{font-size:var(--text-2xs);font-weight:500;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em}
+.trend-row{display:flex;gap:var(--space-3);flex-wrap:wrap;margin-bottom:var(--space-2)}
+.trend-chip{flex:1;min-width:180px;backdrop-filter:blur(4px);background:rgba(15,15,19,0.7);border:0.5px solid var(--border-subtle);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);display:flex;align-items:flex-start;gap:var(--space-2)}
+.trend-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.trend-body{font-size:var(--text-sm);color:var(--text-primary);line-height:1.4}
+.trend-body strong{color:var(--blue-400)}
+.trend-body .trend-sub{font-size:var(--text-2xs);color:var(--text-tertiary);margin-top:4px;font-family:var(--font-mono)}
+.agent-row{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-4);background:var(--bg-surface-1);border:0.5px solid var(--border-subtle);border-radius:var(--radius-lg);margin-bottom:var(--space-2)}
+.agent-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.agent-dot.live{background:var(--green);box-shadow:0 0 6px rgba(0,200,83,.4)}
+.agent-dot.paused{background:var(--text-tertiary)}
+.agent-name{font-size:var(--text-sm);font-weight:500;flex:1}
+.agent-desc{font-size:var(--text-xs);color:var(--text-secondary);flex:2}
+.agent-ts{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-tertiary)}
+.agent-toggle{width:32px;height:17px;border-radius:9px;background:var(--bg-surface-3);border:0.5px solid var(--border-default);cursor:pointer;position:relative;transition:background var(--ease-fast)}
+.agent-toggle.on{background:rgba(0,200,83,.2);border-color:var(--green)}
+.agent-toggle::after{content:'';position:absolute;width:13px;height:13px;border-radius:50%;background:var(--text-tertiary);top:1px;left:1px;transition:all .2s}
+.agent-toggle.on::after{left:16px;background:var(--green)}
+
+/* ─── CHATBOT SIDEBAR ─────────────────────────────────────────────────────── */
+.chat-header{padding:var(--space-3) var(--space-4);border-bottom:0.5px solid var(--border-subtle);display:flex;align-items:center;gap:var(--space-2);flex-shrink:0}
+.chat-title{font-size:var(--text-md);font-weight:500}
+.chat-model{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-tertiary);margin-left:auto}
+.chat-messages{flex:1;overflow-y:auto;padding:var(--space-3) var(--space-4);display:flex;flex-direction:column;gap:var(--space-2)}
+.chat-messages::-webkit-scrollbar{width:5px}
+.chat-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}
+.msg{max-width:92%;border-radius:var(--radius-lg);padding:var(--space-2) var(--space-3);font-size:var(--text-sm);line-height:1.5}
+.msg.user{background:rgba(59,114,255,.12);border:0.5px solid rgba(59,114,255,.2);align-self:flex-end;color:var(--text-primary)}
+.msg.ai{background:var(--bg-surface-1);border:0.5px solid var(--border-subtle);align-self:flex-start;color:var(--text-primary)}
+.msg.ai strong{color:var(--blue-400);font-weight:500}
+.msg.ai em{color:var(--green);font-style:normal}
+.thinking{align-self:flex-start;background:var(--bg-surface-1);border:0.5px solid var(--border-subtle);border-radius:var(--radius-lg);padding:var(--space-2) var(--space-3);display:flex;gap:4px}
+.td{width:5px;height:5px;border-radius:50%;background:var(--text-tertiary);animation:bob 1.2s infinite}
+.td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
+@keyframes bob{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.chat-suggestions{padding:var(--space-2) var(--space-4);border-top:0.5px solid var(--border-subtle);display:flex;flex-wrap:wrap;gap:5px;flex-shrink:0}
+.sug{font-size:var(--text-sm);color:var(--text-secondary);cursor:pointer;transition:background var(--ease-fast);padding:4px 0;background:none;border:none}
+.sug::before{content:'→ ';color:var(--blue-400);opacity:0.7}
+.sug:hover{background:rgba(255,255,255,0.03);color:var(--text-primary)}
+.chat-input-row{display:flex;gap:var(--space-2);padding:var(--space-3) var(--space-4);border-top:0.5px solid var(--border-subtle);flex-shrink:0}
+.chat-inp{flex:1;padding:8px 10px;border-radius:var(--radius-lg);border:0.5px solid var(--border-default);background:var(--bg-surface-1);font-size:var(--text-sm);color:var(--text-primary);font-family:var(--font-ui);outline:none;resize:none;height:32px;transition:border-color var(--ease-fast)}
+.chat-inp::placeholder{color:var(--text-tertiary)}
+.chat-inp:focus{border-color:var(--border-focus);box-shadow:0 0 0 2px rgba(59,114,255,0.12)}
+.send{width:32px;height:32px;border-radius:var(--radius-lg);background:var(--blue-500);color:#fff;border:none;border-top:1px solid rgba(255,255,255,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background var(--ease-fast)}
+.send:hover{background:var(--blue-600)}.send:disabled{opacity:.35;cursor:default}
+.send svg{width:14px;height:14px;fill:#fff}
+
+/* ─── SOURCE CARDS / KG ────────────────────────────────────────────────────── */
+.source-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-2)}
+.source-card{background:var(--bg-surface-2);border:0.5px solid var(--border-subtle);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);display:flex;flex-direction:column;gap:6px}
+.source-name{font-size:var(--text-sm);font-weight:500}
+.source-meta{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-tertiary)}
+.source-status{font-family:var(--font-mono);font-size:var(--text-2xs);padding:2px 8px;border-radius:var(--radius-md);align-self:flex-start}
+.source-connected{border-left:2px solid rgba(0,200,83,0.4);background:rgba(255,255,255,0.02)}
+.source-disconnected{opacity:0.6}
+.status-live{background:var(--green-bg);color:var(--green);border:0.5px solid rgba(0,200,83,0.2)}
+.status-connect{background:transparent;color:var(--text-tertiary);border:0.5px solid var(--border-default)}
+.kg-entity{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);border-radius:var(--radius-lg);background:var(--bg-surface-2);border:0.5px solid var(--border-subtle);margin-bottom:var(--space-2)}
+.kg-type{font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary)}
+.kg-name{font-size:var(--text-sm);font-weight:500;flex:1}
+.kg-links{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-tertiary)}
+
+div.divider{height:0.5px;background:var(--border-subtle);margin:var(--space-4) 0}
+.demand-row{display:flex;align-items:center;gap:0;padding:9px 16px;border-bottom:0.5px solid rgba(255,255,255,0.04)}
+.demand-row:last-child{border-bottom:none}
+.demand-label{font-size:12px;color:#5E5E70;width:180px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.demand-bar-wrap{flex:1;display:flex;align-items:center;gap:10px}
+.demand-rev-count{font-family:var(--font-mono);font-size:10px;color:#2E2E3E;width:42px;flex-shrink:0}
+.demand-bar-bg{flex:1;height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden}
+.demand-bar{height:3px;border-radius:2px}
+.demand-p{font-family:var(--font-mono);font-size:10px;color:#2A2A3A;width:36px;text-align:right;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="glow-1"></div><div class="glow-2"></div><div class="glow-3"></div><div class="glow-4"></div>
+
+<!-- NAV -->
+<nav class="nav-wrap">
+  <div class="logo-block">
+    <span class="logo-slash">/</span>
+    <div class="logo-text"><em>emergent</em> intel</div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-view="unify" onclick="showView('unify')">Data Sources</div>
+    <div class="tab" data-view="understand" onclick="showView('understand')">Taxonomy</div>
+    <div class="tab" data-view="opportunity" onclick="showView('opportunity')">Opportunities</div>
+    <div class="tab" data-view="act" onclick="showView('act')">Act</div>
+  </div>
+  <div class="nav-right">
+    <div class="status-dot pulse"></div>
+    <div class="nav-meta" id="nav-meta"></div>
+  </div>
+</nav>
+
+
+<div class="workspace">
+
+  <!-- CENTER -->
+  <div class="center">
+
+    <!-- ── UNIFY VIEW ─────────────────────────────────────────── -->
+    <div class="view active" id="view-unify">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Unify</div>
+          <div class="view-sub">All feedback ingested, enriched, and modelled into a Knowledge Graph</div>
+        </div>
+        <div class="nav-phase phase-u1" style="margin-left:auto" id="unified-badge"></div>
+      </div>
+      <div class="view-body">
+
+        <div class="metric-row">
+          <div class="metric-tile"><div class="metric-val" id="m-total" style="color:var(--accent)">-</div><div class="metric-lbl">Total Reviews</div></div>
+          <div class="metric-tile"><div class="metric-val" id="m-avg-sent" style="color:var(--warn)">-</div><div class="metric-lbl">Avg Sentiment</div></div>
+          <div class="metric-tile"><div class="metric-val" id="m-avg-sev" style="color:var(--crit)">-</div><div class="metric-lbl">Avg Severity</div></div>
+          <div class="metric-tile"><div class="metric-val" id="m-avg-act" style="color:var(--purple)">-</div><div class="metric-lbl">Avg Actionability</div></div>
+          <div class="metric-tile"><div class="metric-val" id="m-clusters" style="color:var(--act)">-</div><div class="metric-lbl">Clusters</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd"><div class="card-hd-title">Data Sources (Simulated)</div><div class="pill" style="background:rgba(34,201,123,.1);color:var(--act)">All live</div></div>
+          <div class="card-bd">
+            <div class="source-grid">
+              <div class="source-card source-connected"><div class="source-name">Google Play Reviews</div><div class="source-meta" id="src-gplay"></div><div class="source-status status-live">● LIVE</div></div>
+              <div class="source-card source-disconnected"><div class="source-name">Zendesk Tickets</div><div class="source-meta">0 records · ready</div><div class="source-status status-connect">CONNECT</div></div>
+              <div class="source-card source-disconnected"><div class="source-name">Salesforce CRM</div><div class="source-meta">0 records · ready</div><div class="source-status status-connect">CONNECT</div></div>
+              <div class="source-card source-disconnected"><div class="source-name">App Store Reviews</div><div class="source-meta">0 records · ready</div><div class="source-status status-connect">CONNECT</div></div>
+              <div class="source-card source-disconnected"><div class="source-name">In-App Surveys</div><div class="source-meta">0 records · ready</div><div class="source-status status-connect">CONNECT</div></div>
+              <div class="source-card source-disconnected"><div class="source-name">Intercom Chats</div><div class="source-meta">0 records · ready</div><div class="source-status status-connect">CONNECT</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd"><div class="card-hd-title">Knowledge Graph — Custom Objects</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Entities extracted from review metadata</div></div>
+          <div class="card-bd" id="kg-entities"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd"><div class="card-hd-title">Data Enrichment Workflows</div></div>
+          <div class="card-bd" style="display:flex;flex-direction:column;gap:7px">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--s2);border-radius:7px;border:1px solid var(--border)">
+              <div class="pill status-live">● DONE</div>
+              <div style="font-size:11px;flex:1"><strong>Language normalisation</strong> — Hinglish, Marathi, Arabic detected and translated</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">4 records</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--s2);border-radius:7px;border:1px solid var(--border)">
+              <div class="pill status-live">● DONE</div>
+              <div style="font-size:11px;flex:1"><strong>Severity tagging</strong> — keyword + weight scoring across 4 tiers</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)" id="enrich-sev"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--s2);border-radius:7px;border:1px solid var(--border)">
+              <div class="pill status-live">● DONE</div>
+              <div style="font-size:11px;flex:1"><strong>Actionability scoring</strong> — specificity + quantity signals extracted</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)" id="enrich-act"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--s2);border-radius:7px;border:1px solid var(--border)">
+              <div class="pill status-enrich">○ PENDING</div>
+              <div style="font-size:11px;flex:1"><strong>ARR / CSAT enrichment</strong> — link reviews to revenue impact via CRM</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">connect Salesforce</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd"><div class="card-hd-title">All Reviews</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Sorted by severity</div></div>
+          <div class="card-bd" id="unify-review-feed" style="max-height:600px;overflow-y:auto"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── UNDERSTAND VIEW ─────────────────────────────────────── -->
+    <div class="view" id="view-understand">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Understand</div>
+          <div class="view-sub">Adaptive 5-level taxonomy — auto-detected from review corpus</div>
+        </div>
+      </div>
+      <div class="view-body">
+
+        <div class="card">
+          <div class="card-hd">
+            <div class="card-hd-title">Taxonomy Tree — L1 → L2 → L3 → Theme → Subtheme</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Click to expand · auto-generated by HDBSCAN + TF-IDF</div>
+          </div>
+          <div class="card-bd" id="tax-tree"></div>
+          <div class="card-hd" style="border-top:1px solid var(--border);margin-top:0">
+            <div class="card-hd-title">Cluster Selection</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Select to view cluster detail</div>
+          </div>
+          <div class="card-bd" style="padding-top:10px">
+            <div class="cluster-chips-wrap" id="understand-clusters"></div>
+          </div>
+        </div>
+
+        <div class="card" id="cluster-detail-card" style="display:none">
+          <div class="card-hd">
+            <div class="card-hd-title" id="detail-title">—</div>
+            <div id="detail-badges" style="display:flex;gap:5px"></div>
+          </div>
+          <div class="card-bd">
+            <div class="metric-row" id="detail-metrics" style="margin-bottom:12px"></div>
+
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">TF-IDF Word Signals</div>
+            <div class="freq-grid" id="detail-freq"></div>
+
+            <div class="divider"></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Repeated Phrases (cross-review)</div>
+            <div class="phrase-wrap" id="detail-phrases"></div>
+
+            <div class="divider"></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Reviews in this cluster</div>
+            <div id="detail-reviews"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── OPPORTUNITY VIEW ────────────────────────────────────── -->
+    <div class="view" id="view-opportunity">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Opportunity Sizing</div>
+          <div class="view-sub">Feedback weighted by volume, severity, and revenue signal</div>
+        </div>
+      </div>
+      <div class="view-body">
+
+        <div class="metric-row" id="opp-metrics"></div>
+
+        <div class="opp-section">
+          <div class="opp-sec-head">
+            <span class="opp-sec-lbl">Cluster Opportunity Table</span>
+            <span class="opp-sec-hint">sorted by priority score</span>
+          </div>
+          <table class="opp-table">
+            <thead><tr>
+              <th style="width:220px">Cluster Theme</th>
+              <th>Reviews</th>
+              <th>Priority Score</th>
+              <th>Avg Sentiment</th>
+              <th class="r">High Severity</th>
+              <th class="r">Avg Actionability</th>
+              <th class="r">Top Signal</th>
+            </tr></thead>
+            <tbody id="opp-tbody"></tbody>
+          </table>
+        </div>
+
+        <div class="opp-section">
+          <div class="opp-sec-head">
+            <span class="opp-sec-lbl">Real Demand Data — Opportunity Sizing</span>
+          </div>
+          <div id="demand-bars"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── ACT VIEW ────────────────────────────────────────────── -->
+    <div class="view" id="view-act">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Act</div>
+          <div class="view-sub">PM-level intelligence — generate structured insights, impact estimates, and ready-to-share summaries</div>
+        </div>
+        <div id="act-agent-count" class="nav-phase phase-a" style="margin-left:auto">0 active agents</div>
+      </div>
+      <div class="view-body">
+
+        <div class="card">
+          <div class="card-hd"><div class="card-hd-title">Cluster Alerts — Generate Actionable Insights</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Click "Generate Insight" for a full PM-level report via Claude</div></div>
+          <div class="card-bd" id="alerts-container"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd"><div class="card-hd-title">Agent Status Panel</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Monitoring agents watching your review pipeline</div></div>
+          <div class="card-bd" id="agent-panel"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd"><div class="card-hd-title">Agent Action Log</div></div>
+          <div class="card-bd" id="action-log" style="display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto">
+            <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">No actions taken yet. Generate insights above to begin.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /center -->
+
+  <!-- RIGHT RAIL: Inference AI chatbot -->
+  <div class="right-rail">
+    <div class="chat-header">
+      <div class="status-dot pulse"></div>
+      <div class="chat-title">Inference AI</div>
+      <div class="chat-model">groq · llama-3.1-8b</div>
+    </div>
+    <div class="chat-messages" id="chat-msgs">
+      <div class="msg ai">
+        I'm <strong>Inference AI</strong> — I have the full analysis: <strong id="chat-count"></strong> reviews, <strong id="chat-clusters"></strong> HDBSCAN clusters, TF-IDF word signals, repeated phrases, severity scores, and actionability ratings.<br><br>
+        Ask me anything about the data. I'll cite specific clusters, scores, and verbatim quotes.
+      </div>
+    </div>
+    <div class="chat-suggestions">
+      <div class="sug" onclick="sug(this)">Which cluster is most urgent?</div>
+      <div class="sug" onclick="sug(this)">What words repeat in billing?</div>
+      <div class="sug" onclick="sug(this)">Show me the top actionable reviews</div>
+      <div class="sug" onclick="sug(this)">What is the AI quality problem?</div>
+      <div class="sug" onclick="sug(this)">What should we fix first?</div>
+      <div class="sug" onclick="sug(this)">Summarise positive reviews</div>
+    </div>
+    <div class="chat-input-row">
+      <textarea class="chat-inp" id="chat-inp" rows="1" placeholder="Ask Inference AI…"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chat()}"></textarea>
+      <button class="send" id="send-btn" onclick="chat()">
+        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+      </button>
+    </div>
+  </div>
+
+</div><!-- /workspace -->
+
+<script>
+// ── DATA (injected from server) ──────────────────────────────────────────────
+const CLUSTERS = {{ clusters_json | safe }};
+const REVIEWS  = {{ reviews_json | safe }};
+
+// ── DYNAMIC COUNTS ───────────────────────────────────────────────────────────
+document.getElementById('nav-meta').textContent = `${REVIEWS.length} reviews · ${CLUSTERS.length} clusters · live`;
+document.getElementById('m-total').textContent = REVIEWS.length;
+document.getElementById('m-clusters').textContent = CLUSTERS.length;
+const avgSent = REVIEWS.length ? (REVIEWS.reduce((a,r) => a + r.sent.c, 0) / REVIEWS.length) : 0;
+const avgSev = REVIEWS.length ? (REVIEWS.reduce((a,r) => a + r.sev.s, 0) / REVIEWS.length) : 0;
+const avgAct = REVIEWS.length ? (REVIEWS.reduce((a,r) => a + r.act.s, 0) / REVIEWS.length) : 0;
+document.getElementById('m-avg-sent').textContent = avgSent.toFixed(2);
+document.getElementById('m-avg-sent').style.color = avgSent >= 0 ? 'var(--act)' : 'var(--crit)';
+document.getElementById('m-avg-sev').textContent = avgSev.toFixed(1);
+document.getElementById('m-avg-act').textContent = avgAct.toFixed(2);
+document.getElementById('unified-badge').textContent = `${REVIEWS.length} records unified`;
+document.getElementById('src-gplay').textContent = `${REVIEWS.length} reviews · Mar 7–12 2026`;
+document.getElementById('enrich-sev').textContent = `${REVIEWS.length} records`;
+document.getElementById('enrich-act').textContent = `${REVIEWS.length} records`;
+document.getElementById('chat-count').textContent = REVIEWS.length;
+document.getElementById('chat-clusters').textContent = CLUSTERS.length;
+
+// ── UNIFY REVIEW FEED ────────────────────────────────────────────────────────
+const clusterMap = {};
+CLUSTERS.forEach(c => { clusterMap[c.id] = c; });
+const unifyFeed = document.getElementById('unify-review-feed');
+[...REVIEWS].sort((a,b) => b.sev.s - a.sev.s).forEach(r => {
+  const cl = clusterMap[r.cid];
+  const clLabel = cl ? cl.label : "Unclustered";
+  const clShort = clLabel.split(' ').slice(0,2).join(' ');
+  const sentVal = r.sent.c > 0 ? "+" : "" + r.sent.c.toFixed(2);
+  unifyFeed.innerHTML += `<div class="rev-card ${r.rep ? "rep" : ""}">
+    <div class="rev-hd">${r.rep ? "★ " : ""}${r.name} · ${clShort} · ${r.sev.l} · ${sentVal}</div>
+    <div class="rev-txt">${r.text}</div>
+  </div>`;
+});
+
+// ── KNOWLEDGE GRAPH ENTITIES ─────────────────────────────────────────────────
+const kgEl = document.getElementById('kg-entities');
+const kgData = [
+  {type: 'PLATFORM', name: 'Android / Google Play', links: `linked to ${REVIEWS.length} reviews`},
+  ...CLUSTERS.filter(c => c.id !== 5).map(c => ({
+    type: 'FEATURE', name: c.l3 || c.label, links: `linked to ${c.count} reviews · ${c.label} cluster`
+  })),
+];
+kgData.forEach(kg => {
+  kgEl.innerHTML += `<div class="kg-entity"><div class="kg-type">${kg.type}</div><div class="kg-name">${kg.name}</div><div class="kg-links">${kg.links}</div></div>`;
+});
+
+function clusterSemanticColor(c) {
+  const lbl = (c.label || '').toLowerCase();
+  if (lbl.includes('billing') || lbl.includes('credit') || lbl.includes('payment') || c.priority > 0.5) return {fg:'var(--semantic-problem)',bg:'var(--semantic-problem-bg)'};
+  if (lbl.includes('positive') || lbl.includes('short') || c.sentiment > 0.3) return {fg:'var(--semantic-neutral)',bg:'var(--semantic-neutral-bg)'};
+  return {fg:'var(--semantic-muted)',bg:'var(--semantic-muted-bg)'};
+}
+let activeClusterId = -1;
+const understandClustersEl = document.getElementById("understand-clusters");
+[...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach((c, i) => {
+  const chip = document.createElement("div");
+  chip.className = "cluster-chip" + (i === 0 ? " active" : "");
+  chip.dataset.id = c.id;
+  const sc = clusterSemanticColor(c);
+  chip.innerHTML = `<div class="cluster-chip-dot" style="background:${sc.fg}"></div><span class="cluster-chip-label">${c.label.split(' ').slice(0,2).join(' ')}</span><span class="cluster-chip-count">${c.count}</span>`;
+  chip.onclick = () => {
+    document.querySelectorAll(".cluster-chip").forEach(ch => ch.classList.remove("active"));
+    chip.classList.add("active");
+    activeClusterId = c.id;
+    showView("understand");
+    selectCluster(c.id);
+  };
+  understandClustersEl.appendChild(chip);
+});
+
+function setFilter(id) {
+  activeClusterId = id;
+  document.querySelectorAll(".cluster-chip").forEach(ch => {
+    ch.classList.toggle("active", parseInt(ch.dataset.id) === id);
+  });
+  if (id >= 0) { showView("understand"); selectCluster(id); }
+}
+
+function filterSev(sev) {
+  const revs = REVIEWS.filter(r => r.sev.l === sev);
+  alert(`${revs.length} reviews with severity "${sev}":\n\n` + revs.map(r => `• ${r.name}: ${r.text.slice(0,60)}…`).join("\n"));
+}
+
+// ── VIEW SWITCHING ────────────────────────────────────────────────────────────
+function showView(name) {
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById(`view-${name}`).classList.add("active");
+  document.querySelectorAll(".tab").forEach(t => { t.classList.toggle("active", t.dataset.view === name); });
+}
+
+// ── TAXONOMY TREE (merged L3s to avoid repetition) ─────────────────────────────
+const taxTree = document.getElementById("tax-tree");
+const l1Groups = {};
+CLUSTERS.forEach(c => {
+  const l1 = c.l1 || 'Uncategorized';
+  const l2 = c.l2 || 'Uncategorized';
+  const l3 = c.l3 || c.label || 'Uncategorized';
+  if (!l1Groups[l1]) l1Groups[l1] = {};
+  if (!l1Groups[l1][l2]) l1Groups[l1][l2] = {};
+  if (!l1Groups[l1][l2][l3]) l1Groups[l1][l2][l3] = [];
+  l1Groups[l1][l2][l3].push(c);
+});
+
+Object.entries(l1Groups).forEach(([l1, l2s]) => {
+  const l1Node = document.createElement("div"); l1Node.className = "tax-node";
+  const l1Row = document.createElement("div"); l1Row.className = "tax-row";
+  const l1Total = Object.values(l2s).flatMap(l2obj => Object.values(l2obj).flat()).reduce((a,c) => a + c.count, 0);
+  l1Row.innerHTML = `<span class="tax-chevron open">▶</span><span class="tax-pill" style="background:rgba(77,124,254,.12);color:var(--accent)">L1</span><span class="tax-name">${l1}</span><span class="tax-cnt">${l1Total}</span>`;
+  const l1Children = document.createElement("div"); l1Children.className = "tax-children open";
+  l1Row.onclick = () => { l1Children.classList.toggle("open"); l1Row.querySelector(".tax-chevron").classList.toggle("open"); };
+  l1Node.appendChild(l1Row); l1Node.appendChild(l1Children);
+
+  Object.entries(l2s).forEach(([l2, l3Groups]) => {
+    const l2Node = document.createElement("div"); l2Node.className = "tax-node";
+    const l2Row = document.createElement("div"); l2Row.className = "tax-row";
+    const l2Total = Object.values(l3Groups).flat().reduce((a,c) => a + c.count, 0);
+    l2Row.innerHTML = `<span class="tax-chevron">▶</span><span class="tax-pill" style="background:rgba(155,112,245,.12);color:var(--purple)">L2</span><span class="tax-name">${l2}</span><span class="tax-cnt">${l2Total}</span>`;
+    const l2Children = document.createElement("div"); l2Children.className = "tax-children";
+    l2Row.onclick = (e) => { e.stopPropagation(); l2Children.classList.toggle("open"); l2Row.querySelector(".tax-chevron").classList.toggle("open"); };
+    l2Node.appendChild(l2Row); l2Node.appendChild(l2Children);
+
+    Object.entries(l3Groups).forEach(([l3Label, clusters]) => {
+      const mergedCount = clusters.reduce((a,c) => a + c.count, 0);
+      const primary = clusters.reduce((best, c) => c.count > best.count ? c : best, clusters[0]);
+      const cNode = document.createElement("div"); cNode.className = "tax-node";
+      const cRow = document.createElement("div"); cRow.className = "tax-row";
+      const sc = clusterSemanticColor(primary);
+      cRow.innerHTML = `<span class="tax-chevron" style="opacity:0">▶</span><span class="tax-pill" style="background:${sc.bg};color:${sc.fg}">L3</span><span class="tax-name">${l3Label}</span><span class="tax-cnt">${mergedCount}</span>`;
+
+      const themeDiv = document.createElement("div");
+      themeDiv.className = "tax-children";
+      themeDiv.style.display = "none";
+      themeDiv.innerHTML = `
+        <div class="tax-row" style="cursor:default">
+          <span class="tax-chevron" style="opacity:0">▶</span>
+          <span class="tax-pill" style="background:rgba(34,201,123,.1);color:var(--act)">Theme</span>
+          <span class="tax-name" style="font-size:10px">${primary.theme}</span>
+        </div>
+        <div class="tax-row" style="cursor:default">
+          <span class="tax-chevron" style="opacity:0">▶</span>
+          <span class="tax-pill" style="background:rgba(240,160,48,.1);color:var(--warn)">Sub</span>
+          <span class="tax-name" style="font-size:10px;color:var(--muted2)">${primary.subtheme}</span>
+        </div>`;
+      cRow.onclick = (e) => {
+        e.stopPropagation();
+        const isOpen = themeDiv.style.display !== "none";
+        themeDiv.style.display = isOpen ? "none" : "block";
+        document.querySelectorAll(".tax-row").forEach(r => r.classList.remove("selected"));
+        cRow.classList.add("selected");
+        selectCluster(primary.id);
+      };
+      cNode.appendChild(cRow); cNode.appendChild(themeDiv);
+      l2Children.appendChild(cNode);
+    });
+    l1Children.appendChild(l2Node);
+  });
+  taxTree.appendChild(l1Node);
+});
+
+// ── CLUSTER DETAIL ────────────────────────────────────────────────────────────
+function selectCluster(id) {
+  const c = CLUSTERS.find(x => x.id === id);
+  if (!c) return;
+  activeClusterId = id;
+  document.querySelectorAll(".cluster-chip").forEach(ch => {
+    ch.classList.toggle("active", parseInt(ch.dataset.id) === id);
+  });
+  const revs = REVIEWS.filter(r => r.cid === id).sort((a,b) => b.sev.s - a.sev.s);
+  const detailCard = document.getElementById("cluster-detail-card");
+  detailCard.style.display = "block";
+
+  document.getElementById("detail-title").textContent = c.label;
+
+  const sentColor = c.sentiment >= 0.05 ? "var(--act)" : c.sentiment <= -0.05 ? "var(--crit)" : "var(--warn)";
+  document.getElementById("detail-metrics").innerHTML = `
+    <div class="metric-tile"><div class="metric-val" style="color:${sentColor}">${c.sentiment > 0 ? "+" : ""}${c.sentiment.toFixed(2)}</div><div class="metric-lbl">Sentiment</div></div>
+    <div class="metric-tile"><div class="metric-val" style="color:${c.severity>0.5?"var(--crit)":c.severity>0.2?"var(--warn)":"var(--accent)"}">${Math.round(c.severity*100)}</div><div class="metric-lbl">Severity/100</div></div>
+    <div class="metric-tile"><div class="metric-val" style="color:var(--purple)">${Math.round(c.actionability*100)}</div><div class="metric-lbl">Actionability</div></div>
+    <div class="metric-tile"><div class="metric-val" style="color:var(--accent)">${Math.round(c.confidence*100)}%</div><div class="metric-lbl">Confidence</div></div>`;
+
+  const maxTfidf = Math.max(...c.signals.map(s => s.tfidf), 0.01);
+  document.getElementById("detail-freq").innerHTML = c.signals.map(sig => {
+    const isRep = Object.keys(c.phrases).some(p => p.includes(sig.term));
+    return `<div class="freq-row">
+      <div class="freq-word ${isRep ? "rep" : ""}">${sig.term}${isRep ? " ●" : ""}</div>
+      <div class="freq-track"><div class="freq-fill" style="width:${Math.round(sig.tfidf/maxTfidf*100)}%;background:var(--amber)"></div></div>
+      <div class="freq-n">${sig.raw}×</div>
+      <div class="freq-pct">${sig.pct.toFixed(0)}%</div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("detail-phrases").innerHTML = Object.entries(c.phrases).map(([phrase, cnt]) =>
+    `<div class="phrase-chip">"${phrase}" <span>×${cnt}</span></div>`).join("");
+
+  document.getElementById("detail-reviews").innerHTML = revs.map(r => {
+    const sentVal = (r.sent.c > 0 ? "+" : "") + r.sent.c.toFixed(2);
+    return `<div class="rev-card ${r.rep ? "rep" : ""}">
+      <div class="rev-hd">${r.rep ? "★ " : ""}${r.name} · ${r.sev.l} · ${sentVal}</div>
+      <div class="rev-txt">${r.text}</div>
+    </div>`;
+  }).join("");
+
+  detailCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+// ── OPPORTUNITY METRICS ───────────────────────────────────────────────────────
+const oppMetrics = document.getElementById('opp-metrics');
+const topCluster = [...CLUSTERS].sort((a,b) => b.priority - a.priority)[0];
+const posRate = Math.round(REVIEWS.filter(r => r.sent.l === 'Positive').length / REVIEWS.length * 100);
+const actionableCount = REVIEWS.filter(r => r.act.s >= 0.3).length;
+const billingLabel = (topCluster?.label||'').toLowerCase().includes('billing') ? 'Billing' : (topCluster?.label||'').split(' ').slice(0,1).join('') || 'Priority';
+oppMetrics.innerHTML = `
+  <div class="metric-tile"><div class="metric-val val-red">P1</div><div class="metric-lbl">Top Priority</div></div>
+  <div class="metric-tile"><div class="metric-val val-amber">${Math.round((topCluster?.priority||0)*100)}</div><div class="metric-lbl">${billingLabel} Score</div></div>
+  <div class="metric-tile"><div class="metric-val val-green">${posRate}%</div><div class="metric-lbl">Positive Rate</div></div>
+  <div class="metric-tile"><div class="metric-val val-blue">${actionableCount}</div><div class="metric-lbl">Actionable Revs</div></div>`;
+
+// ── OPPORTUNITY TABLE ─────────────────────────────────────────────────────────
+const tbody = document.getElementById("opp-tbody");
+const maxScore = Math.max(...CLUSTERS.map(c => c.priority), 0.01);
+[...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach(c => {
+  const pctW = Math.round((c.priority / maxScore) * 100);
+  const sc = clusterSemanticColor(c);
+  const sentVal = (c.sentiment >= 0 ? '+' : '') + c.sentiment.toFixed(2);
+  tbody.innerHTML += `<tr>
+    <td><div class="opp-cluster-name"><div class="opp-cdot" style="background:${sc.fg}"></div>${c.label}</div></td>
+    <td><span class="opp-rev-pill">${c.count}</span></td>
+    <td><div class="opp-score-cell"><div class="opp-score-bar-bg"><div class="opp-score-bar" style="width:${pctW}%;background:${sc.fg}"></div></div><span class="opp-score-num">${Math.round(c.priority*100)}</span></div></td>
+    <td><span class="${c.sentiment>=0?'opp-sent-pos':'opp-sent-neg'}">${sentVal}</span></td>
+    <td class="r"><span class="opp-sev-num ${(c.hsev||0)>5?'hot':''}">${c.hsev||0}</span></td>
+    <td class="r"><span class="opp-act-num">${Math.round((c.actionability||0)*100)}</span></td>
+    <td class="r"><span class="opp-signal-tag">${c.signals?.[0]?.term || "—"}</span></td>
+  </tr>`;
+});
+
+// ── DEMAND BARS ───────────────────────────────────────────────────────────────
+const demandEl = document.getElementById("demand-bars");
+const maxRevs = Math.max(...CLUSTERS.map(c => c.count), 1);
+[...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach(c => {
+  const pct = Math.round((c.count / maxRevs) * 100);
+  const sc = clusterSemanticColor(c);
+  demandEl.innerHTML += `<div class="demand-row">
+    <div class="demand-label">${c.label}</div>
+    <div class="demand-bar-wrap">
+      <div class="demand-rev-count">${c.count} revs</div>
+      <div class="demand-bar-bg"><div class="demand-bar" style="width:${pct}%;background:${sc.fg}"></div></div>
+      <div class="demand-p">P=${Math.round(c.priority*100)}</div>
+    </div>
+  </div>`;
+});
+
+const sortedByPriority = [...CLUSTERS].sort((a,b) => b.priority - a.priority);
+
+// ── ALERT CARDS (ACT VIEW) ───────────────────────────────────────────────────
+const alertsEl = document.getElementById('alerts-container');
+const insightCache = {};
+
+sortedByPriority.forEach(c => {
+  let sevLabel; if (c.priority > 0.55) sevLabel = 'CRITICAL'; else if (c.priority > 0.3) sevLabel = 'HIGH'; else sevLabel = 'LOW';
+  const topTerms = c.signals.slice(0, 4).map(s => s.term).join(', ');
+  const pctOfTotal = (c.count / REVIEWS.length * 100).toFixed(1);
+  const ratingImpact = (c.neg / REVIEWS.length * 1.5).toFixed(1);
+  const churnRisk = c.severity > 0.5 ? 'High' : c.severity > 0.25 ? 'Medium' : 'Low';
+
+  alertsEl.innerHTML += `<div class="alert-card" id="alert-${c.id}">
+    <div class="alert-hd">
+      <div class="alert-title">${c.label}</div>
+      <div class="alert-stats">
+        <span class="alert-stat alert-sev">${sevLabel}</span>
+        <span class="alert-stat">${c.count} reviews</span>
+        <span class="alert-stat">P ${Math.round(c.priority*100)}</span>
+        <span class="alert-stat">${c.sentiment > 0 ? '+' : ''}${c.sentiment.toFixed(2)} sent</span>
+      </div>
+    </div>
+    <div class="alert-signals">${topTerms || '—'}</div>
+    <div class="impact-row">
+      <div class="impact-tile"><div class="impact-tile-val">~${ratingImpact} ★</div><div class="impact-tile-lbl">Est. rating impact</div></div>
+      <div class="impact-tile"><div class="impact-tile-val">${churnRisk}</div><div class="impact-tile-lbl">Churn risk</div></div>
+      <div class="impact-tile"><div class="impact-tile-val">${pctOfTotal}%</div><div class="impact-tile-lbl">Of feedback volume</div></div>
+    </div>
+    <div class="alert-actions">
+      <button class="act-btn gen" id="gen-btn-${c.id}" onclick="generateInsight(${c.id})">⚡ Generate Insight</button>
+    </div>
+    <div id="insight-${c.id}"></div>
+  </div>`;
+});
+
+// ── GENERATE INSIGHT ─────────────────────────────────────────────────────────
+async function generateInsight(clusterId) {
+  const btn = document.getElementById(`gen-btn-${clusterId}`);
+  const target = document.getElementById(`insight-${clusterId}`);
+  if (!btn || !target) return;
+
+  if (insightCache[clusterId]) {
+    target.innerHTML = insightCache[clusterId];
+    btn.style.display = 'none';
+    return;
+  }
+
+  btn.classList.add('loading');
+  btn.textContent = '⏳ Generating…';
+  logAction('insight', `Generating insight for cluster ${clusterId}…`);
+
+  try {
+    const res = await fetch('/api/generate-insight', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({cluster_id: clusterId})
+    });
+    const data = await res.json();
+
+    if (data.error) {
+      btn.classList.remove('loading');
+      btn.textContent = '⚡ Generate Insight';
+      target.innerHTML = `<div style="color:var(--crit);font-size:11px;margin-top:8px">Error: ${data.error}</div>`;
+      return;
+    }
+
+    let insight;
+    try { insight = JSON.parse(data.insight); } catch(e) {
+      const jsonMatch = data.insight.match(/\{[\s\S]*\}/);
+      if (jsonMatch) { try { insight = JSON.parse(jsonMatch[0]); } catch(e2) { insight = null; } }
+    }
+
+    if (!insight) {
+      btn.classList.remove('loading');
+      btn.textContent = '⚡ Generate Insight';
+      target.innerHTML = `<div style="color:var(--crit);font-size:11px;margin-top:8px">Failed to parse insight. Raw response logged.</div>`;
+      return;
+    }
+
+    const cluster = CLUSTERS.find(c => c.id === clusterId);
+    const priClass = (insight.priority||'').toLowerCase() === 'critical' ? 'crit-bg' : (insight.priority||'').toLowerCase() === 'high' ? 'high-bg' : (insight.priority||'').toLowerCase() === 'medium' ? 'med-bg' : 'low-bg';
+    const priIcon = (insight.priority||'').toLowerCase() === 'critical' ? '🔴' : (insight.priority||'').toLowerCase() === 'high' ? '🟡' : (insight.priority||'').toLowerCase() === 'medium' ? '🟠' : '🟢';
+    const safeStr = (v) => { if (v == null) return '—'; if (typeof v === 'string') return v; if (Array.isArray(v)) return v.map(x => typeof x === 'string' ? x : (x?.text || x?.action || '—')).join(', '); if (typeof v === 'object') return v.text || v.content || v.summary || '—'; return String(v); };
+    const actions = (insight.recommended_actions || []).map(a => typeof a === 'string' ? a : (a?.text || a?.action || '—')).map(a => `<li>${a}</li>`).join('');
+    const slackText = (insight.slack_summary || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const clusterLabel = cluster ? cluster.label : `Cluster ${clusterId}`;
+
+    const html = `<div class="insight-report">
+      <div class="insight-section">
+        <div class="insight-label">Problem Statement</div>
+        <div class="insight-text">${safeStr(insight.problem_statement)}</div>
+      </div>
+      <div class="insight-section">
+        <div class="insight-label">Evidence</div>
+        <div class="insight-text">${safeStr(insight.evidence)}</div>
+      </div>
+      <div class="insight-section">
+        <div class="insight-label">Root Cause Hypothesis</div>
+        <div class="insight-text">${safeStr(insight.root_cause_hypothesis)}</div>
+      </div>
+      <div class="insight-section">
+        <div class="insight-label">User Impact</div>
+        <div class="insight-text">${safeStr(insight.user_impact)}</div>
+      </div>
+      <div class="insight-section">
+        <div class="insight-label">Recommended Actions</div>
+        <div class="insight-text"><ul>${actions || '<li>—</li>'}</ul></div>
+      </div>
+      <div class="insight-section">
+        <div class="insight-label">Priority</div>
+        <div class="insight-text"><span class="insight-priority-badge ${priClass}">${priIcon} ${insight.priority || '—'}</span></div>
+        <div class="insight-text" style="margin-top:4px;color:var(--muted2)">${safeStr(insight.priority_reasoning)}</div>
+      </div>
+      <div class="insight-section">
+        <div class="insight-label">Slack Summary — Copy & Share</div>
+        <div class="slack-block" id="slack-block-${clusterId}"><button class="slack-copy-btn" onclick="copySlack(${clusterId})">📋 Copy</button>${slackText}</div>
+      </div>
+      <div class="insight-actions">
+        <button class="act-btn primary" onclick="mockAction('jira','${clusterLabel}')">📋 Create Jira Ticket</button>
+        <button class="act-btn" onclick="mockAction('slack','#${clusterLabel.split(' ')[0].toLowerCase()}')">💬 Send to Slack</button>
+        <button class="act-btn" onclick="mockAction('notion','${clusterLabel}')">📓 Log to Notion</button>
+      </div>
+    </div>`;
+
+    insightCache[clusterId] = html;
+    target.innerHTML = html;
+    btn.style.display = 'none';
+    logAction('insight', `Insight generated for "${clusterLabel}"`);
+  } catch(e) {
+    btn.classList.remove('loading');
+    btn.textContent = '⚡ Generate Insight';
+    target.innerHTML = `<div style="color:var(--crit);font-size:11px;margin-top:8px">Error: ${e.message}</div>`;
+  }
+}
+
+function copySlack(clusterId) {
+  const block = document.getElementById(`slack-block-${clusterId}`);
+  if (!block) return;
+  const text = block.innerText.replace('📋 Copy', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = block.querySelector('.slack-copy-btn');
+    btn.classList.add('copied');
+    btn.textContent = '✓ Copied';
+    logAction('clipboard', 'Slack summary copied to clipboard');
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '📋 Copy'; }, 2000);
+  });
+}
+
+// ── ACTION LOG ────────────────────────────────────────────────────────────────
+const actionLog = document.getElementById("action-log");
+let actionLogHasEntries = false;
+
+function logAction(type, message) {
+  if (!actionLogHasEntries) { actionLog.innerHTML = ''; actionLogHasEntries = true; }
+  const icons = { jira:'📋', slack:'💬', email:'📧', notion:'📓', insight:'⚡', clipboard:'📎' };
+  const time = new Date().toLocaleTimeString();
+  const el = document.createElement("div");
+  el.style.cssText = "display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--s2);border:1px solid var(--border);border-radius:7px";
+  el.innerHTML = `<span>${icons[type]||'⚡'}</span><span style="font-size:12px;flex:1">${message}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tertiary)">${time}</span><span class="pill" style="background:rgba(0,200,83,.12);color:var(--act)">OK</span>`;
+  actionLog.prepend(el);
+}
+
+function mockAction(type, target) {
+  logAction(type, `${type.toUpperCase()} → <strong>${target}</strong>`);
+}
+
+// ── AGENT STATUS PANEL ───────────────────────────────────────────────────────
+const agentPanel = document.getElementById('agent-panel');
+const agents = [
+  {name:'Quality Monitor Agent', desc:'Watching for severity spikes and sentiment drops', live:false},
+  {name:'Trend Agent', desc:'Detecting week-over-week pattern shifts in clusters', live:false},
+  {name:'Slack Digest Agent', desc:'Sends a weekly rollup of top signals to your channel', live:false}
+];
+const now = new Date();
+agents.forEach((a, i) => {
+  const ts = new Date(now - (i+1)*3600000*Math.random()*5).toLocaleTimeString();
+  agentPanel.innerHTML += `<div class="agent-row">
+    <div class="agent-dot ${a.live ? 'live' : 'paused'}"></div>
+    <div class="agent-name">${a.name}</div>
+    <div class="agent-desc">${a.desc}</div>
+    <div class="agent-ts">Last: ${ts}</div>
+    <div class="agent-toggle ${a.live ? 'on' : ''}" onclick="toggleAgent(this, ${i})" data-idx="${i}"></div>
+  </div>`;
+});
+
+function toggleAgent(el, idx) {
+  const isOn = el.classList.toggle('on');
+  const dot = el.parentElement.querySelector('.agent-dot');
+  dot.classList.toggle('live', isOn);
+  dot.classList.toggle('paused', !isOn);
+  agents[idx].live = isOn;
+  const activeCount = agents.filter(a => a.live).length;
+  document.getElementById('act-agent-count').textContent = `${activeCount} active agent${activeCount !== 1 ? 's' : ''}`;
+  logAction('insight', `${agents[idx].name} ${isOn ? 'resumed' : 'paused'}`);
+}
+
+// ── INFERENCE AI CHATBOT ─────────────────────────────────────────────────────
+const clusterSummary = CLUSTERS.map(c => ({id:c.id,label:c.label,count:c.count,priority:c.priority,sentiment:c.sentiment,neg:c.neg,hsev:c.hsev,topSignals:c.signals.slice(0,4).map(s=>s.term),phrases:Object.keys(c.phrases).slice(0,3)})).slice(0,12);
+const reviewSample = REVIEWS.filter(r=>r.rep).slice(0,15).map(r=>({id:r.id,cluster:r.cid,text:r.text.slice(0,200),sev:r.sev.l,sent:r.sent.c}));
+const SYSTEM = `You are Inference AI — product intelligence assistant. You have:
+
+CLUSTERS (${CLUSTERS.length}): ${JSON.stringify(clusterSummary)}
+
+SAMPLE REVIEWS (${reviewSample.length} of ${REVIEWS.length}): ${JSON.stringify(reviewSample)}
+
+SCORING: Sentiment VADER -1..+1; Severity Critical/High/Medium/Low; Priority=0.5×sev+0.3×neg_ratio+0.2×size.
+
+RULES:
+- Be concise and direct. Max 4-5 sentences unless asked to elaborate.
+- Always cite actual cluster names, scores, review counts, and verbatim quotes.
+- Use **bold** for cluster names and numbers, and "quotes" for verbatim text.
+- When asked about urgent issues, rank by priority_score.
+- When asked about word patterns, reference signals and repeated_phrases.
+- When asked what to fix, give a ranked action list based on severity + actionability.`;
+
+const msgs = [];
+const chatMsgs = document.getElementById("chat-msgs");
+
+function sug(el) { document.getElementById("chat-inp").value = (el.textContent || '').replace(/^→\s*/, '').trim(); chat(); }
+
+function appendMsg(role, html) {
+  const d = document.createElement("div");
+  d.className = `msg ${role}`;
+  d.innerHTML = html;
+  chatMsgs.appendChild(d);
+  chatMsgs.scrollTop = chatMsgs.scrollHeight;
+  return d;
+}
+
+function showThinking() {
+  const d = document.createElement("div");
+  d.className = "thinking"; d.id = "thinking";
+  d.innerHTML = `<div class="td"></div><div class="td"></div><div class="td"></div>`;
+  chatMsgs.appendChild(d); chatMsgs.scrollTop = chatMsgs.scrollHeight;
+}
+
+async function chat() {
+  const inp = document.getElementById("chat-inp");
+  const text = inp.value.trim(); if (!text) return;
+  inp.value = "";
+  const btn = document.getElementById("send-btn"); btn.disabled = true;
+  document.querySelector(".status-dot").style.background = "var(--warn)";
+  appendMsg("user", text);
+  msgs.push({role:"user", content: text});
+  showThinking();
+
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({model:"llama-3.1-8b-instant", max_tokens:1000, messages:[{role:"system", content:SYSTEM}, ...msgs.slice(-10)]})
+    });
+    const data = await res.json();
+    document.getElementById("thinking")?.remove();
+    const reply = data.choices?.[0]?.message?.content || "I couldn't get a response. Check your XAI_API_KEY.";
+    msgs.push({role:"assistant", content: reply});
+    appendMsg("ai", reply.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\n/g,"<br>"));
+  } catch(e) {
+    document.getElementById("thinking")?.remove();
+    appendMsg("ai", `Error: ${e.message}`);
+  }
+  btn.disabled = false;
+  document.querySelector(".status-dot").style.background = "var(--act)";
+}
+</script>
+</body>
+</html>

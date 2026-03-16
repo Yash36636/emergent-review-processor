@@ -17,6 +17,9 @@ build/
 data/raw_reviews.docx
 *.docx
 
+# Node
+node_modules/
+
 # OS
 .DS_Store
 Thumbs.db

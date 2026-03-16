@@ -29,6 +29,9 @@ from .scoring    import score_sentiment, score_severity, score_actionability
 from .embedding  import embed_texts, reduce_dimensions
 from .clustering import cluster_embeddings, compute_confidence, find_representatives
 from .labelling  import label_clusters
+from .signals    import extract_cluster_signals
+from .phrases    import extract_cluster_phrases
+from .taxonomy   import assign_taxonomy
 
 
 def run_pipeline(reviews: list[dict], output_path: str) -> dict:
@@ -109,9 +112,20 @@ def run_pipeline(reviews: list[dict], output_path: str) -> dict:
             "umap_2d_y":          round(float(coords_2d[i][1]), 6),
         })
 
-    # Step 9: Aggregate
-    _step(8, "Aggregating cluster statistics")
-    cluster_summary = _aggregate(reviews, labels, cluster_info, scored)
+    # Step 8b: TF-IDF signals
+    _step(8, "Extracting TF-IDF signals")
+    cluster_signals = extract_cluster_signals(scored)
+
+    # Step 8c: Repeated phrases
+    _step(9, "Detecting repeated phrases")
+    cluster_phrases = extract_cluster_phrases(scored)
+
+    # Step 9: Aggregate (now includes signals, phrases, taxonomy, color)
+    _step(10, "Aggregating cluster statistics")
+    cluster_summary = _aggregate(
+        reviews, labels, cluster_info, scored,
+        cluster_signals, cluster_phrases,
+    )
 
     output = {
         "meta": {
@@ -158,18 +172,31 @@ def run_pipeline(reviews: list[dict], output_path: str) -> dict:
 
 _SEVERITY_ORDER = {"Critical": 0, "High": 1, "Medium": 2, "Low": 3}
 
+_CLUSTER_COLORS = [
+    "#f05454", "#9b70f5", "#f0a030", "#f07840",
+    "#3fbe7a", "#4da8f5", "#f0c454", "#e056a0",
+    "#56c8c8", "#a0a0ff", "#80c060", "#d07030",
+]
+
 
 def _aggregate(
     reviews: list[dict],
     labels,
     cluster_info: dict,
     scored: list[dict],
+    cluster_signals: dict | None = None,
+    cluster_phrases: dict | None = None,
 ) -> list[dict]:
+    cluster_signals = cluster_signals or {}
+    cluster_phrases = cluster_phrases or {}
+
     clusters: dict[int, list[int]] = defaultdict(list)
     for i, label in enumerate(labels):
         clusters[int(label)].append(i)
 
     summary = []
+    color_idx = 0
+
     for cid, indices in clusters.items():
         cr   = [scored[i] for i in indices]
         info = cluster_info.get(cid, {})
@@ -183,14 +210,22 @@ def _aggregate(
         pos   = sum(1 for r in cr if r["sentiment"]["label"] == "Positive")
         hi_sv = sum(1 for r in cr if r["severity"]["label"] in ("Critical", "High"))
 
+        avg_sent = round(float(np.mean(sent_scores)), 4)
+        label_str = info.get("label", f"Cluster {cid}")
+        taxonomy = assign_taxonomy(label_str, avg_sent)
+
+        color = _CLUSTER_COLORS[color_idx % len(_CLUSTER_COLORS)] if cid != -1 else "#666666"
+        if cid != -1:
+            color_idx += 1
+
         summary.append({
             "cluster_id":            cid,
-            "cluster_label":         info.get("label", f"Cluster {cid}"),
+            "cluster_label":         label_str,
             "is_noise":              cid == -1,
             "top_keywords":          info.get("keywords", []),
             "review_count":          len(indices),
             "review_ids":            [reviews[i]["id"] for i in indices],
-            "avg_sentiment":         round(float(np.mean(sent_scores)), 4),
+            "avg_sentiment":         avg_sent,
             "avg_severity_score":    round(float(np.mean(sev_scores)), 4),
             "avg_actionability":     round(float(np.mean(act_scores)), 4),
             "avg_confidence":        round(float(np.mean(conf_scores)), 4),
@@ -203,6 +238,10 @@ def _aggregate(
                 + 0.2 * min(len(indices) / 10, 1.0),
                 4,
             ),
+            "signals":  cluster_signals.get(cid, []),
+            "phrases":  cluster_phrases.get(cid, {}),
+            "taxonomy": taxonomy,
+            "color":    color,
         })
 
     summary.sort(key=lambda x: x["priority_score"], reverse=True)
