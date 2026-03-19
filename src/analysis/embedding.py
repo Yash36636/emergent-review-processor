@@ -2,38 +2,64 @@
 Text embedding and dimensionality reduction.
 
 Embedding  : sentence-transformers/all-MiniLM-L6-v2 (384-dim, CPU-friendly)
+             Fallback: TF-IDF + TruncatedSVD when sentence-transformers fails (MemoryError)
 Reduction  : UMAP  → 5-dim for clustering, 2-dim for visualization
 """
 
 import numpy as np
 
 
+def _embed_with_tfidf_svd(texts: list[str], n_components: int = 128) -> np.ndarray:
+    """
+    Lightweight fallback: TF-IDF + TruncatedSVD (LSA).
+    Uses only sklearn — no PyTorch/transformers. Safe on memory-constrained systems.
+    """
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.decomposition import TruncatedSVD
+
+    print("  Using TF-IDF + SVD fallback (lightweight, no neural model)...")
+    vec = TfidfVectorizer(
+        max_features=5000,
+        ngram_range=(1, 2),
+        min_df=1,
+        sublinear_tf=True,
+    )
+    tfidf = vec.fit_transform(texts)
+    n_comp = max(1, min(n_components, tfidf.shape[1] - 1, tfidf.shape[0] - 1))
+    svd = TruncatedSVD(n_components=n_comp, random_state=42)
+    dense = svd.fit_transform(tfidf)
+    norms = np.linalg.norm(dense, axis=1, keepdims=True)
+    norms = np.where(norms > 0, norms, 1.0)
+    return (dense / norms).astype(np.float32)
+
+
 def embed_texts(texts: list[str]) -> np.ndarray:
     """
-    Encode texts into L2-normalised 384-dim dense vectors.
-
-    The model is downloaded on first run (~90 MB) and cached locally at:
-    ~/.cache/torch/sentence_transformers/
-
-    Args:
-        texts: List of raw review strings.
-
-    Returns:
-        np.ndarray of shape (N, 384).
+    Encode texts into L2-normalised dense vectors.
+    Primary: sentence-transformers (384-dim). Fallback: TF-IDF+SVD (128-dim).
     """
-    from sentence_transformers import SentenceTransformer
+    try:
+        from sentence_transformers import SentenceTransformer
+    except (MemoryError, OSError, ImportError) as e:
+        import warnings
+        warnings.warn(f"sentence-transformers failed to load ({e}). Using TF-IDF+SVD fallback.")
+        return _embed_with_tfidf_svd(texts)
 
-    print("Loading sentence-transformers model (all-MiniLM-L6-v2)...")
-    model = SentenceTransformer("all-MiniLM-L6-v2")
-
-    print(f"Embedding {len(texts)} texts...")
-    embeddings = model.encode(
-        texts,
-        batch_size=32,
-        show_progress_bar=True,
-        normalize_embeddings=True,
-    )
-    return embeddings
+    try:
+        print("Loading sentence-transformers model (all-MiniLM-L6-v2)...")
+        model = SentenceTransformer("all-MiniLM-L6-v2")
+        print(f"Embedding {len(texts)} texts...")
+        embeddings = model.encode(
+            texts,
+            batch_size=32,
+            show_progress_bar=True,
+            normalize_embeddings=True,
+        )
+        return embeddings
+    except (MemoryError, OSError) as e:
+        import warnings
+        warnings.warn(f"sentence-transformers failed ({e}). Using TF-IDF+SVD fallback.")
+        return _embed_with_tfidf_svd(texts)
 
 
 def reduce_dimensions(

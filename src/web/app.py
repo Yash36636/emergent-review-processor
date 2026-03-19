@@ -50,8 +50,35 @@ def create_app(pipeline_data: dict) -> Flask:
     def api_data():
         return jsonify({"clusters": clusters, "reviews": reviews})
 
+    def _call_groq_direct(payload: dict) -> tuple[dict, int]:
+        """Call Groq API directly. Returns (data, status_code)."""
+        api_key = os.environ.get("GROQ_API_KEY", "").strip()
+        if not api_key:
+            return {"error": "GROQ_API_KEY not set in .env"}, 400
+        req = urllib.request.Request(
+            "https://api.groq.com/openai/v1/chat/completions",
+            data=json.dumps(payload).encode("utf-8"),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {api_key}",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            },
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=90) as resp:
+                return json.loads(resp.read()), 200
+        except urllib.error.HTTPError as e:
+            try:
+                err_body = json.loads(e.read().decode("utf-8", errors="replace"))
+            except Exception:
+                err_body = {"error": f"HTTP {e.code}"}
+            return err_body, min(e.code, 502)
+        except Exception as e:
+            return {"error": str(e)}, 502
+
     def _call_ai_api(payload: dict) -> tuple[dict, int]:
-        """Call Groq API directly or via Node proxy. Returns (data, status_code)."""
+        """Call Groq API via proxy (if running) or directly. Returns (data, status_code)."""
         proxy_url = os.environ.get("AI_PROXY_URL", "").strip()
         use_proxy = proxy_url and os.environ.get("USE_AI_PROXY", "").lower() in ("1", "true", "yes")
 
@@ -63,37 +90,22 @@ def create_app(pipeline_data: dict) -> Flask:
                     headers={"Content-Type": "application/json"},
                     method="POST",
                 )
-                with urllib.request.urlopen(req, timeout=60) as resp:
+                with urllib.request.urlopen(req, timeout=90) as resp:
                     return json.loads(resp.read()), 200
             except urllib.error.HTTPError as e:
                 try:
                     err_body = json.loads(e.read().decode("utf-8", errors="replace"))
                 except Exception:
                     err_body = {"error": f"HTTP {e.code}"}
-                return err_body, e.code
+                return err_body, min(e.code, 502)
+            except (OSError, urllib.error.URLError, TimeoutError) as e:
+                # Proxy unreachable — fallback to direct Groq
+                print(f"  [AI] Proxy unreachable ({e}), falling back to Groq direct")
+                return _call_groq_direct(payload)
             except Exception as e:
-                return {"error": str(e)}, 502
-        else:
-            api_key = os.environ.get("GROQ_API_KEY", "")
-            if not api_key:
-                return {"choices": [{"message": {"content": "Set GROQ_API_KEY in .env"}}]}, 400
-            req = urllib.request.Request(
-                "https://api.groq.com/openai/v1/chat/completions",
-                data=json.dumps(payload).encode("utf-8"),
-                headers={
-                    "Content-Type": "application/json",
-                    "Authorization": f"Bearer {api_key}",
-                },
-            )
-            try:
-                with urllib.request.urlopen(req, timeout=60) as resp:
-                    return json.loads(resp.read()), 200
-            except urllib.error.HTTPError as e:
-                try:
-                    err_body = json.loads(e.read().decode("utf-8", errors="replace"))
-                except Exception:
-                    err_body = {"error": f"HTTP {e.code}"}
-                return err_body, e.code
+                print(f"  [AI] Proxy error: {e}, falling back to Groq direct")
+                return _call_groq_direct(payload)
+        return _call_groq_direct(payload)
 
     @app.route("/api/chat", methods=["POST"])
     def chat_proxy():

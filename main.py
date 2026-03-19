@@ -3,30 +3,28 @@ Emergent Review Processor
 =========================
 Single entry point for the full pipeline:
 
-  Reviews (.docx / .xlsx)  -->  Parse  -->  ML Score + Cluster  -->  Excel Report / Web Dashboard
+  Reviews.docx  -->  Parse  -->  ML Score + Cluster  -->  Excel Report / Web Dashboard
 
 Usage
 -----
   # Full pipeline → Excel report only
-  python -X utf8 main.py run --input "Reviews.docx"
-  python -X utf8 main.py run --input "Processed_Reviews.xlsx"
+  python -X utf8 main.py run
 
   # Launch web dashboard (runs pipeline → generates Excel + serves dashboard)
-  python -X utf8 main.py web --input "Reviews.docx"
-  python -X utf8 main.py web --input "Processed_Reviews.xlsx"
+  python -X utf8 main.py web --input "C:\\path\\to\\Reviews.docx"
 
   # Web dashboard from pre-computed JSON (skip ML, instant)
   python -X utf8 main.py web --json review_analysis.json
 
   # Specify input/output explicitly
-  python -X utf8 main.py run --input "Reviews.docx" --output "Report.xlsx"
+  python -X utf8 main.py run --input "C:\\path\\to\\Reviews.docx" --output "C:\\path\\to\\Report.xlsx"
 
   # Save JSON intermediate output too
   python -X utf8 main.py run --save-json
 
 Pipeline steps
 --------------
-  1. Parse     .docx / .xlsx → structured review list
+  1. Parse     .docx → structured review list
   2. Score     VADER sentiment + keyword severity + actionability
   3. Embed     sentence-transformers all-MiniLM-L6-v2 (384-dim)
   4. Reduce    UMAP 384D → 5D (clustering) + 2D (viz coords)
@@ -41,36 +39,15 @@ import sys
 import argparse
 from pathlib import Path
 
-from dotenv import load_dotenv
-load_dotenv()
-
-DEFAULT_INPUT = r"C:\Users\yashm\Downloads\Reviews.docx"
-DEFAULT_XLSX  = r"C:\Users\yashm\Downloads\Review_Analysis.xlsx"
-DEFAULT_JSON  = r"C:\Users\yashm\Downloads\review_analysis.json"
-
-_SUPPORTED_EXTENSIONS = {".docx", ".xlsx", ".xls"}
-
-
-def _parse_input_file(input_path: Path) -> list[tuple[str, str, str]] | None:
-    """Auto-detect file type and parse reviews. Returns list of (name, date, text) or None on error."""
-    ext = input_path.suffix.lower()
-
-    if ext == ".docx":
-        from src.parsers import parse_docx_reviews
-        return parse_docx_reviews(str(input_path))
-
-    if ext in (".xlsx", ".xls"):
-        from src.parsers import parse_xlsx_reviews
-        return parse_xlsx_reviews(str(input_path))
-
-    print(f"\nError: Unsupported file type '{ext}'")
-    print(f"  Supported formats: {', '.join(sorted(_SUPPORTED_EXTENSIONS))}")
-    return None
+DEFAULT_INPUT = r"C:\Users\yashm\Downloads\Processed_Reviews.xlsx"
+DEFAULT_XLSX = r"C:\Users\yashm\Downloads\Review_Analysis.xlsx"
+DEFAULT_JSON = r"C:\Users\yashm\Downloads\review_analysis.json"
 
 
 # ── Full pipeline ─────────────────────────────────────────────────────────────
 
 def cmd_run(args):
+    from src.parsers             import parse_docx_reviews, parse_xlsx_reviews
     from src.analysis            import run_pipeline
     from src.exporters           import create_analysis_workbook
 
@@ -81,7 +58,7 @@ def cmd_run(args):
     # ── Step 0: Validate input ─────────────────────────────────────────────
     if not input_path.exists():
         print(f"\nError: Input file not found:\n  {input_path}")
-        print("Tip: pass --input with the correct path to your file (.docx or .xlsx)\n")
+        print("Tip: pass --input with the correct path to your Reviews.docx or .xlsx\n")
         return 1
 
     print(f"\n{'='*60}")
@@ -91,11 +68,15 @@ def cmd_run(args):
     print(f"  Output : {output_xlsx}")
     print(f"{'='*60}\n")
 
-    # ── Step 1: Parse input file ─────────────────────────────────────────────
-    print("[1/3] Parsing input file...")
-    raw = _parse_input_file(input_path)
+    # ── Step 1: Parse input ───────────────────────────────────────────────
+    print("[1/3] Parsing document...")
+    suffix = input_path.suffix.lower()
+    if suffix in (".xlsx", ".xls"):
+        raw = parse_xlsx_reviews(str(input_path))
+    else:
+        raw = parse_docx_reviews(str(input_path))
     if not raw:
-        print("Error: No reviews found in the file. Check the file format and contents.")
+        print("Error: No reviews found in the document. Check the file format.")
         return 1
 
     reviews = [
@@ -188,24 +169,30 @@ def cmd_web(args):
         c = pipeline_data.get("meta", {}).get("n_clusters", "?")
         print(f"  Loaded {n} reviews, {c} clusters from JSON.\n")
 
-    # ── Source 2: input file → full pipeline ─────────────────────────────
+    # ── Source 2: .docx file → full pipeline ─────────────────────────────
     else:
         input_path = Path(args.input)
         if not input_path.exists():
             print(f"\nError: Input file not found:\n  {input_path}")
-            print("Tip: pass --input with the correct path to your file (.docx or .xlsx)\n")
+            print("Tip: pass --input with the correct path to your .docx or .xlsx file\n")
             return 1
+
+        from src.parsers import parse_docx_reviews, parse_xlsx_reviews
 
         print(f"\n{'='*60}")
         print("  EMERGENT REVIEW PROCESSOR — WEB")
         print(f"{'='*60}")
         print(f"  Input : {input_path}\n")
 
-        print("[1/3] Parsing input file...")
-        raw = _parse_input_file(input_path)
+        print("[1/3] Parsing document...")
+        suffix = input_path.suffix.lower()
+        if suffix in (".xlsx", ".xls"):
+            raw = parse_xlsx_reviews(str(input_path))
+        else:
+            raw = parse_docx_reviews(str(input_path))
 
         if not raw:
-            print("Error: No reviews found in the file. Check the file format and contents.")
+            print("Error: No reviews found in the document. Check the file format.")
             return 1
 
         reviews = [
@@ -238,16 +225,15 @@ def cmd_web(args):
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="main.py",
-        description="Emergent Review Processor — .docx/.xlsx → ML analysis → Excel report / Web dashboard",
+        description="Emergent Review Processor — .docx → ML analysis → Excel report / Web dashboard",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  python -X utf8 main.py run --input Reviews.docx\n"
-            "  python -X utf8 main.py run --input Processed_Reviews.xlsx\n"
+            "  python -X utf8 main.py run\n"
             "  python -X utf8 main.py run --input Reviews.docx --output Report.xlsx\n"
             "  python -X utf8 main.py run --save-json\n"
             "  python -X utf8 main.py web --input Reviews.docx\n"
-            "  python -X utf8 main.py web --input Processed_Reviews.xlsx\n"
+            "  python -X utf8 main.py web --input Reviews.docx --port 8080\n"
             "  python -X utf8 main.py web --json review_analysis.json\n"
         ),
     )
@@ -256,13 +242,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser(
         "run",
-        help="Full pipeline: parse .docx/.xlsx → ML score/cluster → Excel report",
+        help="Full pipeline: parse .docx → ML score/cluster → Excel report",
     )
     p.add_argument(
         "--input", "-i",
         default=DEFAULT_INPUT,
         metavar="PATH",
-        help=f"Path to review file (.docx or .xlsx)  (default: {DEFAULT_INPUT})",
+        help=f"Path to .docx or .xlsx  (default: {DEFAULT_INPUT})",
     )
     p.add_argument(
         "--output", "-o",
@@ -292,7 +278,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--input", "-i",
         default=DEFAULT_INPUT,
         metavar="PATH",
-        help=f"Path to review file (.docx or .xlsx; required unless --json)  (default: {DEFAULT_INPUT})",
+        help=f"Path to .docx or .xlsx (required unless --json)  (default: {DEFAULT_INPUT})",
     )
     w.add_argument(
         "--json", "-j",

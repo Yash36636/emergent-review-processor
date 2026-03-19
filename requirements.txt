@@ -9,6 +9,13 @@ vaderSentiment>=3.3.2
 scikit-learn>=1.4.0      # includes built-in HDBSCAN (no C++ compiler needed)
 numpy>=1.26.0
 
+# Pipeline v4 (BERTopic + KeyBERT + LLM)
+bertopic>=0.16.0
+keybert>=0.8.0
+hdbscan>=0.8.33
+anthropic>=0.39.0
+pandas>=2.0.0
+
 # Web dashboard
 flask>=3.0.0
 python-dotenv>=1.0.0

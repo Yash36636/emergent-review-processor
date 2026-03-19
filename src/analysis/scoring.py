@@ -12,32 +12,65 @@ import re
 
 # ── Sentiment ─────────────────────────────────────────────────────────────────
 
+_VADER_ANALYZER = None
+_VADER_FAILED = False
+
+
+def _get_vader_analyzer():
+    """Lazy-load a single VADER instance to avoid MemoryError from repeated lexicon loads."""
+    global _VADER_ANALYZER, _VADER_FAILED
+    if _VADER_FAILED:
+        return None
+    if _VADER_ANALYZER is None:
+        try:
+            from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+            _VADER_ANALYZER = SentimentIntensityAnalyzer()
+        except (MemoryError, OSError) as e:
+            _VADER_FAILED = True
+            import warnings
+            warnings.warn(f"VADER failed to load ({e}). Using rule-based fallback.")
+            return None
+    return _VADER_ANALYZER
+
+
+def _fallback_sentiment(text: str) -> dict:
+    """Lightweight rule-based sentiment when VADER fails."""
+    tl = text.lower()
+    pos = sum(1 for w in ("great","love","awesome","perfect","good","nice","amazing","excellent") if w in tl)
+    neg = sum(1 for w in ("bad","terrible","awful","sucks","garbage","scam","worst","hate") if w in tl)
+    c = 0.0
+    if pos > neg:
+        c = min(0.5 + (pos - neg) * 0.1, 1.0)
+    elif neg > pos:
+        c = max(-0.5 - (neg - pos) * 0.1, -1.0)
+    return {
+        "compound":       round(c, 4),
+        "positive_ratio": round(max(0, c), 4) if c > 0 else 0,
+        "negative_ratio": round(max(0, -c), 4) if c < 0 else 0,
+        "neutral_ratio":  round(1 - abs(c), 4) if abs(c) < 1 else 0,
+        "label":          "Positive" if c >= 0.05 else ("Negative" if c <= -0.05 else "Neutral"),
+    }
+
+
 def score_sentiment(text: str) -> dict:
     """
-    VADER sentiment analysis.
-    Rule-based; works well on short social text without a GPU.
-
-    Returns compound (-1 to +1), component ratios, and label.
+    VADER sentiment analysis with singleton analyzer and MemoryError fallback.
     """
-    from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-    analyzer = SentimentIntensityAnalyzer()
-    scores   = analyzer.polarity_scores(text)
-    compound = scores["compound"]
-
-    if compound >= 0.05:
-        label = "Positive"
-    elif compound <= -0.05:
-        label = "Negative"
-    else:
-        label = "Neutral"
-
-    return {
-        "compound":       round(compound, 4),
-        "positive_ratio": round(scores["pos"], 4),
-        "negative_ratio": round(scores["neg"], 4),
-        "neutral_ratio":  round(scores["neu"], 4),
-        "label":          label,
-    }
+    analyzer = _get_vader_analyzer()
+    if analyzer is not None:
+        try:
+            scores = analyzer.polarity_scores(text)
+            compound = scores["compound"]
+            return {
+                "compound":       round(compound, 4),
+                "positive_ratio": round(scores["pos"], 4),
+                "negative_ratio": round(scores["neg"], 4),
+                "neutral_ratio":  round(scores["neu"], 4),
+                "label":          "Positive" if compound >= 0.05 else ("Negative" if compound <= -0.05 else "Neutral"),
+            }
+        except MemoryError:
+            pass
+    return _fallback_sentiment(text)
 
 
 # ── Severity ──────────────────────────────────────────────────────────────────

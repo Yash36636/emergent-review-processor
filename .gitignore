@@ -1,6 +1,9 @@
 # Generated output files
 output/
 *.csv
+review_analysis.json
+analysis.json
+taxonomy_history.json
 
 # Python
 __pycache__/
