@@ -5,12 +5,15 @@ Routes
 ------
   GET  /                    → Dashboard HTML (data injected via Jinja2)
   GET  /api/data            → JSON API for cluster + review data
+  POST /api/upload          → Upload .xlsx, run full ML pipeline, return JSON
   POST /api/chat            → Proxy to Groq API for the Wisdom AI chatbot
   POST /api/generate-insight→ Generate a 7-section PM insight report via Groq
 """
 
 import json
 import os
+import tempfile
+import traceback
 import urllib.request
 import urllib.error
 from pathlib import Path
@@ -129,7 +132,7 @@ def create_app(pipeline_data: dict) -> Flask:
         prompt = _build_insight_prompt(cluster, cluster_reviews, total_reviews)
 
         ai_payload = {
-            "model": "llama-3.1-8b-instant",  # higher free-tier limits than 70b
+            "model": "llama-3.1-8b-instant",
             "max_tokens": 2500,
             "messages": [{"role": "user", "content": prompt}],
         }
@@ -138,6 +141,63 @@ def create_app(pipeline_data: dict) -> Flask:
             return jsonify({"error": data.get("error", data.get("message", str(data)))}), status
         text = data.get("choices", [{}])[0].get("message", {}).get("content", "")
         return jsonify({"insight": text, "cluster_id": cluster_id})
+
+    @app.route("/api/upload", methods=["POST"])
+    def upload_and_process():
+        """Accept an .xlsx upload, run the full ML pipeline, update dashboard data."""
+        f = request.files.get("file")
+        if not f or not f.filename:
+            return jsonify({"error": "No file uploaded."}), 400
+        if not f.filename.lower().endswith((".xlsx", ".xls")):
+            return jsonify({"error": "Only .xlsx / .xls files are supported."}), 400
+
+        tmp = tempfile.NamedTemporaryFile(suffix=".xlsx", delete=False)
+        try:
+            f.save(tmp.name)
+            tmp.close()
+
+            from src.parsers import parse_xlsx_reviews
+            raw = parse_xlsx_reviews(tmp.name)
+            if not raw:
+                return jsonify({"error": "No reviews found in the uploaded file."}), 400
+
+            review_dicts = [
+                {"id": i + 1, "name": name, "date": date, "text": text}
+                for i, (name, date, text) in enumerate(raw)
+            ]
+
+            from src.analysis import run_pipeline
+            json_tmp = tempfile.NamedTemporaryFile(suffix=".json", delete=False).name
+            pipeline_data = run_pipeline(review_dicts, output_path=json_tmp)
+            try:
+                Path(json_tmp).unlink(missing_ok=True)
+            except Exception:
+                pass
+
+            new_clusters, new_reviews = _transform_pipeline_data(pipeline_data)
+
+            clusters.clear()
+            clusters.extend(new_clusters)
+            reviews.clear()
+            reviews.extend(new_reviews)
+
+            return jsonify({
+                "ok": True,
+                "clusters": clusters,
+                "reviews": reviews,
+                "meta": {
+                    "total_reviews": len(reviews),
+                    "n_clusters": len(clusters),
+                },
+            })
+        except Exception as e:
+            traceback.print_exc()
+            return jsonify({"error": str(e)}), 500
+        finally:
+            try:
+                Path(tmp.name).unlink(missing_ok=True)
+            except Exception:
+                pass
 
     return app
 

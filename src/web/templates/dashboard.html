@@ -1168,14 +1168,12 @@ async function chat() {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// UPLOAD & IN-BROWSER ANALYSIS ENGINE
+// UPLOAD — SERVER-SIDE ML PIPELINE
 // ══════════════════════════════════════════════════════════════════════════════
 
-let _uploadedRows = null;
-let _colMap = null;
-let _analysisResult = null;
+let _uploadedFile = null;
 
-// ── File handling ────────────────────────────────────────────────────────────
+// ── File handling (preview only — actual processing happens server-side) ─────
 const uploadZone = document.getElementById('upload-zone');
 const fileInput  = document.getElementById('upload-file-input');
 
@@ -1189,6 +1187,7 @@ uploadZone.addEventListener('drop', e => {
 fileInput.addEventListener('change', () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
 
 function handleFile(file) {
+  _uploadedFile = file;
   const reader = new FileReader();
   reader.onload = e => {
     const data = new Uint8Array(e.target.result);
@@ -1198,13 +1197,12 @@ function handleFile(file) {
     if (!rows.length) { alert('No data found in the first sheet.'); return; }
 
     const headers = Object.keys(rows[0]);
-    _colMap = detectColumns(headers);
-    _uploadedRows = rows;
+    const colMap = detectColumns(headers, rows);
 
     const mapEl = document.getElementById('col-map');
     mapEl.style.display = 'flex';
     mapEl.innerHTML = ['text','name','date'].map(key => {
-      const found = _colMap[key];
+      const found = colMap[key];
       return `<div class="col-indicator"><div class="col-dot ${found?'ok':'warn'}"></div>${key.charAt(0).toUpperCase()+key.slice(1)}: ${found||'not found'}</div>`;
     }).join('');
 
@@ -1215,7 +1213,7 @@ function handleFile(file) {
   reader.readAsArrayBuffer(file);
 }
 
-function detectColumns(headers) {
+function detectColumns(headers, rows) {
   const map = {text:null, name:null, date:null};
   const textPat  = /review|text|comment|feedback|description|content|message/i;
   const namePat  = /name|reviewer|author|user|customer/i;
@@ -1227,7 +1225,7 @@ function detectColumns(headers) {
   }
   if (!map.text) {
     const longest = headers.reduce((best, h) => {
-      const avg = _uploadedRows.slice(0,10).reduce((s,r) => s + String(r[h]||'').length, 0) / Math.min(10, _uploadedRows.length);
+      const avg = rows.slice(0,10).reduce((s,r) => s + String(r[h]||'').length, 0) / Math.min(10, rows.length);
       return avg > best.avg ? {h, avg} : best;
     }, {h:null, avg:0});
     if (longest.h) map.text = longest.h;
@@ -1235,133 +1233,9 @@ function detectColumns(headers) {
   return map;
 }
 
-// ── Scoring (ported from scoring.py) ─────────────────────────────────────────
-const _POS_WORDS = ['great','love','awesome','perfect','good','nice','amazing','excellent','wonderful','best','fantastic','superb','brilliant','outstanding','helpful'];
-const _NEG_WORDS = ['bad','terrible','awful','sucks','garbage','scam','worst','hate','useless','horrible','disgusting','poor','waste','pathetic','broken'];
-
-function scoreSentiment(text) {
-  const tl = text.toLowerCase();
-  let pos = 0, neg = 0;
-  for (const w of _POS_WORDS) if (tl.includes(w)) pos++;
-  for (const w of _NEG_WORDS) if (tl.includes(w)) neg++;
-  let c = 0;
-  if (pos > neg) c = Math.min(0.5 + (pos - neg) * 0.1, 1.0);
-  else if (neg > pos) c = Math.max(-0.5 - (neg - pos) * 0.1, -1.0);
-  const label = c >= 0.05 ? 'Positive' : (c <= -0.05 ? 'Negative' : 'Neutral');
-  return {compound: Math.round(c*10000)/10000, label};
-}
-
-const _SEV_TIERS = {
-  critical: {words:['scam','scammed','fraud','stole','disappeared','blank screen','lost money','lost credits','lost all','charged again','not deployed','never appeared','all disappeared'], weight:1.0},
-  high:     {words:['lost','gone','nothing',"doesn't work","doesn't deploy",'irrelevant','misunderstands','not worth','garbage','sucks','useless','forgetful','no chat history','no accountability','wasted','eating credits'], weight:0.6},
-  medium:   {words:['too fast','expensive','spendy','too much','confusing','improvement','not free','costs','pricy','slow','glitches'], weight:0.3},
-  low:      {words:['bad','not good','ok','average','boring'], weight:0.1}
-};
-
-function scoreSeverity(text) {
-  const tl = text.toLowerCase();
-  let raw = 0;
-  for (const tier of Object.values(_SEV_TIERS))
-    for (const kw of tier.words) if (tl.includes(kw)) raw += tier.weight;
-  const score = Math.min(Math.round(raw*10000)/10000, 1.0);
-  const label = score >= 0.8 ? 'Critical' : score >= 0.4 ? 'High' : score >= 0.15 ? 'Medium' : 'Low';
-  return {score, label};
-}
-
-const _ACT_FEATURES = ['chat history','memory','deploy','playstore','play store','credits','billing','support','response','blank screen','accuracy','subscription'];
-const _ACT_QUANT = [/\$\d+/, /\d+ credits/, /\d+ times/, /\d+ day/];
-const _ACT_IMPROVE = ['please improve','should be','needs to','would be better','wish it had','improvement'];
-const _ACT_VAGUE = [/^(ok|nice|bad|good|awesome|sucks?|vary bad|bakwaas)\.?$/i];
-
-function scoreActionability(text) {
-  const tl = text.toLowerCase().trim();
-  for (const p of _ACT_VAGUE) if (p.test(tl)) return {score:0, label:'Not actionable'};
-  let score = 0;
-  for (const kw of _ACT_FEATURES) if (tl.includes(kw)) score += 0.25;
-  for (const p of _ACT_QUANT) if (p.test(tl)) score += 0.3;
-  for (const ph of _ACT_IMPROVE) if (tl.includes(ph)) score += 0.2;
-  const wc = text.split(/\s+/).length;
-  if (wc > 30) score += 0.2; else if (wc > 10) score += 0.1;
-  score = Math.min(Math.round(score*10000)/10000, 1.0);
-  const label = score >= 0.6 ? 'Highly actionable' : score >= 0.3 ? 'Actionable' : score > 0 ? 'Low actionability' : 'Not actionable';
-  return {score, label};
-}
-
-// ── K-Means clustering ───────────────────────────────────────────────────────
-function kMeans(points, k, maxIter) {
-  maxIter = maxIter || 50;
-  const n = points.length, d = points[0].length;
-  const centroids = [];
-  const used = new Set();
-  while (centroids.length < k) {
-    const idx = Math.floor(Math.random() * n);
-    if (!used.has(idx)) { used.add(idx); centroids.push([...points[idx]]); }
-  }
-  const assign = new Int32Array(n);
-  for (let iter = 0; iter < maxIter; iter++) {
-    let changed = false;
-    for (let i = 0; i < n; i++) {
-      let best = 0, bestD = Infinity;
-      for (let c = 0; c < k; c++) {
-        let dist = 0;
-        for (let j = 0; j < d; j++) dist += (points[i][j] - centroids[c][j]) ** 2;
-        if (dist < bestD) { bestD = dist; best = c; }
-      }
-      if (assign[i] !== best) { assign[i] = best; changed = true; }
-    }
-    if (!changed) break;
-    for (let c = 0; c < k; c++) {
-      const sums = new Float64Array(d);
-      let cnt = 0;
-      for (let i = 0; i < n; i++) {
-        if (assign[i] === c) { cnt++; for (let j = 0; j < d; j++) sums[j] += points[i][j]; }
-      }
-      if (cnt > 0) for (let j = 0; j < d; j++) centroids[c][j] = sums[j] / cnt;
-    }
-  }
-  return assign;
-}
-
-// ── Auto-labeling (ported from labelling.py) ─────────────────────────────────
-const _VOTE_RULES = [
-  ['Login & Network Issues', ['login','sign in','signin','sign-in',"can't log",'cannot login','network error','network request','not loading','stuck on login']],
-  ['App Bugs & Crashes', ['blank screen','not deployed','play store','playstore','crash','deployment','glitch','disappeared','build failed']],
-  ['Misleading Free Tier', ['not free','says free','buy credits','credits exhausted','expo','hidden cost','free tier','free but']],
-  ['Billing & Credit Issues', ['lost credits','charged again','scam','rip off','not worth the money','waste of money','eats credit','overcharged','credits gone','subscription']],
-  ['AI Quality Issues', ['forgetful','no chat history','no accountability','code flaws','misunderstands','garbage code','no memory','inaccurate','wrong answers','too many errors']],
-  ['Support & Response Issues', ['support has disappeared','no reply','no response','unresponsive','no one responds']],
-  ['Positive Experience', ['great experience','best coding','love the app','best app ever','highly recommend','enhanced my career']],
-  ['Performance Issues', ['slow','lag','loading','takes forever','hangs','freeze','unresponsive','timeout']],
-  ['UI/UX Problems', ['confusing','hard to use','unintuitive','ugly','cluttered','navigation','interface','layout']],
-  ['Feature Requests', ['wish it had','would be nice','please add','should have','missing feature','need a','want to']],
-  ['Pricing Concerns', ['expensive','overpriced','too costly','price','pricing','cheaper','afford','money']],
-];
-
-function autoLabelCluster(texts) {
-  const votes = {};
-  for (const text of texts) {
-    const tl = text.toLowerCase();
-    let bestLabel = null, bestHits = 0;
-    for (const [label, phrases] of _VOTE_RULES) {
-      const hits = phrases.filter(p => tl.includes(p)).length;
-      if (hits > bestHits) { bestHits = hits; bestLabel = label; }
-    }
-    if (bestLabel) votes[bestLabel] = (votes[bestLabel] || 0) + 1;
-  }
-  if (Object.keys(votes).length) {
-    const topCount = Math.max(...Object.values(votes));
-    const winners = Object.entries(votes).filter(([,c]) => c === topCount);
-    if (winners.length === 1 && topCount >= 2) return winners[0][0];
-  }
-  const words = {};
-  for (const t of texts) for (const w of t.toLowerCase().split(/\W+/).filter(w => w.length > 3)) words[w] = (words[w]||0) + 1;
-  const topWords = Object.entries(words).sort((a,b) => b[1]-a[1]).slice(0,2).map(e => e[0]);
-  return topWords.length ? 'Theme: ' + topWords.join(', ') : 'Miscellaneous';
-}
-
-// ── Process uploaded data ────────────────────────────────────────────────────
+// ── Process: upload file to server → full ML pipeline ────────────────────────
 async function processUploadedData() {
-  if (!_uploadedRows || !_colMap) return;
+  if (!_uploadedFile) return;
   const btn = document.getElementById('process-btn');
   btn.disabled = true; btn.textContent = 'Processing…';
   const progressWrap = document.getElementById('progress-wrap');
@@ -1374,114 +1248,43 @@ async function processUploadedData() {
   const log = msg => { logArea.innerHTML += msg + '\n'; logArea.scrollTop = logArea.scrollHeight; };
   const prog = (pct, label) => { progressFill.style.width = pct + '%'; progressLabel.textContent = label; };
 
-  await new Promise(r => setTimeout(r, 30));
+  log(`Uploading ${_uploadedFile.name} to server…`);
+  prog(10, 'Uploading…');
 
-  log('Parsing rows…');
-  prog(5, 'Parsing rows…');
-  const rawReviews = [];
-  for (let i = 0; i < _uploadedRows.length; i++) {
-    const row = _uploadedRows[i];
-    const text = String(row[_colMap.text] || '').trim();
-    if (!text) continue;
-    rawReviews.push({
-      id: i + 1,
-      name: _colMap.name ? String(row[_colMap.name] || 'Anonymous') : 'Review ' + (i+1),
-      date: _colMap.date ? String(row[_colMap.date] || '') : '',
-      text
-    });
+  try {
+    const formData = new FormData();
+    formData.append('file', _uploadedFile);
+
+    prog(20, 'Running ML pipeline on server (VADER + HDBSCAN + TF-IDF)…');
+    log('Server is running the full ML pipeline: VADER sentiment, severity scoring, HDBSCAN clustering, TF-IDF signals…');
+
+    const res = await fetch('/api/upload', { method: 'POST', body: formData });
+    const data = await res.json();
+
+    if (!res.ok || data.error) {
+      log('Error: ' + (data.error || 'Server error'));
+      prog(0, 'Failed');
+      btn.disabled = false; btn.textContent = 'Process Reviews';
+      return;
+    }
+
+    prog(80, 'Rebuilding dashboard…');
+    log(`Pipeline complete: ${data.meta.total_reviews} reviews → ${data.meta.n_clusters} clusters.`);
+    log('Rebuilding dashboard…');
+
+    rebuildDashboard(data.clusters, data.reviews);
+
+    prog(100, 'Done');
+    log(`Dashboard updated. ${data.meta.total_reviews} reviews, ${data.meta.n_clusters} clusters with full VADER sentiment, HDBSCAN clustering, and TF-IDF signals.`);
+    btn.textContent = 'Process Reviews';
+    btn.disabled = false;
+    document.getElementById('export-card').style.display = 'block';
+    showView('unify');
+  } catch(e) {
+    log('Error: ' + e.message);
+    prog(0, 'Failed');
+    btn.disabled = false; btn.textContent = 'Process Reviews';
   }
-  log(`Parsed ${rawReviews.length} reviews (${_uploadedRows.length - rawReviews.length} blank rows skipped).`);
-  if (!rawReviews.length) { btn.disabled = false; btn.textContent = 'Process Reviews'; alert('No text data found.'); return; }
-
-  await new Promise(r => setTimeout(r, 20));
-
-  log('Scoring sentiment, severity, actionability…');
-  prog(20, 'Scoring reviews…');
-  const reviews = [];
-  for (const raw of rawReviews) {
-    const sent = scoreSentiment(raw.text);
-    const sev  = scoreSeverity(raw.text);
-    const act  = scoreActionability(raw.text);
-    reviews.push({ ...raw, sent:{c:sent.compound, l:sent.label}, sev:{s:sev.score, l:sev.label}, act:{s:act.score, l:act.label}, rep:false, conf:0, cid:-1 });
-  }
-  log(`Scored ${reviews.length} reviews.`);
-  await new Promise(r => setTimeout(r, 20));
-
-  log('Clustering reviews (K-Means)…');
-  prog(50, 'Clustering…');
-  const maxLen = Math.max(...reviews.map(r => r.text.length), 1);
-  const points = reviews.map(r => [
-    (r.sent.c + 1) / 2,
-    r.sev.s,
-    r.act.s,
-    r.text.length / maxLen
-  ]);
-  const k = Math.max(3, Math.min(7, Math.round(Math.sqrt(reviews.length / 2))));
-  const assignments = kMeans(points, k, 50);
-  for (let i = 0; i < reviews.length; i++) reviews[i].cid = assignments[i];
-  log(`Formed ${k} clusters.`);
-  await new Promise(r => setTimeout(r, 20));
-
-  log('Labelling clusters…');
-  prog(70, 'Labelling…');
-  const clusterTexts = {};
-  const clusterRevs = {};
-  for (const r of reviews) {
-    if (!clusterTexts[r.cid]) { clusterTexts[r.cid] = []; clusterRevs[r.cid] = []; }
-    clusterTexts[r.cid].push(r.text);
-    clusterRevs[r.cid].push(r);
-  }
-  const usedLabels = {};
-  const clusters = [];
-  const COLORS = ["#f05454","#9b70f5","#f0a030","#f07840","#3fbe7a","#4da8f5","#f0c454","#e056a0","#56c8c8","#a0a0ff"];
-  for (const cid of Object.keys(clusterTexts).map(Number).sort((a,b)=>a-b)) {
-    const texts = clusterTexts[cid];
-    const cReviews = clusterRevs[cid];
-    let label = autoLabelCluster(texts);
-    if (usedLabels[label]) { usedLabels[label]++; label += ' (' + usedLabels[label] + ')'; } else usedLabels[label] = 1;
-    const avgSent = cReviews.reduce((s,r) => s + r.sent.c, 0) / cReviews.length;
-    const avgSev  = cReviews.reduce((s,r) => s + r.sev.s, 0) / cReviews.length;
-    const avgAct  = cReviews.reduce((s,r) => s + r.act.s, 0) / cReviews.length;
-    const negCount = cReviews.filter(r => r.sent.l === 'Negative').length;
-    const posCount = cReviews.filter(r => r.sent.l === 'Positive').length;
-    const hsev = cReviews.filter(r => r.sev.s >= 0.4).length;
-    const priority = Math.round((0.5 * avgSev + 0.3 * (negCount/cReviews.length) + 0.2 * (cReviews.length/reviews.length)) * 10000) / 10000;
-
-    const wordFreq = {};
-    for (const t of texts) for (const w of t.toLowerCase().split(/\W+/).filter(w => w.length > 3)) wordFreq[w] = (wordFreq[w]||0) + 1;
-    const topSignals = Object.entries(wordFreq).sort((a,b) => b[1]-a[1]).slice(0,6).map(([term,raw]) => ({term, tfidf: raw/texts.length, raw, pct: Math.round(raw/texts.length*100)}));
-
-    const rep = cReviews.reduce((best,r) => {
-      const d = Math.abs(r.sent.c - avgSent) + Math.abs(r.sev.s - avgSev);
-      return d < best.d ? {r, d} : best;
-    }, {r:null, d:Infinity}).r;
-    if (rep) rep.rep = true;
-
-    clusters.push({
-      id: cid, label, color: COLORS[cid % COLORS.length], priority,
-      count: cReviews.length, sentiment: Math.round(avgSent*100)/100,
-      severity: Math.round(avgSev*100)/100, actionability: Math.round(avgAct*100)/100,
-      confidence: 0, neg: negCount, pos: posCount, hsev,
-      signals: topSignals, phrases: {}, top_keywords: topSignals.slice(0,3).map(s=>s.term),
-      l1:'', l2:'', l3: label, theme: label, subtheme: ''
-    });
-  }
-  clusters.sort((a,b) => b.priority - a.priority);
-  log(`Labelled ${clusters.length} clusters. Top: ${clusters[0]?.label || '—'}`);
-  await new Promise(r => setTimeout(r, 20));
-
-  log('Rebuilding dashboard…');
-  prog(85, 'Rebuilding dashboard…');
-  _analysisResult = {clusters, reviews};
-  rebuildDashboard(clusters, reviews);
-  await new Promise(r => setTimeout(r, 20));
-
-  prog(100, 'Done');
-  log(`Analysis complete. ${reviews.length} reviews → ${clusters.length} clusters.`);
-  btn.textContent = 'Process Reviews';
-  btn.disabled = false;
-  document.getElementById('export-card').style.display = 'block';
-  showView('unify');
 }
 
 // ── Rebuild entire dashboard ─────────────────────────────────────────────────
@@ -1643,10 +1446,10 @@ RULES:
 
 // ── Export functions ──────────────────────────────────────────────────────────
 function exportExcel() {
-  if (!_analysisResult) return;
+  if (!CLUSTERS.length) return;
   const wb = XLSX.utils.book_new();
 
-  const revRows = _analysisResult.reviews.map(r => ({
+  const revRows = REVIEWS.map(r => ({
     ID: r.id, Name: r.name, Date: r.date, Text: r.text,
     Sentiment: r.sent.c, 'Sentiment Label': r.sent.l,
     Severity: r.sev.s, 'Severity Label': r.sev.l,
@@ -1655,7 +1458,7 @@ function exportExcel() {
   }));
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(revRows), 'Reviews');
 
-  const csRows = _analysisResult.clusters.map(c => ({
+  const csRows = CLUSTERS.map(c => ({
     ID: c.id, Label: c.label, Reviews: c.count, Priority: c.priority,
     'Avg Sentiment': c.sentiment, 'Avg Severity': c.severity,
     'Avg Actionability': c.actionability, Negative: c.neg, Positive: c.pos,
@@ -1663,19 +1466,19 @@ function exportExcel() {
   }));
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(csRows), 'Cluster Summary');
 
-  const taxRows = _analysisResult.clusters.map(c => ({
+  const taxRows = CLUSTERS.map(c => ({
     L1: c.l1 || 'Uncategorized', L2: c.l2 || 'Uncategorized',
     L3: c.l3 || c.label, Theme: c.theme, Subtheme: c.subtheme || '',
     Reviews: c.count
   }));
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(taxRows), 'Taxonomy Tree');
 
-  const total = _analysisResult.reviews.length;
-  const avgSent2 = total ? _analysisResult.reviews.reduce((s,r) => s + r.sent.c, 0) / total : 0;
-  const posRate2 = total ? _analysisResult.reviews.filter(r => r.sent.l === 'Positive').length / total : 0;
-  const negRate2 = total ? _analysisResult.reviews.filter(r => r.sent.l === 'Negative').length / total : 0;
-  const detractors = _analysisResult.reviews.filter(r => r.sent.c < -0.3).length;
-  const promoters  = _analysisResult.reviews.filter(r => r.sent.c > 0.3).length;
+  const total = REVIEWS.length;
+  const avgSent2 = total ? REVIEWS.reduce((s,r) => s + r.sent.c, 0) / total : 0;
+  const posRate2 = total ? REVIEWS.filter(r => r.sent.l === 'Positive').length / total : 0;
+  const negRate2 = total ? REVIEWS.filter(r => r.sent.l === 'Negative').length / total : 0;
+  const detractors = REVIEWS.filter(r => r.sent.c < -0.3).length;
+  const promoters  = REVIEWS.filter(r => r.sent.c > 0.3).length;
   const nps = total ? Math.round((promoters/total - detractors/total) * 100) : 0;
   const cxRows = [
     {Metric: 'Total Reviews', Value: total},
@@ -1683,7 +1486,7 @@ function exportExcel() {
     {Metric: 'Positive Rate', Value: (posRate2*100).toFixed(1) + '%'},
     {Metric: 'Negative Rate', Value: (negRate2*100).toFixed(1) + '%'},
     {Metric: 'NPS Proxy', Value: nps},
-    {Metric: 'Clusters', Value: _analysisResult.clusters.length}
+    {Metric: 'Clusters', Value: CLUSTERS.length}
   ];
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(cxRows), 'CX Metrics');
 
@@ -1691,8 +1494,8 @@ function exportExcel() {
 }
 
 function exportJSON() {
-  if (!_analysisResult) return;
-  const blob = new Blob([JSON.stringify(_analysisResult, null, 2)], {type:'application/json'});
+  if (!CLUSTERS.length) return;
+  const blob = new Blob([JSON.stringify({clusters: CLUSTERS, reviews: REVIEWS}, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'review_analysis.json';
