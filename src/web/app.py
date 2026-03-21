@@ -199,7 +199,11 @@ Respond in EXACTLY this JSON format (no markdown fences, just raw JSON):
 # ── Pipeline → Dashboard transformer ────────────────────────────────────────
 
 def _transform_pipeline_data(data: dict) -> tuple[list, list]:
-    """Convert ``run_pipeline()`` output to the dashboard's CLUSTERS / REVIEWS."""
+    """Convert ``run_pipeline()`` output to the dashboard's CLUSTERS / REVIEWS.
+
+    Handles both v3 (src/analysis/pipeline.py) and v4 (review_pipeline_v4.py)
+    output schemas transparently.
+    """
     cluster_summary = data.get("cluster_summary", [])
     pipeline_reviews = data.get("reviews", [])
 
@@ -208,6 +212,26 @@ def _transform_pipeline_data(data: dict) -> tuple[list, list]:
         if cs.get("is_noise"):
             continue
         taxonomy = cs.get("taxonomy", {})
+
+        raw_signals = cs.get("signals", cs.get("pm_signals", []))
+        signals = []
+        for s in raw_signals:
+            signals.append({
+                "term":  s.get("term", ""),
+                "tfidf": s.get("tfidf", 0),
+                "raw":   s.get("raw", s.get("raw_freq", 0)),
+                "pct":   s.get("pct", s.get("pct_of_cluster", 0)),
+            })
+
+        raw_phrases = cs.get("phrases", cs.get("repeated_phrases", {}))
+        phrases = {}
+        for k, v in raw_phrases.items():
+            phrases[k] = v.get("count", v) if isinstance(v, dict) else v
+
+        top_kw = cs.get("top_keywords",
+                        cs.get("l3_keywords",
+                               cs.get("l1_keywords", [])))
+
         clusters.append({
             "id":            cs["cluster_id"],
             "label":         cs["cluster_label"],
@@ -221,8 +245,9 @@ def _transform_pipeline_data(data: dict) -> tuple[list, list]:
             "neg":           cs["negative_review_count"],
             "pos":           cs["positive_review_count"],
             "hsev":          cs["high_severity_count"],
-            "signals":       cs.get("signals", []),
-            "phrases":       cs.get("phrases", {}),
+            "signals":       signals,
+            "phrases":       phrases,
+            "top_keywords":  top_kw,
             "l1":            taxonomy.get("l1", ""),
             "l2":            taxonomy.get("l2", ""),
             "l3":            taxonomy.get("l3", ""),
