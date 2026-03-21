@@ -555,7 +555,7 @@ div.divider{height:0.5px;background:var(--border-subtle);margin:var(--space-4) 0
         <div class="opp-section">
           <div class="opp-sec-head">
             <span class="opp-sec-lbl">Cluster Opportunity Table</span>
-            <span class="opp-sec-hint">sorted by priority score</span>
+            <span class="opp-sec-hint">sorted by review count (descending)</span>
           </div>
           <table class="opp-table">
             <thead><tr>
@@ -870,7 +870,7 @@ oppMetrics.innerHTML = `
 // ── OPPORTUNITY TABLE ─────────────────────────────────────────────────────────
 const tbody = document.getElementById("opp-tbody");
 const maxScore = Math.max(...CLUSTERS.map(c => c.priority), 0.01);
-[...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach(c => {
+[...CLUSTERS].sort((a,b) => b.count - a.count).forEach(c => {
   const pctW = Math.round((c.priority / maxScore) * 100);
   const sc = clusterSemanticColor(c);
   const sentVal = (c.sentiment >= 0 ? '+' : '') + c.sentiment.toFixed(2);
@@ -888,7 +888,7 @@ const maxScore = Math.max(...CLUSTERS.map(c => c.priority), 0.01);
 // ── DEMAND BARS ───────────────────────────────────────────────────────────────
 const demandEl = document.getElementById("demand-bars");
 const maxRevs = Math.max(...CLUSTERS.map(c => c.count), 1);
-[...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach(c => {
+[...CLUSTERS].sort((a,b) => b.count - a.count).forEach(c => {
   const pct = Math.round((c.count / maxRevs) * 100);
   const sc = clusterSemanticColor(c);
   demandEl.innerHTML += `<div class="demand-row">
@@ -901,13 +901,13 @@ const maxRevs = Math.max(...CLUSTERS.map(c => c.count), 1);
   </div>`;
 });
 
-const sortedByPriority = [...CLUSTERS].sort((a,b) => b.priority - a.priority);
+const sortedByCount = [...CLUSTERS].sort((a,b) => b.count - a.count);
 
 // ── ALERT CARDS (ACT VIEW) ───────────────────────────────────────────────────
 const alertsEl = document.getElementById('alerts-container');
 const insightCache = {};
 
-sortedByPriority.forEach(c => {
+sortedByCount.forEach(c => {
   let sevLabel; if (c.priority > 0.55) sevLabel = 'CRITICAL'; else if (c.priority > 0.3) sevLabel = 'HIGH'; else sevLabel = 'LOW';
   const topTerms = c.signals.slice(0, 4).map(s => s.term).join(', ');
   const pctOfTotal = (c.count / REVIEWS.length * 100).toFixed(1);
@@ -1395,7 +1395,7 @@ function rebuildDashboard(newClusters, newReviews) {
   const tbody2 = document.getElementById('opp-tbody');
   tbody2.innerHTML = '';
   const mxS = Math.max(...CLUSTERS.map(c => c.priority), 0.01);
-  [...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach(c => {
+  [...CLUSTERS].sort((a,b) => b.count - a.count).forEach(c => {
     const pW = Math.round((c.priority / mxS) * 100);
     const sc = clusterSemanticColor(c);
     const sv = (c.sentiment >= 0 ? '+' : '') + c.sentiment.toFixed(2);
@@ -1405,7 +1405,7 @@ function rebuildDashboard(newClusters, newReviews) {
   const dEl = document.getElementById('demand-bars');
   dEl.innerHTML = '';
   const mxR = Math.max(...CLUSTERS.map(c => c.count), 1);
-  [...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach(c => {
+  [...CLUSTERS].sort((a,b) => b.count - a.count).forEach(c => {
     const pct = Math.round((c.count / mxR) * 100);
     const sc = clusterSemanticColor(c);
     dEl.innerHTML += `<div class="demand-row"><div class="demand-label">${c.label}</div><div class="demand-bar-wrap"><div class="demand-rev-count">${c.count} revs</div><div class="demand-bar-bg"><div class="demand-bar" style="width:${pct}%;background:${sc.fg}"></div></div><div class="demand-p">P=${Math.round(c.priority*100)}</div></div></div>`;
@@ -1414,7 +1414,7 @@ function rebuildDashboard(newClusters, newReviews) {
   const aEl = document.getElementById('alerts-container');
   aEl.innerHTML = '';
   Object.keys(insightCache).forEach(k => delete insightCache[k]);
-  [...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach(c => {
+  [...CLUSTERS].sort((a,b) => b.count - a.count).forEach(c => {
     let sevL; if (c.priority > 0.55) sevL='CRITICAL'; else if (c.priority > 0.3) sevL='HIGH'; else sevL='LOW';
     const tT = c.signals.slice(0,4).map(s=>s.term).join(', ');
     const pT = (c.count / REVIEWS.length * 100).toFixed(1);
