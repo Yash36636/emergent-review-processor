@@ -1,6 +1,6 @@
 """
-Emergent Review Processor
-=========================
+Review Processor
+================
 Single entry point for the full pipeline:
 
   Reviews.docx  -->  Parse  -->  ML Score + Cluster  -->  Excel Report / Web Dashboard
@@ -62,7 +62,7 @@ def cmd_run(args):
         return 1
 
     print(f"\n{'='*60}")
-    print("  EMERGENT REVIEW PROCESSOR")
+    print("  REVIEW PROCESSOR")
     print(f"{'='*60}")
     print(f"  Input  : {input_path}")
     print(f"  Output : {output_xlsx}")
@@ -159,7 +159,7 @@ def cmd_web(args):
             return 1
 
         print(f"\n{'='*60}")
-        print("  EMERGENT REVIEW PROCESSOR — WEB (from JSON)")
+        print("  REVIEW PROCESSOR — WEB (from JSON)")
         print(f"{'='*60}")
         print(f"  Loading : {json_path}\n")
 
@@ -180,7 +180,7 @@ def cmd_web(args):
         from src.parsers import parse_docx_reviews, parse_xlsx_reviews
 
         print(f"\n{'='*60}")
-        print("  EMERGENT REVIEW PROCESSOR — WEB")
+        print("  REVIEW PROCESSOR — WEB")
         print(f"{'='*60}")
         print(f"  Input : {input_path}\n")
 
@@ -225,7 +225,7 @@ def cmd_web(args):
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="main.py",
-        description="Emergent Review Processor — .docx → ML analysis → Excel report / Web dashboard",
+        description="Review Processor — .docx → ML analysis → Excel report / Web dashboard",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"

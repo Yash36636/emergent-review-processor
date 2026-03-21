@@ -46,7 +46,7 @@ def run_pipeline(reviews: list[dict], output_path: str) -> dict:
         The complete output dict (also written to output_path).
     """
     _sep()
-    print("EMERGENT REVIEW CLUSTERING PIPELINE")
+    print("REVIEW CLUSTERING PIPELINE")
     _sep()
 
     texts = [r["text"] for r in reviews]

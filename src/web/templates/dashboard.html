@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Emergent · Review Intelligence Platform</title>
+<title>Review Intelligence Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   EMERGENT INTEL — RAZORPAY-STYLE DESIGN SYSTEM
+   REVIEW INTELLIGENCE — DESIGN SYSTEM
    ============================================================ */
 :root {
   --bg-base:        #08080A;
@@ -314,6 +314,30 @@ body{
 .kg-name{font-size:var(--text-sm);font-weight:500;flex:1}
 .kg-links{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-tertiary)}
 
+/* ─── UPLOAD VIEW ──────────────────────────────────────────────────────────── */
+.upload-zone{border:2px dashed var(--border-default);border-radius:var(--radius-lg);padding:48px 24px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--blue-500);background:rgba(59,114,255,0.06)}
+.upload-zone-icon{font-size:36px;margin-bottom:12px;opacity:0.5}
+.upload-zone-text{font-size:var(--text-md);color:var(--text-secondary)}
+.upload-zone-hint{font-size:var(--text-xs);color:var(--text-tertiary);margin-top:6px}
+.col-map{display:flex;gap:var(--space-3);flex-wrap:wrap;margin-top:var(--space-3)}
+.col-indicator{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius-pill);border:0.5px solid var(--border-default);background:var(--bg-surface-2);font-size:var(--text-sm)}
+.col-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.col-dot.ok{background:var(--green)}.col-dot.warn{background:var(--amber)}
+.progress-wrap{margin-top:var(--space-4);display:none}
+.progress-bar-bg{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.progress-bar-fill{height:6px;width:0%;border-radius:3px;background:var(--blue-500);transition:width .3s}
+.progress-label{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-tertiary);margin-top:4px}
+.log-area{margin-top:var(--space-3);max-height:180px;overflow-y:auto;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-tertiary);background:var(--bg-surface-1);border:0.5px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-3);display:none}
+.export-section{margin-top:var(--space-4);display:none;gap:var(--space-3)}
+.export-btn{padding:8px 20px;border-radius:var(--radius-md);border:0.5px solid var(--border-default);background:var(--bg-surface-2);color:var(--text-primary);font-size:var(--text-sm);font-weight:500;cursor:pointer;transition:all var(--ease-fast)}
+.export-btn:hover{background:var(--bg-surface-3);border-color:var(--border-strong)}
+.export-btn.primary{background:var(--blue-500);border-color:var(--blue-600);color:#fff}
+.export-btn.primary:hover{background:var(--blue-600)}
+.process-btn{margin-top:var(--space-4);padding:10px 28px;border-radius:var(--radius-md);border:none;background:var(--blue-500);color:#fff;font-size:var(--text-sm);font-weight:600;cursor:pointer;transition:background .15s;display:none}
+.process-btn:hover{background:var(--blue-600)}
+.process-btn:disabled{opacity:0.4;cursor:not-allowed}
+
 div.divider{height:0.5px;background:var(--border-subtle);margin:var(--space-4) 0}
 .demand-row{display:flex;align-items:center;gap:0;padding:9px 16px;border-bottom:0.5px solid rgba(255,255,255,0.04)}
 .demand-row:last-child{border-bottom:none}
@@ -324,6 +348,7 @@ div.divider{height:0.5px;background:var(--border-subtle);margin:var(--space-4) 0
 .demand-bar{height:3px;border-radius:2px}
 .demand-p{font-family:var(--font-mono);font-size:10px;color:#2A2A3A;width:36px;text-align:right;flex-shrink:0}
 </style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="glow-1"></div><div class="glow-2"></div><div class="glow-3"></div><div class="glow-4"></div>
@@ -332,9 +357,10 @@ div.divider{height:0.5px;background:var(--border-subtle);margin:var(--space-4) 0
 <nav class="nav-wrap">
   <div class="logo-block">
     <span class="logo-slash">/</span>
-    <div class="logo-text"><em>emergent</em> intel</div>
+    <div class="logo-text"><em>review</em> intel</div>
   </div>
   <div class="tabs">
+    <div class="tab" data-view="upload" onclick="showView('upload')">Upload Reviews</div>
     <div class="tab active" data-view="unify" onclick="showView('unify')">Data Sources</div>
     <div class="tab" data-view="understand" onclick="showView('understand')">Taxonomy</div>
     <div class="tab" data-view="opportunity" onclick="showView('opportunity')">Opportunities</div>
@@ -351,6 +377,47 @@ div.divider{height:0.5px;background:var(--border-subtle);margin:var(--space-4) 0
 
   <!-- CENTER -->
   <div class="center">
+
+    <!-- ── UPLOAD VIEW ────────────────────────────────────────── -->
+    <div class="view" id="view-upload">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Upload Reviews</div>
+          <div class="view-sub">Drop an Excel file to analyse reviews entirely in your browser — no server upload needed</div>
+        </div>
+      </div>
+      <div class="view-body">
+
+        <div class="card">
+          <div class="card-hd"><div class="card-hd-title">Import Excel File</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Supports .xlsx files</div></div>
+          <div class="card-bd">
+            <div class="upload-zone" id="upload-zone">
+              <div class="upload-zone-icon">&#128194;</div>
+              <div class="upload-zone-text">Drag & drop your <strong>.xlsx</strong> file here, or click to browse</div>
+              <div class="upload-zone-hint">The file is read entirely in your browser — nothing is uploaded to any server</div>
+              <input type="file" id="upload-file-input" accept=".xlsx,.xls" style="display:none">
+            </div>
+            <div class="col-map" id="col-map" style="display:none"></div>
+            <div id="upload-file-info" style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-tertiary)"></div>
+            <button class="process-btn" id="process-btn" onclick="processUploadedData()">Process Reviews</button>
+            <div class="progress-wrap" id="progress-wrap">
+              <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+              <div class="progress-label" id="progress-label">Initialising…</div>
+            </div>
+            <div class="log-area" id="upload-log"></div>
+          </div>
+        </div>
+
+        <div class="card" id="export-card" style="display:none">
+          <div class="card-hd"><div class="card-hd-title">Export Results</div></div>
+          <div class="card-bd" style="display:flex;gap:12px;flex-wrap:wrap">
+            <button class="export-btn primary" onclick="exportExcel()">Download Analysis Excel</button>
+            <button class="export-btn" onclick="exportJSON()">Download JSON</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <!-- ── UNIFY VIEW ─────────────────────────────────────────── -->
     <div class="view active" id="view-unify">
@@ -526,7 +593,7 @@ div.divider{height:0.5px;background:var(--border-subtle);margin:var(--space-4) 0
       <div class="view-body">
 
         <div class="card">
-          <div class="card-hd"><div class="card-hd-title">Cluster Alerts — Generate Actionable Insights</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Click "Generate Insight" for a full PM-level report via Claude</div></div>
+          <div class="card-hd"><div class="card-hd-title">Cluster Alerts — Generate Actionable Insights</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Click "Generate Insight" for a full PM-level report via AI</div></div>
           <div class="card-bd" id="alerts-container"></div>
         </div>
 
@@ -1034,7 +1101,7 @@ function toggleAgent(el, idx) {
 // ── INFERENCE AI CHATBOT ─────────────────────────────────────────────────────
 const clusterSummary = CLUSTERS.map(c => ({id:c.id,label:c.label,count:c.count,priority:c.priority,sentiment:c.sentiment,neg:c.neg,hsev:c.hsev,topSignals:c.signals.slice(0,4).map(s=>s.term),phrases:Object.keys(c.phrases).slice(0,3)})).slice(0,12);
 const reviewSample = REVIEWS.filter(r=>r.rep).slice(0,15).map(r=>({id:r.id,cluster:r.cid,text:r.text.slice(0,200),sev:r.sev.l,sent:r.sent.c}));
-const SYSTEM = `You are Inference AI — product intelligence assistant. You have:
+let SYSTEM = `You are Inference AI — product intelligence assistant. You have:
 
 CLUSTERS (${CLUSTERS.length}): ${JSON.stringify(clusterSummary)}
 
@@ -1098,6 +1165,539 @@ async function chat() {
   }
   btn.disabled = false;
   document.querySelector(".status-dot").style.background = "var(--act)";
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// UPLOAD & IN-BROWSER ANALYSIS ENGINE
+// ══════════════════════════════════════════════════════════════════════════════
+
+let _uploadedRows = null;
+let _colMap = null;
+let _analysisResult = null;
+
+// ── File handling ────────────────────────────────────────────────────────────
+const uploadZone = document.getElementById('upload-zone');
+const fileInput  = document.getElementById('upload-file-input');
+
+uploadZone.addEventListener('click', () => fileInput.click());
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault(); uploadZone.classList.remove('drag-over');
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
+
+function handleFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const data = new Uint8Array(e.target.result);
+    const wb = XLSX.read(data, {type:'array'});
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
+    if (!rows.length) { alert('No data found in the first sheet.'); return; }
+
+    const headers = Object.keys(rows[0]);
+    _colMap = detectColumns(headers);
+    _uploadedRows = rows;
+
+    const mapEl = document.getElementById('col-map');
+    mapEl.style.display = 'flex';
+    mapEl.innerHTML = ['text','name','date'].map(key => {
+      const found = _colMap[key];
+      return `<div class="col-indicator"><div class="col-dot ${found?'ok':'warn'}"></div>${key.charAt(0).toUpperCase()+key.slice(1)}: ${found||'not found'}</div>`;
+    }).join('');
+
+    document.getElementById('upload-file-info').textContent = `${file.name} — ${rows.length} rows, ${headers.length} columns`;
+    document.getElementById('process-btn').style.display = 'inline-block';
+    document.getElementById('export-card').style.display = 'none';
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function detectColumns(headers) {
+  const map = {text:null, name:null, date:null};
+  const textPat  = /review|text|comment|feedback|description|content|message/i;
+  const namePat  = /name|reviewer|author|user|customer/i;
+  const datePat  = /date|time|created|posted|timestamp/i;
+  for (const h of headers) {
+    if (!map.text && textPat.test(h)) map.text = h;
+    if (!map.name && namePat.test(h)) map.name = h;
+    if (!map.date && datePat.test(h)) map.date = h;
+  }
+  if (!map.text) {
+    const longest = headers.reduce((best, h) => {
+      const avg = _uploadedRows.slice(0,10).reduce((s,r) => s + String(r[h]||'').length, 0) / Math.min(10, _uploadedRows.length);
+      return avg > best.avg ? {h, avg} : best;
+    }, {h:null, avg:0});
+    if (longest.h) map.text = longest.h;
+  }
+  return map;
+}
+
+// ── Scoring (ported from scoring.py) ─────────────────────────────────────────
+const _POS_WORDS = ['great','love','awesome','perfect','good','nice','amazing','excellent','wonderful','best','fantastic','superb','brilliant','outstanding','helpful'];
+const _NEG_WORDS = ['bad','terrible','awful','sucks','garbage','scam','worst','hate','useless','horrible','disgusting','poor','waste','pathetic','broken'];
+
+function scoreSentiment(text) {
+  const tl = text.toLowerCase();
+  let pos = 0, neg = 0;
+  for (const w of _POS_WORDS) if (tl.includes(w)) pos++;
+  for (const w of _NEG_WORDS) if (tl.includes(w)) neg++;
+  let c = 0;
+  if (pos > neg) c = Math.min(0.5 + (pos - neg) * 0.1, 1.0);
+  else if (neg > pos) c = Math.max(-0.5 - (neg - pos) * 0.1, -1.0);
+  const label = c >= 0.05 ? 'Positive' : (c <= -0.05 ? 'Negative' : 'Neutral');
+  return {compound: Math.round(c*10000)/10000, label};
+}
+
+const _SEV_TIERS = {
+  critical: {words:['scam','scammed','fraud','stole','disappeared','blank screen','lost money','lost credits','lost all','charged again','not deployed','never appeared','all disappeared'], weight:1.0},
+  high:     {words:['lost','gone','nothing',"doesn't work","doesn't deploy",'irrelevant','misunderstands','not worth','garbage','sucks','useless','forgetful','no chat history','no accountability','wasted','eating credits'], weight:0.6},
+  medium:   {words:['too fast','expensive','spendy','too much','confusing','improvement','not free','costs','pricy','slow','glitches'], weight:0.3},
+  low:      {words:['bad','not good','ok','average','boring'], weight:0.1}
+};
+
+function scoreSeverity(text) {
+  const tl = text.toLowerCase();
+  let raw = 0;
+  for (const tier of Object.values(_SEV_TIERS))
+    for (const kw of tier.words) if (tl.includes(kw)) raw += tier.weight;
+  const score = Math.min(Math.round(raw*10000)/10000, 1.0);
+  const label = score >= 0.8 ? 'Critical' : score >= 0.4 ? 'High' : score >= 0.15 ? 'Medium' : 'Low';
+  return {score, label};
+}
+
+const _ACT_FEATURES = ['chat history','memory','deploy','playstore','play store','credits','billing','support','response','blank screen','accuracy','subscription'];
+const _ACT_QUANT = [/\$\d+/, /\d+ credits/, /\d+ times/, /\d+ day/];
+const _ACT_IMPROVE = ['please improve','should be','needs to','would be better','wish it had','improvement'];
+const _ACT_VAGUE = [/^(ok|nice|bad|good|awesome|sucks?|vary bad|bakwaas)\.?$/i];
+
+function scoreActionability(text) {
+  const tl = text.toLowerCase().trim();
+  for (const p of _ACT_VAGUE) if (p.test(tl)) return {score:0, label:'Not actionable'};
+  let score = 0;
+  for (const kw of _ACT_FEATURES) if (tl.includes(kw)) score += 0.25;
+  for (const p of _ACT_QUANT) if (p.test(tl)) score += 0.3;
+  for (const ph of _ACT_IMPROVE) if (tl.includes(ph)) score += 0.2;
+  const wc = text.split(/\s+/).length;
+  if (wc > 30) score += 0.2; else if (wc > 10) score += 0.1;
+  score = Math.min(Math.round(score*10000)/10000, 1.0);
+  const label = score >= 0.6 ? 'Highly actionable' : score >= 0.3 ? 'Actionable' : score > 0 ? 'Low actionability' : 'Not actionable';
+  return {score, label};
+}
+
+// ── K-Means clustering ───────────────────────────────────────────────────────
+function kMeans(points, k, maxIter) {
+  maxIter = maxIter || 50;
+  const n = points.length, d = points[0].length;
+  const centroids = [];
+  const used = new Set();
+  while (centroids.length < k) {
+    const idx = Math.floor(Math.random() * n);
+    if (!used.has(idx)) { used.add(idx); centroids.push([...points[idx]]); }
+  }
+  const assign = new Int32Array(n);
+  for (let iter = 0; iter < maxIter; iter++) {
+    let changed = false;
+    for (let i = 0; i < n; i++) {
+      let best = 0, bestD = Infinity;
+      for (let c = 0; c < k; c++) {
+        let dist = 0;
+        for (let j = 0; j < d; j++) dist += (points[i][j] - centroids[c][j]) ** 2;
+        if (dist < bestD) { bestD = dist; best = c; }
+      }
+      if (assign[i] !== best) { assign[i] = best; changed = true; }
+    }
+    if (!changed) break;
+    for (let c = 0; c < k; c++) {
+      const sums = new Float64Array(d);
+      let cnt = 0;
+      for (let i = 0; i < n; i++) {
+        if (assign[i] === c) { cnt++; for (let j = 0; j < d; j++) sums[j] += points[i][j]; }
+      }
+      if (cnt > 0) for (let j = 0; j < d; j++) centroids[c][j] = sums[j] / cnt;
+    }
+  }
+  return assign;
+}
+
+// ── Auto-labeling (ported from labelling.py) ─────────────────────────────────
+const _VOTE_RULES = [
+  ['Login & Network Issues', ['login','sign in','signin','sign-in',"can't log",'cannot login','network error','network request','not loading','stuck on login']],
+  ['App Bugs & Crashes', ['blank screen','not deployed','play store','playstore','crash','deployment','glitch','disappeared','build failed']],
+  ['Misleading Free Tier', ['not free','says free','buy credits','credits exhausted','expo','hidden cost','free tier','free but']],
+  ['Billing & Credit Issues', ['lost credits','charged again','scam','rip off','not worth the money','waste of money','eats credit','overcharged','credits gone','subscription']],
+  ['AI Quality Issues', ['forgetful','no chat history','no accountability','code flaws','misunderstands','garbage code','no memory','inaccurate','wrong answers','too many errors']],
+  ['Support & Response Issues', ['support has disappeared','no reply','no response','unresponsive','no one responds']],
+  ['Positive Experience', ['great experience','best coding','love the app','best app ever','highly recommend','enhanced my career']],
+  ['Performance Issues', ['slow','lag','loading','takes forever','hangs','freeze','unresponsive','timeout']],
+  ['UI/UX Problems', ['confusing','hard to use','unintuitive','ugly','cluttered','navigation','interface','layout']],
+  ['Feature Requests', ['wish it had','would be nice','please add','should have','missing feature','need a','want to']],
+  ['Pricing Concerns', ['expensive','overpriced','too costly','price','pricing','cheaper','afford','money']],
+];
+
+function autoLabelCluster(texts) {
+  const votes = {};
+  for (const text of texts) {
+    const tl = text.toLowerCase();
+    let bestLabel = null, bestHits = 0;
+    for (const [label, phrases] of _VOTE_RULES) {
+      const hits = phrases.filter(p => tl.includes(p)).length;
+      if (hits > bestHits) { bestHits = hits; bestLabel = label; }
+    }
+    if (bestLabel) votes[bestLabel] = (votes[bestLabel] || 0) + 1;
+  }
+  if (Object.keys(votes).length) {
+    const topCount = Math.max(...Object.values(votes));
+    const winners = Object.entries(votes).filter(([,c]) => c === topCount);
+    if (winners.length === 1 && topCount >= 2) return winners[0][0];
+  }
+  const words = {};
+  for (const t of texts) for (const w of t.toLowerCase().split(/\W+/).filter(w => w.length > 3)) words[w] = (words[w]||0) + 1;
+  const topWords = Object.entries(words).sort((a,b) => b[1]-a[1]).slice(0,2).map(e => e[0]);
+  return topWords.length ? 'Theme: ' + topWords.join(', ') : 'Miscellaneous';
+}
+
+// ── Process uploaded data ────────────────────────────────────────────────────
+async function processUploadedData() {
+  if (!_uploadedRows || !_colMap) return;
+  const btn = document.getElementById('process-btn');
+  btn.disabled = true; btn.textContent = 'Processing…';
+  const progressWrap = document.getElementById('progress-wrap');
+  const progressFill = document.getElementById('progress-fill');
+  const progressLabel = document.getElementById('progress-label');
+  const logArea = document.getElementById('upload-log');
+  progressWrap.style.display = 'block';
+  logArea.style.display = 'block';
+  logArea.innerHTML = '';
+  const log = msg => { logArea.innerHTML += msg + '\n'; logArea.scrollTop = logArea.scrollHeight; };
+  const prog = (pct, label) => { progressFill.style.width = pct + '%'; progressLabel.textContent = label; };
+
+  await new Promise(r => setTimeout(r, 30));
+
+  log('Parsing rows…');
+  prog(5, 'Parsing rows…');
+  const rawReviews = [];
+  for (let i = 0; i < _uploadedRows.length; i++) {
+    const row = _uploadedRows[i];
+    const text = String(row[_colMap.text] || '').trim();
+    if (!text) continue;
+    rawReviews.push({
+      id: i + 1,
+      name: _colMap.name ? String(row[_colMap.name] || 'Anonymous') : 'Review ' + (i+1),
+      date: _colMap.date ? String(row[_colMap.date] || '') : '',
+      text
+    });
+  }
+  log(`Parsed ${rawReviews.length} reviews (${_uploadedRows.length - rawReviews.length} blank rows skipped).`);
+  if (!rawReviews.length) { btn.disabled = false; btn.textContent = 'Process Reviews'; alert('No text data found.'); return; }
+
+  await new Promise(r => setTimeout(r, 20));
+
+  log('Scoring sentiment, severity, actionability…');
+  prog(20, 'Scoring reviews…');
+  const reviews = [];
+  for (const raw of rawReviews) {
+    const sent = scoreSentiment(raw.text);
+    const sev  = scoreSeverity(raw.text);
+    const act  = scoreActionability(raw.text);
+    reviews.push({ ...raw, sent:{c:sent.compound, l:sent.label}, sev:{s:sev.score, l:sev.label}, act:{s:act.score, l:act.label}, rep:false, conf:0, cid:-1 });
+  }
+  log(`Scored ${reviews.length} reviews.`);
+  await new Promise(r => setTimeout(r, 20));
+
+  log('Clustering reviews (K-Means)…');
+  prog(50, 'Clustering…');
+  const maxLen = Math.max(...reviews.map(r => r.text.length), 1);
+  const points = reviews.map(r => [
+    (r.sent.c + 1) / 2,
+    r.sev.s,
+    r.act.s,
+    r.text.length / maxLen
+  ]);
+  const k = Math.max(3, Math.min(7, Math.round(Math.sqrt(reviews.length / 2))));
+  const assignments = kMeans(points, k, 50);
+  for (let i = 0; i < reviews.length; i++) reviews[i].cid = assignments[i];
+  log(`Formed ${k} clusters.`);
+  await new Promise(r => setTimeout(r, 20));
+
+  log('Labelling clusters…');
+  prog(70, 'Labelling…');
+  const clusterTexts = {};
+  const clusterRevs = {};
+  for (const r of reviews) {
+    if (!clusterTexts[r.cid]) { clusterTexts[r.cid] = []; clusterRevs[r.cid] = []; }
+    clusterTexts[r.cid].push(r.text);
+    clusterRevs[r.cid].push(r);
+  }
+  const usedLabels = {};
+  const clusters = [];
+  const COLORS = ["#f05454","#9b70f5","#f0a030","#f07840","#3fbe7a","#4da8f5","#f0c454","#e056a0","#56c8c8","#a0a0ff"];
+  for (const cid of Object.keys(clusterTexts).map(Number).sort((a,b)=>a-b)) {
+    const texts = clusterTexts[cid];
+    const cReviews = clusterRevs[cid];
+    let label = autoLabelCluster(texts);
+    if (usedLabels[label]) { usedLabels[label]++; label += ' (' + usedLabels[label] + ')'; } else usedLabels[label] = 1;
+    const avgSent = cReviews.reduce((s,r) => s + r.sent.c, 0) / cReviews.length;
+    const avgSev  = cReviews.reduce((s,r) => s + r.sev.s, 0) / cReviews.length;
+    const avgAct  = cReviews.reduce((s,r) => s + r.act.s, 0) / cReviews.length;
+    const negCount = cReviews.filter(r => r.sent.l === 'Negative').length;
+    const posCount = cReviews.filter(r => r.sent.l === 'Positive').length;
+    const hsev = cReviews.filter(r => r.sev.s >= 0.4).length;
+    const priority = Math.round((0.5 * avgSev + 0.3 * (negCount/cReviews.length) + 0.2 * (cReviews.length/reviews.length)) * 10000) / 10000;
+
+    const wordFreq = {};
+    for (const t of texts) for (const w of t.toLowerCase().split(/\W+/).filter(w => w.length > 3)) wordFreq[w] = (wordFreq[w]||0) + 1;
+    const topSignals = Object.entries(wordFreq).sort((a,b) => b[1]-a[1]).slice(0,6).map(([term,raw]) => ({term, tfidf: raw/texts.length, raw, pct: Math.round(raw/texts.length*100)}));
+
+    const rep = cReviews.reduce((best,r) => {
+      const d = Math.abs(r.sent.c - avgSent) + Math.abs(r.sev.s - avgSev);
+      return d < best.d ? {r, d} : best;
+    }, {r:null, d:Infinity}).r;
+    if (rep) rep.rep = true;
+
+    clusters.push({
+      id: cid, label, color: COLORS[cid % COLORS.length], priority,
+      count: cReviews.length, sentiment: Math.round(avgSent*100)/100,
+      severity: Math.round(avgSev*100)/100, actionability: Math.round(avgAct*100)/100,
+      confidence: 0, neg: negCount, pos: posCount, hsev,
+      signals: topSignals, phrases: {}, top_keywords: topSignals.slice(0,3).map(s=>s.term),
+      l1:'', l2:'', l3: label, theme: label, subtheme: ''
+    });
+  }
+  clusters.sort((a,b) => b.priority - a.priority);
+  log(`Labelled ${clusters.length} clusters. Top: ${clusters[0]?.label || '—'}`);
+  await new Promise(r => setTimeout(r, 20));
+
+  log('Rebuilding dashboard…');
+  prog(85, 'Rebuilding dashboard…');
+  _analysisResult = {clusters, reviews};
+  rebuildDashboard(clusters, reviews);
+  await new Promise(r => setTimeout(r, 20));
+
+  prog(100, 'Done');
+  log(`Analysis complete. ${reviews.length} reviews → ${clusters.length} clusters.`);
+  btn.textContent = 'Process Reviews';
+  btn.disabled = false;
+  document.getElementById('export-card').style.display = 'block';
+  showView('unify');
+}
+
+// ── Rebuild entire dashboard ─────────────────────────────────────────────────
+function rebuildDashboard(newClusters, newReviews) {
+  CLUSTERS.length = 0; CLUSTERS.push(...newClusters);
+  REVIEWS.length  = 0; REVIEWS.push(...newReviews);
+
+  document.getElementById('nav-meta').textContent = `${REVIEWS.length} reviews · ${CLUSTERS.length} clusters · live`;
+  document.getElementById('m-total').textContent = REVIEWS.length;
+  document.getElementById('m-clusters').textContent = CLUSTERS.length;
+  const aS = REVIEWS.length ? REVIEWS.reduce((a,r) => a + r.sent.c, 0) / REVIEWS.length : 0;
+  const aSv = REVIEWS.length ? REVIEWS.reduce((a,r) => a + r.sev.s, 0) / REVIEWS.length : 0;
+  const aA = REVIEWS.length ? REVIEWS.reduce((a,r) => a + r.act.s, 0) / REVIEWS.length : 0;
+  document.getElementById('m-avg-sent').textContent = aS.toFixed(2);
+  document.getElementById('m-avg-sent').style.color = aS >= 0 ? 'var(--act)' : 'var(--crit)';
+  document.getElementById('m-avg-sev').textContent = aSv.toFixed(1);
+  document.getElementById('m-avg-act').textContent = aA.toFixed(2);
+  document.getElementById('unified-badge').textContent = `${REVIEWS.length} records unified`;
+  document.getElementById('src-gplay').textContent = `${REVIEWS.length} reviews · uploaded`;
+  document.getElementById('enrich-sev').textContent = `${REVIEWS.length} records`;
+  document.getElementById('enrich-act').textContent = `${REVIEWS.length} records`;
+  document.getElementById('chat-count').textContent = REVIEWS.length;
+  document.getElementById('chat-clusters').textContent = CLUSTERS.length;
+
+  const cMap = {};
+  CLUSTERS.forEach(c => { cMap[c.id] = c; });
+  Object.keys(clusterMap).forEach(k => delete clusterMap[k]);
+  Object.assign(clusterMap, cMap);
+
+  const uf = document.getElementById('unify-review-feed');
+  uf.innerHTML = '';
+  [...REVIEWS].sort((a,b) => b.sev.s - a.sev.s).forEach(r => {
+    const cl = clusterMap[r.cid];
+    const clLabel = cl ? cl.label : 'Unclustered';
+    const clShort = clLabel.split(' ').slice(0,2).join(' ');
+    const sentVal = r.sent.c > 0 ? '+' : '' + r.sent.c.toFixed(2);
+    uf.innerHTML += `<div class="rev-card ${r.rep?'rep':''}"><div class="rev-hd">${r.rep?'★ ':''}${r.name} · ${clShort} · ${r.sev.l} · ${sentVal}</div><div class="rev-txt">${r.text}</div></div>`;
+  });
+
+  const kgEl = document.getElementById('kg-entities');
+  kgEl.innerHTML = '';
+  const kgData = [{type:'PLATFORM',name:'Uploaded Dataset',links:`linked to ${REVIEWS.length} reviews`},
+    ...CLUSTERS.map(c=>({type:'FEATURE',name:c.l3||c.label,links:`linked to ${c.count} reviews · ${c.label} cluster`}))];
+  kgData.forEach(kg => { kgEl.innerHTML += `<div class="kg-entity"><div class="kg-type">${kg.type}</div><div class="kg-name">${kg.name}</div><div class="kg-links">${kg.links}</div></div>`; });
+
+  const taxTree2 = document.getElementById('tax-tree');
+  taxTree2.innerHTML = '';
+  const l1G = {};
+  CLUSTERS.forEach(c => {
+    const l1 = c.l1 || 'Uncategorized', l2 = c.l2 || 'Uncategorized', l3 = c.l3 || c.label || 'Uncategorized';
+    if (!l1G[l1]) l1G[l1] = {};
+    if (!l1G[l1][l2]) l1G[l1][l2] = {};
+    if (!l1G[l1][l2][l3]) l1G[l1][l2][l3] = [];
+    l1G[l1][l2][l3].push(c);
+  });
+  Object.entries(l1G).forEach(([l1, l2s]) => {
+    const l1Node = document.createElement('div'); l1Node.className = 'tax-node';
+    const l1Row = document.createElement('div'); l1Row.className = 'tax-row';
+    const l1Total = Object.values(l2s).flatMap(o => Object.values(o).flat()).reduce((a,c) => a + c.count, 0);
+    l1Row.innerHTML = `<span class="tax-chevron open">▶</span><span class="tax-pill" style="background:rgba(77,124,254,.12);color:var(--accent)">L1</span><span class="tax-name">${l1}</span><span class="tax-cnt">${l1Total}</span>`;
+    const l1Ch = document.createElement('div'); l1Ch.className = 'tax-children open';
+    l1Row.onclick = () => { l1Ch.classList.toggle('open'); l1Row.querySelector('.tax-chevron').classList.toggle('open'); };
+    l1Node.appendChild(l1Row); l1Node.appendChild(l1Ch);
+    Object.entries(l2s).forEach(([l2, l3Groups]) => {
+      const l2Node = document.createElement('div'); l2Node.className = 'tax-node';
+      const l2Row = document.createElement('div'); l2Row.className = 'tax-row';
+      const l2Total = Object.values(l3Groups).flat().reduce((a,c) => a + c.count, 0);
+      l2Row.innerHTML = `<span class="tax-chevron">▶</span><span class="tax-pill" style="background:rgba(155,112,245,.12);color:var(--purple)">L2</span><span class="tax-name">${l2}</span><span class="tax-cnt">${l2Total}</span>`;
+      const l2Ch = document.createElement('div'); l2Ch.className = 'tax-children';
+      l2Row.onclick = e => { e.stopPropagation(); l2Ch.classList.toggle('open'); l2Row.querySelector('.tax-chevron').classList.toggle('open'); };
+      l2Node.appendChild(l2Row); l2Node.appendChild(l2Ch);
+      Object.entries(l3Groups).forEach(([l3Label, cls]) => {
+        const mCount = cls.reduce((a,c) => a + c.count, 0);
+        const primary = cls.reduce((b,c) => c.count > b.count ? c : b, cls[0]);
+        const cNode = document.createElement('div'); cNode.className = 'tax-node';
+        const cRow = document.createElement('div'); cRow.className = 'tax-row';
+        const sc = clusterSemanticColor(primary);
+        cRow.innerHTML = `<span class="tax-chevron" style="opacity:0">▶</span><span class="tax-pill" style="background:${sc.bg};color:${sc.fg}">L3</span><span class="tax-name">${l3Label}</span><span class="tax-cnt">${mCount}</span>`;
+        const themeDiv = document.createElement('div'); themeDiv.className = 'tax-children'; themeDiv.style.display = 'none';
+        themeDiv.innerHTML = `<div class="tax-row" style="cursor:default"><span class="tax-chevron" style="opacity:0">▶</span><span class="tax-pill" style="background:rgba(34,201,123,.1);color:var(--act)">Theme</span><span class="tax-name" style="font-size:10px">${primary.theme}</span></div><div class="tax-row" style="cursor:default"><span class="tax-chevron" style="opacity:0">▶</span><span class="tax-pill" style="background:rgba(240,160,48,.1);color:var(--warn)">Sub</span><span class="tax-name" style="font-size:10px;color:var(--muted2)">${primary.subtheme||'—'}</span></div>`;
+        cRow.onclick = e => { e.stopPropagation(); themeDiv.style.display = themeDiv.style.display==='none'?'block':'none'; selectCluster(primary.id); };
+        cNode.appendChild(cRow); cNode.appendChild(themeDiv);
+        l2Ch.appendChild(cNode);
+      });
+      l1Ch.appendChild(l2Node);
+    });
+    taxTree2.appendChild(l1Node);
+  });
+
+  const ucEl = document.getElementById('understand-clusters');
+  ucEl.innerHTML = '';
+  [...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach((c,i) => {
+    const chip = document.createElement('div'); chip.className = 'cluster-chip' + (i===0?' active':''); chip.dataset.id = c.id;
+    const sc = clusterSemanticColor(c);
+    chip.innerHTML = `<div class="cluster-chip-dot" style="background:${sc.fg}"></div><span class="cluster-chip-label">${c.label.split(' ').slice(0,2).join(' ')}</span><span class="cluster-chip-count">${c.count}</span>`;
+    chip.onclick = () => { document.querySelectorAll('.cluster-chip').forEach(ch=>ch.classList.remove('active')); chip.classList.add('active'); activeClusterId=c.id; showView('understand'); selectCluster(c.id); };
+    ucEl.appendChild(chip);
+  });
+  document.getElementById('cluster-detail-card').style.display = 'none';
+
+  const oppM = document.getElementById('opp-metrics');
+  const topC = [...CLUSTERS].sort((a,b) => b.priority - a.priority)[0];
+  const pR = Math.round(REVIEWS.filter(r => r.sent.l==='Positive').length / Math.max(REVIEWS.length,1) * 100);
+  const aC = REVIEWS.filter(r => r.act.s >= 0.3).length;
+  const bL = (topC?.label||'').split(' ').slice(0,1).join('') || 'Priority';
+  oppM.innerHTML = `<div class="metric-tile"><div class="metric-val val-red">P1</div><div class="metric-lbl">Top Priority</div></div><div class="metric-tile"><div class="metric-val val-amber">${Math.round((topC?.priority||0)*100)}</div><div class="metric-lbl">${bL} Score</div></div><div class="metric-tile"><div class="metric-val val-green">${pR}%</div><div class="metric-lbl">Positive Rate</div></div><div class="metric-tile"><div class="metric-val val-blue">${aC}</div><div class="metric-lbl">Actionable Revs</div></div>`;
+
+  const tbody2 = document.getElementById('opp-tbody');
+  tbody2.innerHTML = '';
+  const mxS = Math.max(...CLUSTERS.map(c => c.priority), 0.01);
+  [...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach(c => {
+    const pW = Math.round((c.priority / mxS) * 100);
+    const sc = clusterSemanticColor(c);
+    const sv = (c.sentiment >= 0 ? '+' : '') + c.sentiment.toFixed(2);
+    tbody2.innerHTML += `<tr><td><div class="opp-cluster-name"><div class="opp-cdot" style="background:${sc.fg}"></div>${c.label}</div></td><td><span class="opp-rev-pill">${c.count}</span></td><td><div class="opp-score-cell"><div class="opp-score-bar-bg"><div class="opp-score-bar" style="width:${pW}%;background:${sc.fg}"></div></div><span class="opp-score-num">${Math.round(c.priority*100)}</span></div></td><td><span class="${c.sentiment>=0?'opp-sent-pos':'opp-sent-neg'}">${sv}</span></td><td class="r"><span class="opp-sev-num ${(c.hsev||0)>5?'hot':''}">${c.hsev||0}</span></td><td class="r"><span class="opp-act-num">${Math.round((c.actionability||0)*100)}</span></td><td class="r"><span class="opp-signal-tag">${c.signals?.[0]?.term||'—'}</span></td></tr>`;
+  });
+
+  const dEl = document.getElementById('demand-bars');
+  dEl.innerHTML = '';
+  const mxR = Math.max(...CLUSTERS.map(c => c.count), 1);
+  [...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach(c => {
+    const pct = Math.round((c.count / mxR) * 100);
+    const sc = clusterSemanticColor(c);
+    dEl.innerHTML += `<div class="demand-row"><div class="demand-label">${c.label}</div><div class="demand-bar-wrap"><div class="demand-rev-count">${c.count} revs</div><div class="demand-bar-bg"><div class="demand-bar" style="width:${pct}%;background:${sc.fg}"></div></div><div class="demand-p">P=${Math.round(c.priority*100)}</div></div></div>`;
+  });
+
+  const aEl = document.getElementById('alerts-container');
+  aEl.innerHTML = '';
+  Object.keys(insightCache).forEach(k => delete insightCache[k]);
+  [...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach(c => {
+    let sevL; if (c.priority > 0.55) sevL='CRITICAL'; else if (c.priority > 0.3) sevL='HIGH'; else sevL='LOW';
+    const tT = c.signals.slice(0,4).map(s=>s.term).join(', ');
+    const pT = (c.count / REVIEWS.length * 100).toFixed(1);
+    const rI = (c.neg / REVIEWS.length * 1.5).toFixed(1);
+    const cR = c.severity > 0.5 ? 'High' : c.severity > 0.25 ? 'Medium' : 'Low';
+    aEl.innerHTML += `<div class="alert-card" id="alert-${c.id}"><div class="alert-hd"><div class="alert-title">${c.label}</div><div class="alert-stats"><span class="alert-stat alert-sev">${sevL}</span><span class="alert-stat">${c.count} reviews</span><span class="alert-stat">P ${Math.round(c.priority*100)}</span><span class="alert-stat">${c.sentiment>0?'+':''}${c.sentiment.toFixed(2)} sent</span></div></div><div class="alert-signals">${tT||'—'}</div><div class="impact-row"><div class="impact-tile"><div class="impact-tile-val">~${rI} ★</div><div class="impact-tile-lbl">Est. rating impact</div></div><div class="impact-tile"><div class="impact-tile-val">${cR}</div><div class="impact-tile-lbl">Churn risk</div></div><div class="impact-tile"><div class="impact-tile-val">${pT}%</div><div class="impact-tile-lbl">Of feedback volume</div></div></div><div class="alert-actions"><button class="act-btn gen" id="gen-btn-${c.id}" onclick="generateInsight(${c.id})">⚡ Generate Insight</button></div><div id="insight-${c.id}"></div></div>`;
+  });
+
+  const cSum = CLUSTERS.map(c=>({id:c.id,label:c.label,count:c.count,priority:c.priority,sentiment:c.sentiment,neg:c.neg,hsev:c.hsev,topSignals:c.signals.slice(0,4).map(s=>s.term),phrases:Object.keys(c.phrases).slice(0,3)})).slice(0,12);
+  const rSamp = REVIEWS.filter(r=>r.rep).slice(0,15).map(r=>({id:r.id,cluster:r.cid,text:r.text.slice(0,200),sev:r.sev.l,sent:r.sent.c}));
+  SYSTEM = `You are Inference AI — product intelligence assistant. You have:
+
+CLUSTERS (${CLUSTERS.length}): ${JSON.stringify(cSum)}
+
+SAMPLE REVIEWS (${rSamp.length} of ${REVIEWS.length}): ${JSON.stringify(rSamp)}
+
+SCORING: Sentiment VADER -1..+1; Severity Critical/High/Medium/Low; Priority=0.5×sev+0.3×neg_ratio+0.2×size.
+
+RULES:
+- Be concise and direct. Max 4-5 sentences unless asked to elaborate.
+- Always cite actual cluster names, scores, review counts, and verbatim quotes.
+- Use **bold** for cluster names and numbers, and "quotes" for verbatim text.
+- When asked about urgent issues, rank by priority_score.
+- When asked about word patterns, reference signals and repeated_phrases.
+- When asked what to fix, give a ranked action list based on severity + actionability.`;
+
+  msgs.length = 0;
+}
+
+// ── Export functions ──────────────────────────────────────────────────────────
+function exportExcel() {
+  if (!_analysisResult) return;
+  const wb = XLSX.utils.book_new();
+
+  const revRows = _analysisResult.reviews.map(r => ({
+    ID: r.id, Name: r.name, Date: r.date, Text: r.text,
+    Sentiment: r.sent.c, 'Sentiment Label': r.sent.l,
+    Severity: r.sev.s, 'Severity Label': r.sev.l,
+    Actionability: r.act.s, 'Actionability Label': r.act.l,
+    Cluster: r.cid, Representative: r.rep ? 'Yes' : ''
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(revRows), 'Reviews');
+
+  const csRows = _analysisResult.clusters.map(c => ({
+    ID: c.id, Label: c.label, Reviews: c.count, Priority: c.priority,
+    'Avg Sentiment': c.sentiment, 'Avg Severity': c.severity,
+    'Avg Actionability': c.actionability, Negative: c.neg, Positive: c.pos,
+    'High Severity': c.hsev, 'Top Signal': c.signals[0]?.term || ''
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(csRows), 'Cluster Summary');
+
+  const taxRows = _analysisResult.clusters.map(c => ({
+    L1: c.l1 || 'Uncategorized', L2: c.l2 || 'Uncategorized',
+    L3: c.l3 || c.label, Theme: c.theme, Subtheme: c.subtheme || '',
+    Reviews: c.count
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(taxRows), 'Taxonomy Tree');
+
+  const total = _analysisResult.reviews.length;
+  const avgSent2 = total ? _analysisResult.reviews.reduce((s,r) => s + r.sent.c, 0) / total : 0;
+  const posRate2 = total ? _analysisResult.reviews.filter(r => r.sent.l === 'Positive').length / total : 0;
+  const negRate2 = total ? _analysisResult.reviews.filter(r => r.sent.l === 'Negative').length / total : 0;
+  const detractors = _analysisResult.reviews.filter(r => r.sent.c < -0.3).length;
+  const promoters  = _analysisResult.reviews.filter(r => r.sent.c > 0.3).length;
+  const nps = total ? Math.round((promoters/total - detractors/total) * 100) : 0;
+  const cxRows = [
+    {Metric: 'Total Reviews', Value: total},
+    {Metric: 'Avg Sentiment', Value: avgSent2.toFixed(3)},
+    {Metric: 'Positive Rate', Value: (posRate2*100).toFixed(1) + '%'},
+    {Metric: 'Negative Rate', Value: (negRate2*100).toFixed(1) + '%'},
+    {Metric: 'NPS Proxy', Value: nps},
+    {Metric: 'Clusters', Value: _analysisResult.clusters.length}
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(cxRows), 'CX Metrics');
+
+  XLSX.writeFile(wb, 'review_analysis.xlsx');
+}
+
+function exportJSON() {
+  if (!_analysisResult) return;
+  const blob = new Blob([JSON.stringify(_analysisResult, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'review_analysis.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 </script>
 </body>

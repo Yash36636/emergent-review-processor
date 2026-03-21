@@ -115,7 +115,7 @@ def _sheet_all_reviews(wb: Workbook, reviews: list[dict]):
     ]
     widths = [4, 20, 13, 58, 12, 10, 10, 9, 16, 9, 30, 11]
 
-    row = _title_row(ws, "Emergent App — Full Review Analysis", len(headers))
+    row = _title_row(ws, "Full Review Analysis", len(headers))
     row = _header_row(ws, headers, row, widths)
 
     for i, r in enumerate(reviews):
