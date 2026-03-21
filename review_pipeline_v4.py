@@ -5,7 +5,7 @@ Method: BERTopic Hierarchical Topic Modelling + KeyBERT + LLM Labelling
 
 Install:
     pip install bertopic keybert sentence-transformers hdbscan umap-learn
-                vaderSentiment scikit-learn numpy anthropic openpyxl pandas
+                vaderSentiment scikit-learn numpy openpyxl pandas python-dotenv
 
 Run:
     python review_pipeline_v4.py
@@ -22,6 +22,43 @@ from datetime import datetime
 from collections import defaultdict, Counter
 
 import numpy as np
+import urllib.request
+import urllib.error
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+GROQ_MODEL = "llama-3.3-70b-versatile"
+
+def _call_groq(prompt, max_tokens=600):
+    api_key = os.environ.get("GROQ_API_KEY", "").strip()
+    if not api_key:
+        raise ValueError("GROQ_API_KEY not set. Add it to .env or set it in your environment.")
+    payload = json.dumps({
+        "model": GROQ_MODEL,
+        "messages": [{"role": "user", "content": prompt}],
+        "max_tokens": max_tokens,
+        "temperature": 0.3,
+    })
+    req = urllib.request.Request(
+        "https://api.groq.com/openai/v1/chat/completions",
+        data=payload.encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        },
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=90) as resp:
+        data = json.loads(resp.read())
+    raw = data["choices"][0]["message"]["content"].strip()
+    raw = re.sub(r"^```(?:json)?\s*", "", raw)
+    raw = re.sub(r"\s*```$", "", raw)
+    return raw
 
 
 RAW_REVIEWS = [
@@ -117,7 +154,10 @@ def _kmeans_fallback(embeddings: np.ndarray, k: int = 6) -> np.ndarray:
 def build_topic_hierarchy(texts: list[str], embeddings: np.ndarray) -> tuple:
     from bertopic import BERTopic
     from umap import UMAP
-    import hdbscan
+    try:
+        from sklearn.cluster import HDBSCAN
+    except ImportError:
+        from hdbscan import HDBSCAN
 
     n = len(texts)
     n_neighbors = max(2, min(5, n // 6))
@@ -125,9 +165,9 @@ def build_topic_hierarchy(texts: list[str], embeddings: np.ndarray) -> tuple:
 
     umap_model = UMAP(n_components=min(5, n - 2), n_neighbors=n_neighbors,
                       min_dist=0.0, metric="cosine", random_state=42)
-    hdbscan_model = hdbscan.HDBSCAN(min_cluster_size=2, min_samples=1,
-                                     cluster_selection_epsilon=0.0, metric="euclidean",
-                                     cluster_selection_method="leaf", prediction_data=True)
+    hdbscan_model = HDBSCAN(min_cluster_size=2, min_samples=1,
+                            cluster_selection_epsilon=0.0, metric="euclidean",
+                            cluster_selection_method="leaf")
     topic_model = BERTopic(umap_model=umap_model, hdbscan_model=hdbscan_model,
                            nr_topics=target_topics, calculate_probabilities=False, verbose=False)
     doc_topics, _ = topic_model.fit_transform(texts, embeddings=embeddings)
@@ -280,17 +320,7 @@ def label_node_with_llm(node_level, keywords, sample_reviews, avg_sentiment,
               f"\n\nINSTRUCTIONS:\n{rendered[node_level]}")
 
     try:
-        api_key = os.environ.get("ANTHROPIC_API_KEY", "")
-        if not api_key:
-            raise ValueError("ANTHROPIC_API_KEY not set.")
-        import anthropic
-        client = anthropic.Anthropic(api_key=api_key)
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514", max_tokens=600,
-            messages=[{"role": "user", "content": prompt}])
-        raw = response.content[0].text.strip()
-        raw = re.sub(r"^```(?:json)?\s*", "", raw)
-        raw = re.sub(r"\s*```$", "", raw)
+        raw = _call_groq(prompt, max_tokens=600)
         return json.loads(raw)
     except Exception as e:
         print(f"\n    LLM call failed for {node_level}: {e}")
@@ -309,8 +339,8 @@ def _fallback_label(node_level, keywords):
 
 
 def generate_l1_vocabulary(cluster_summaries, previous_vocab=None):
-    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
-    if not api_key or not api_key.startswith("sk-ant-"):
+    api_key = os.environ.get("GROQ_API_KEY", "").strip()
+    if not api_key:
         return _fallback_vocab_from_keywords(cluster_summaries)
     cluster_lines = []
     for i, c in enumerate(cluster_summaries):
@@ -326,13 +356,7 @@ def generate_l1_vocabulary(cluster_summaries, previous_vocab=None):
               "\nGenerate 3-6 broad L1 area labels. 2-4 words, specific, not generic.\n"
               'Return ONLY valid JSON list: ["Label One", "Label Two", ...]')
     try:
-        import anthropic
-        client = anthropic.Anthropic(api_key=api_key)
-        response = client.messages.create(model="claude-sonnet-4-20250514", max_tokens=200,
-                                          messages=[{"role":"user","content":prompt}])
-        raw = response.content[0].text.strip()
-        raw = re.sub(r"^```(?:json)?\s*", "", raw)
-        raw = re.sub(r"\s*```$", "", raw)
+        raw = _call_groq(prompt, max_tokens=200)
         vocab = json.loads(raw)
         if isinstance(vocab, list) and all(isinstance(v, str) for v in vocab):
             print(f"  Generated L1 vocabulary: {vocab}")
@@ -362,9 +386,9 @@ def _fallback_vocab_from_keywords(cluster_summaries):
     return list(found) if found else ["Product Experience", "User Feedback"]
 
 def assign_l1_globally(cluster_summaries, previous_vocab=None):
-    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    api_key = os.environ.get("GROQ_API_KEY", "").strip()
     vocab = generate_l1_vocabulary(cluster_summaries, previous_vocab)
-    if not api_key or not api_key.startswith("sk-ant-"):
+    if not api_key:
         return _fallback_l1_assignment(cluster_summaries, vocab)
     cluster_lines = []
     for i, c in enumerate(cluster_summaries):
@@ -377,13 +401,7 @@ def assign_l1_globally(cluster_summaries, previous_vocab=None):
               "\n\nCLUSTERS:\n" + "\n".join(cluster_lines) +
               '\n\nAssign each cluster to ONE label from vocabulary.\nReturn ONLY valid JSON dict: {"0":"...","1":"...",...}')
     try:
-        import anthropic
-        client = anthropic.Anthropic(api_key=api_key)
-        response = client.messages.create(model="claude-sonnet-4-20250514", max_tokens=300,
-                                          messages=[{"role":"user","content":prompt}])
-        raw = response.content[0].text.strip()
-        raw = re.sub(r"^```(?:json)?\s*", "", raw)
-        raw = re.sub(r"\s*```$", "", raw)
+        raw = _call_groq(prompt, max_tokens=300)
         result = json.loads(raw)
         print(f"  Global L1 assignments: {result}")
         return result
@@ -423,13 +441,9 @@ def _fallback_l1_assignment(cluster_summaries, vocab=None):
     return assignments
 
 def label_full_hierarchy(reviews, doc_topics, topic_tree, flat_topics, st_model):
-    use_llm = bool(os.environ.get("ANTHROPIC_API_KEY", "").startswith("sk-ant-"))
+    use_llm = bool(os.environ.get("GROQ_API_KEY", "").strip())
     if not use_llm:
-        key = os.environ.get("ANTHROPIC_API_KEY", "")
-        if key and not key.startswith("sk-ant-"):
-            print(f"\n  Wrong API key format: '{key[:12]}...' - Anthropic keys start with 'sk-ant-'.")
-        else:
-            print("  ANTHROPIC_API_KEY not set - using keyword fallback labels.")
+        print("  GROQ_API_KEY not set - using keyword fallback labels.")
 
     texts = [r["text"] for r in reviews]
 
@@ -1013,7 +1027,7 @@ def run_pipeline(reviews=None, output_path="review_analysis.json",
                  "methods": {"embedding": "sentence-transformers/all-MiniLM-L6-v2",
                              "clustering": "BERTopic (UMAP + HDBSCAN + Ward linkage)",
                              "keywords": "KeyBERT", "word_freq": "TF-IDF + Counter",
-                             "taxonomy": "LLM (claude-sonnet-4-20250514)" if os.environ.get("ANTHROPIC_API_KEY") else "TF-IDF fallback"}},
+                             "taxonomy": f"LLM (Groq/{GROQ_MODEL})" if os.environ.get("GROQ_API_KEY") else "TF-IDF fallback"}},
         "taxonomy_diff": diff_changes, "cluster_summary": cluster_summary, "reviews": scored,
     }
     with open(output_path, "w", encoding="utf-8") as f:
