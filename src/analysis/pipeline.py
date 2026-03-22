@@ -31,7 +31,10 @@ from .clustering import cluster_embeddings, compute_confidence, find_representat
 from .labelling  import label_clusters
 from .signals    import extract_cluster_signals
 from .phrases    import extract_cluster_phrases
-from .taxonomy   import assign_taxonomy
+from .taxonomy   import (
+    assign_taxonomy, assign_l1_globally, generate_cluster_taxonomy,
+    load_taxonomy_history, save_taxonomy_history,
+)
 
 
 def run_pipeline(reviews: list[dict], output_path: str) -> dict:
@@ -149,7 +152,15 @@ def run_pipeline(reviews: list[dict], output_path: str) -> dict:
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
-    print(f"\nOutput written to: {output_path}")
+    print(f"\nJSON output written to: {output_path}")
+
+    # Auto-generate companion Excel output
+    excel_path = output_path.replace(".json", "_output.xlsx")
+    try:
+        _write_output_excel(output, excel_path)
+        print(f"Excel output written to: {excel_path}")
+    except Exception as e:
+        print(f"  Warning: Excel output failed: {e}")
 
     # Summary table
     _sep()
@@ -212,7 +223,6 @@ def _aggregate(
 
         avg_sent = round(float(np.mean(sent_scores)), 4)
         label_str = info.get("label", f"Cluster {cid}")
-        taxonomy = assign_taxonomy(label_str, avg_sent)
 
         color = _CLUSTER_COLORS[color_idx % len(_CLUSTER_COLORS)] if cid != -1 else "#666666"
         if cid != -1:
@@ -240,12 +250,216 @@ def _aggregate(
             ),
             "signals":  cluster_signals.get(cid, []),
             "phrases":  cluster_phrases.get(cid, {}),
-            "taxonomy": taxonomy,
+            "taxonomy": {},
             "color":    color,
         })
 
+    # ── Dynamic LLM taxonomy ────────────────────────────────────────────
+    non_noise = [c for c in summary if not c["is_noise"]]
+    if non_noise:
+        print("  Generating dynamic L1 vocabulary via LLM...")
+        history = load_taxonomy_history()
+        previous_vocab = None
+        if history:
+            try:
+                last_date = max(history.keys())
+                prev_snap = history[last_date]
+                previous_vocab = list({
+                    v.get("l1") for v in prev_snap.values() if v.get("l1")
+                })
+            except Exception:
+                pass
+
+        l1_map, vocab = assign_l1_globally(non_noise, previous_vocab=previous_vocab)
+
+        # Assign taxonomy per cluster (largest first for unique themes)
+        sorted_by_size = sorted(non_noise, key=lambda c: c["review_count"], reverse=True)
+        used_themes = []
+
+        for c in sorted_by_size:
+            cid = c["cluster_id"]
+            l1_label = l1_map.get(cid, vocab[0] if vocab else "Product Experience")
+            tax = generate_cluster_taxonomy(
+                c["cluster_label"],
+                c["top_keywords"],
+                c["avg_sentiment"],
+                c["review_count"],
+                l1_label,
+                used_themes=used_themes,
+            )
+            c["taxonomy"] = tax
+            theme = tax.get("theme", "")
+            if theme:
+                used_themes.append(theme)
+
+        # Save taxonomy snapshot
+        from datetime import date
+        snap = {str(c["cluster_id"]): c["taxonomy"] for c in non_noise}
+        history[date.today().isoformat()] = snap
+        save_taxonomy_history(history)
+    else:
+        for c in summary:
+            c["taxonomy"] = assign_taxonomy(c["cluster_label"], c["avg_sentiment"])
+
+    # ── Noise cluster fallback taxonomy ─────────────────────────────────
+    for c in summary:
+        if c["is_noise"] and not c["taxonomy"]:
+            c["taxonomy"] = assign_taxonomy(c["cluster_label"], c["avg_sentiment"])
+
+    # ── Duplicate cluster merging ───────────────────────────────────────
+    summary = _merge_duplicate_themes(summary)
+
     summary.sort(key=lambda x: x["priority_score"], reverse=True)
     return summary
+
+
+def _merge_duplicate_themes(summary):
+    """Merge clusters that ended up with identical theme labels after LLM labeling."""
+    seen_themes = {}
+    deduped = []
+
+    for c in summary:
+        if c["is_noise"]:
+            deduped.append(c)
+            continue
+
+        theme = c.get("cluster_label", "")
+        if theme in seen_themes:
+            existing = deduped[seen_themes[theme]]
+            n1 = existing["review_count"]
+            n2 = c["review_count"]
+            total = n1 + n2
+
+            for metric in ("avg_sentiment", "avg_severity_score",
+                           "avg_actionability", "avg_confidence"):
+                existing[metric] = round(
+                    (existing[metric] * n1 + c[metric] * n2) / total, 4
+                )
+
+            existing["review_count"] = total
+            existing["review_ids"] += c["review_ids"]
+            existing["negative_review_count"] += c["negative_review_count"]
+            existing["positive_review_count"] += c["positive_review_count"]
+            existing["high_severity_count"] += c["high_severity_count"]
+            existing["priority_score"] = round(
+                0.5 * existing["avg_severity_score"]
+                + 0.3 * (existing["negative_review_count"] / total)
+                + 0.2 * min(total / 10, 1.0),
+                4,
+            )
+
+            # Merge signals and phrases
+            existing_terms = {s["term"] for s in existing.get("signals", [])}
+            for s in c.get("signals", []):
+                if s["term"] not in existing_terms:
+                    existing["signals"].append(s)
+            for phrase, count in c.get("phrases", {}).items():
+                existing["phrases"][phrase] = existing["phrases"].get(phrase, 0) + count
+
+            print(f"  Merged duplicate theme '{theme}' - combined {total} reviews")
+        else:
+            seen_themes[theme] = len(deduped)
+            deduped.append(c)
+
+    return deduped
+
+
+def _write_output_excel(output, path):
+    """Generate a 4-sheet Excel workbook from pipeline output."""
+    from openpyxl import Workbook
+
+    wb = Workbook()
+    reviews = output.get("reviews", [])
+    clusters = output.get("cluster_summary", [])
+
+    # Sheet 1: Reviews
+    ws1 = wb.active
+    ws1.title = "Reviews"
+    headers = ["ID", "Name", "Date", "Review Text", "Sentiment", "Sent Score",
+               "Severity", "Sev Score", "Actionability", "Act Score", "Cluster", "L1", "L2"]
+    ws1.append(headers)
+    for r in reviews:
+        sent = r.get("sentiment", {})
+        sev = r.get("severity", {})
+        act = r.get("actionability", {})
+        ws1.append([
+            r.get("id", ""), r.get("name", ""), r.get("date", ""),
+            r.get("text", ""),
+            sent.get("label", ""), round(sent.get("compound", 0), 3),
+            sev.get("label", ""), round(sev.get("score", 0), 3),
+            act.get("label", ""), round(act.get("score", 0), 3),
+            r.get("cluster_label", ""),
+            r.get("cluster_label", ""),
+            r.get("cluster_label", ""),
+        ])
+
+    # Sheet 2: Cluster Summary
+    ws2 = wb.create_sheet("Cluster Summary")
+    ws2.append(["Cluster", "Reviews", "Priority /100", "Avg Sentiment",
+                "High Severity", "Avg Actionability", "Top Keywords", "Repeated Phrases"])
+    for c in clusters:
+        if c.get("is_noise"):
+            continue
+        kw = ", ".join(c.get("top_keywords", [])[:5])
+        ph = ", ".join(f'"{p}"' for p in list(c.get("phrases", {}).keys())[:4])
+        ws2.append([
+            c.get("cluster_label", ""), c.get("review_count", 0),
+            round(c.get("priority_score", 0) * 100),
+            round(c.get("avg_sentiment", 0), 3),
+            c.get("high_severity_count", 0),
+            round(c.get("avg_actionability", 0) * 100),
+            kw, ph,
+        ])
+
+    # Sheet 3: Taxonomy Tree
+    ws3 = wb.create_sheet("Taxonomy Tree")
+    ws3.append(["L1 Area", "L2 Feature", "L3 Specific", "Theme", "Subtheme", "Reviews", "Priority"])
+    for c in clusters:
+        if c.get("is_noise"):
+            continue
+        tax = c.get("taxonomy", {})
+        ws3.append([
+            tax.get("l1", ""), tax.get("l2", ""), tax.get("l3", ""),
+            tax.get("theme", ""), tax.get("subtheme", ""),
+            c.get("review_count", 0), round(c.get("priority_score", 0) * 100),
+        ])
+
+    # Sheet 4: CX Metrics
+    ws4 = wb.create_sheet("CX Metrics")
+    total = len(reviews)
+    if total:
+        pos_count = sum(1 for r in reviews if r.get("sentiment", {}).get("label") == "Positive")
+        neg_count = sum(1 for r in reviews if r.get("sentiment", {}).get("label") == "Negative")
+        avg_sent = sum(r.get("sentiment", {}).get("compound", 0) for r in reviews) / total
+        promoters = sum(1 for r in reviews
+                        if r.get("sentiment", {}).get("compound", 0) >= 0.5
+                        and r.get("severity", {}).get("score", 0) < 0.2)
+        detractors = sum(1 for r in reviews
+                         if r.get("sentiment", {}).get("compound", 0) <= -0.3
+                         or r.get("severity", {}).get("label") in ("Critical", "High"))
+        csat = round(pos_count / total * 100, 1)
+        nps = round((promoters - detractors) / total * 100, 1)
+    else:
+        pos_count = neg_count = promoters = detractors = 0
+        avg_sent = csat = nps = 0
+
+    ws4.append(["Metric", "Value", "Formula", "Note"])
+    ws4.append(["CSAT", f"{csat}%", "% Positive reviews",
+                "Good" if csat >= 50 else "Needs attention"])
+    ws4.append(["NPS Proxy", f"{'+' if nps > 0 else ''}{nps}",
+                "(Promoters-Detractors)/Total x 100",
+                "Positive" if nps > 0 else "Negative NPS"])
+    ws4.append(["Total Reviews", total, "len(reviews)", ""])
+    ws4.append(["Positive Reviews", pos_count, "sentiment=Positive",
+                f"{round(pos_count/max(total,1)*100)}%"])
+    ws4.append(["Negative Reviews", neg_count, "sentiment=Negative",
+                f"{round(neg_count/max(total,1)*100)}%"])
+    ws4.append(["Promoters", promoters, "sent>=0.5 AND sev<0.2", ""])
+    ws4.append(["Detractors", detractors, "sent<=-0.3 OR sev Critical/High", ""])
+    ws4.append(["Clusters", len([c for c in clusters if not c.get("is_noise")]),
+                "non-noise clusters", ""])
+
+    wb.save(path)
 
 
 def _sep():
