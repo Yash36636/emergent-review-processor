@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Review Intelligence Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:        #070809;
@@ -25,41 +25,53 @@
   --c3: #f07840; --c4: #3fbe7a; --c5: #4da8f5;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:row}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:row}
 
-/* ── SIDEBAR ─────────────────────────────────────────────────────────── */
-.sidebar{width:240px;min-width:240px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;overflow:hidden;flex-shrink:0}
-.sidebar-logo{height:56px;display:flex;align-items:center;padding:0 16px;flex-shrink:0}
-.sidebar-logo-text{font-family:'Instrument Serif',serif;font-size:16px;color:var(--text);letter-spacing:.01em;font-weight:400}
-.sidebar-logo-text span{color:var(--accent)}
-.sidebar-nav{padding:6px 8px;flex-shrink:0}
-.nav-item{display:flex;align-items:center;gap:9px;padding:7px 10px;cursor:pointer;border-radius:8px;font-size:13px;font-weight:400;color:var(--muted2);transition:background .12s,color .12s;white-space:nowrap;margin:1px 0}
-.nav-item:hover{background:rgba(255,255,255,.06);color:var(--text)}
-.nav-item.active{background:rgba(255,255,255,.08);color:var(--text)}
-.nav-item .nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;opacity:.7}
-.nav-item.active .nav-icon{opacity:1}
-.nav-item .nav-label{flex:1}
-.nav-badge{font-family:'DM Mono',monospace;font-size:8px;padding:1px 5px;border-radius:3px;font-weight:500;opacity:.7}
-.badge-u1{background:rgba(77,124,254,.15);color:var(--accent)}
-.badge-u2{background:rgba(155,112,245,.15);color:var(--purple)}
-.badge-act{background:rgba(34,201,123,.15);color:var(--act)}
-.sidebar-divider{height:1px;background:var(--border);margin:6px 12px}
-.sidebar-body{flex:1;overflow-y:auto;padding:4px 8px}
+/* ── SIDEBAR SHELL ─────────────────────────────────────── */
+.sidebar{width:220px;min-width:220px;background:#0a0a0a;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;height:100vh;overflow:hidden;flex-shrink:0}
+
+/* ── LOGO ──────────────────────────────────────────────── */
+.sidebar-logo{height:52px;display:flex;align-items:center;padding:0 14px;flex-shrink:0}
+.sidebar-logo-text{font-family:'Inter',sans-serif;font-size:14px;font-weight:500;color:rgba(255,255,255,.9);letter-spacing:-.01em}
+.sidebar-logo-text span{color:#7b9cff}
+
+/* ── NAV ───────────────────────────────────────────────── */
+.sidebar-nav{padding:4px 8px;flex-shrink:0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;font-size:13.5px;font-weight:400;color:rgba(255,255,255,.45);transition:background .1s ease,color .1s ease;margin:1px 0;user-select:none}
+.nav-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85)}
+.nav-item.active{background:rgba(255,255,255,.09);color:rgba(255,255,255,.95)}
+.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.5}
+.nav-item:hover .nav-icon,.nav-item.active .nav-icon{opacity:1}
+.nav-icon svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.nav-label{flex:1}
+.nav-badge{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:500;padding:2px 5px;border-radius:3px;letter-spacing:.04em;opacity:.6}
+.badge-u1{background:rgba(77,124,254,.14);color:#7b9cff}
+.badge-u2{background:rgba(155,112,245,.14);color:#b89af5}
+.badge-act{background:rgba(34,201,123,.14);color:#55d49a}
+
+/* ── DIVIDER ───────────────────────────────────────────── */
+.sidebar-divider{height:1px;background:rgba(255,255,255,.06);margin:6px 10px}
+
+/* ── CLUSTER LIST ──────────────────────────────────────── */
+.sidebar-body{flex:1;overflow-y:auto;padding:2px 8px 8px}
 .sidebar-body::-webkit-scrollbar{width:2px}
-.sidebar-body::-webkit-scrollbar-thumb{background:var(--s3)}
-.rail-section{padding:10px 8px 4px;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.02em}
-.rail-item{display:flex;align-items:center;gap:8px;padding:5px 10px;cursor:pointer;border-radius:6px;transition:background .12s;margin:1px 0}
-.rail-item:hover{background:rgba(255,255,255,.05)}
-.rail-item.active{background:rgba(255,255,255,.07)}
-.rail-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.rail-label{font-size:12px;color:var(--muted2);flex:1}
-.rail-item.active .rail-label{color:var(--text)}
-.rail-count{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);background:transparent;padding:0}
-.sidebar-footer{padding:12px 12px;flex-shrink:0;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border)}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--act);flex-shrink:0}
+.sidebar-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
+.rail-section{padding:10px 6px 4px;font-family:'Inter',sans-serif;font-size:11px;font-weight:500;color:rgba(255,255,255,.25);letter-spacing:.01em}
+.rail-item{display:flex;align-items:center;gap:9px;padding:5px 8px;border-radius:6px;cursor:pointer;transition:background .1s ease;margin:1px 0}
+.rail-item:hover{background:rgba(255,255,255,.06)}
+.rail-item.active{background:rgba(255,255,255,.08)}
+.rail-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;opacity:.8}
+.rail-label{font-family:'Inter',sans-serif;font-size:12.5px;font-weight:400;color:rgba(255,255,255,.5);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rail-item:hover .rail-label,.rail-item.active .rail-label{color:rgba(255,255,255,.85)}
+.rail-count{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:rgba(255,255,255,.22);flex-shrink:0}
+.rail-item:hover .rail-count,.rail-item.active .rail-count{color:rgba(255,255,255,.45)}
+
+/* ── FOOTER ────────────────────────────────────────────── */
+.sidebar-footer{padding:10px 14px;flex-shrink:0;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px}
+.status-dot{width:6px;height:6px;border-radius:50%;background:#22c97b;flex-shrink:0}
 .status-dot.pulse{animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.nav-meta{font-size:11px;color:var(--muted)}
+.nav-meta{font-family:'Inter',sans-serif;font-size:11px;color:rgba(255,255,255,.25)}
 
 /* ── CENTER COLUMN ───────────────────────────────────────────────────── */
 .center-col{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
@@ -77,7 +89,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;hei
 .inference-panel{border-top:1px solid var(--border);background:var(--bg);padding:0;flex-shrink:0;display:flex;flex-direction:column}
 .inf-toggle{display:flex;align-items:center;justify-content:space-between;padding:6px 20px;cursor:pointer;user-select:none;transition:background .15s}
 .inf-toggle:hover{background:rgba(255,255,255,.03)}
-.inf-toggle-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.inf-toggle-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
 .inf-toggle-arrow{font-size:10px;color:var(--muted);transition:transform .2s}
 .inf-toggle-arrow.collapsed{transform:rotate(180deg)}
 .inf-body{padding:4px 20px 14px;display:flex;flex-direction:column;gap:6px;overflow:hidden;transition:max-height .25s ease,padding .25s ease,opacity .2s ease}
@@ -111,16 +123,16 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;hei
 /* ── CARDS ────────────────────────────────────────────────────────────── */
 .card{background:var(--s1);border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .card-hd{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
-.card-hd-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase}
+.card-hd-title{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase}
 .card-bd{padding:14px}
 .metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .metric-tile{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
-.metric-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;line-height:1.1;margin-bottom:3px}
-.metric-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.09em;text-transform:uppercase}
+.metric-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:500;line-height:1.1;margin-bottom:3px}
+.metric-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.09em;text-transform:uppercase}
 
 /* ── OPPORTUNITY TABLE ───────────────────────────────────────────────── */
 .opp-table{width:100%;border-collapse:collapse}
-.opp-table th{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;text-align:left;padding:0 10px 8px;border-bottom:1px solid var(--border)}
+.opp-table th{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;text-align:left;padding:0 10px 8px;border-bottom:1px solid var(--border)}
 .opp-table td{padding:9px 10px;border-bottom:1px solid var(--border);font-size:11px;vertical-align:top}
 .opp-table tr:last-child td{border-bottom:none}
 .opp-table tr:hover td{background:rgba(255,255,255,.02)}
@@ -134,21 +146,21 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;hei
 .tax-row.selected{background:rgba(77,124,254,.1);border:1px solid rgba(77,124,254,.2)}
 .tax-chevron{font-size:9px;color:var(--muted);width:10px;text-align:center;transition:transform .2s}
 .tax-chevron.open{transform:rotate(90deg)}
-.tax-pill{font-family:'DM Mono',monospace;font-size:9px;padding:2px 6px;border-radius:3px;font-weight:500}
+.tax-pill{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 6px;border-radius:3px;font-weight:500}
 .tax-name{font-size:11px;font-weight:500;flex:1}
-.tax-cnt{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)}
+.tax-cnt{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
 .tax-children{margin-left:20px;border-left:1px solid var(--border);padding-left:8px;margin-top:2px;display:none}
 .tax-children.open{display:block}
 
 /* ── WORD FREQ ───────────────────────────────────────────────────────── */
 .freq-grid{display:flex;flex-direction:column;gap:5px}
 .freq-row{display:grid;grid-template-columns:110px 1fr 36px 44px;align-items:center;gap:8px}
-.freq-word{font-family:'DM Mono',monospace;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.freq-word{font-family:'JetBrains Mono',monospace;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .freq-word.rep{color:#f0c454}
 .freq-track{height:5px;background:var(--s3);border-radius:3px;overflow:hidden}
 .freq-fill{height:100%;border-radius:3px;transition:width .5s ease}
-.freq-n{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-align:right}
-.freq-pct{font-family:'DM Mono',monospace;font-size:9px;color:var(--accent);text-align:right}
+.freq-n{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);text-align:right}
+.freq-pct{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent);text-align:right}
 
 /* ── REVIEW CARDS ────────────────────────────────────────────────────── */
 .rev-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;transition:border-color .15s}
@@ -157,10 +169,10 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;hei
 .rev-hd{display:flex;align-items:center;gap:6px;margin-bottom:5px}
 .rev-name{font-size:11px;font-weight:600;flex:1}
 .rev-txt{font-size:11px;color:var(--muted2);line-height:1.5}
-.pill{display:inline-flex;align-items:center;font-family:'DM Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;font-weight:500}
-.chip{font-family:'DM Mono',monospace;font-size:9px;padding:3px 8px;border-radius:20px;border:1px solid;display:inline-block;margin:2px 3px 2px 0}
+.pill{display:inline-flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;font-weight:500}
+.chip{font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;border-radius:20px;border:1px solid;display:inline-block;margin:2px 3px 2px 0}
 .phrase-wrap{display:flex;flex-wrap:wrap;gap:5px;padding-top:4px}
-.phrase-chip{font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;border-radius:20px;background:rgba(240,196,84,.08);border:1px solid rgba(240,196,84,.25);color:#f0c454}
+.phrase-chip{font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 10px;border-radius:20px;background:rgba(240,196,84,.08);border:1px solid rgba(240,196,84,.25);color:#f0c454}
 .phrase-chip span{color:var(--muted);margin-left:4px}
 
 /* ── ACT PANEL ───────────────────────────────────────────────────────── */
@@ -173,7 +185,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;hei
 .alert-title{font-size:12px;font-weight:600}
 .alert-body{font-size:11px;color:var(--muted2);line-height:1.5}
 .alert-actions{display:flex;gap:6px;margin-top:8px}
-.act-btn{font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;border-radius:5px;border:1px solid var(--border2);background:transparent;color:var(--muted2);cursor:pointer;transition:all .15s}
+.act-btn{font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 10px;border-radius:5px;border:1px solid var(--border2);background:transparent;color:var(--muted2);cursor:pointer;transition:all .15s}
 .act-btn:hover{border-color:var(--accent);color:var(--text)}
 .act-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 .act-btn.primary:hover{opacity:.85}
@@ -182,23 +194,23 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;hei
 .source-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .source-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
 .source-name{font-size:11px;font-weight:600}
-.source-meta{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)}
-.source-status{font-family:'DM Mono',monospace;font-size:9px;padding:2px 6px;border-radius:3px;align-self:flex-start}
+.source-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
+.source-status{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 6px;border-radius:3px;align-self:flex-start}
 .status-live{background:rgba(34,201,123,.12);color:var(--act)}
 .status-enrich{background:rgba(240,160,48,.12);color:var(--warn)}
 .kg-entity{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;background:var(--s2);border:1px solid var(--border);margin-bottom:5px}
-.kg-type{font-family:'DM Mono',monospace;font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(155,112,245,.12);color:var(--purple)}
+.kg-type{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(155,112,245,.12);color:var(--purple)}
 .kg-name{font-size:11px;font-weight:500;flex:1}
-.kg-links{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)}
+.kg-links{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
 div.divider{height:1px;background:var(--border);margin:6px 0}
 
 /* ── INSIGHT CARDS ───────────────────────────────────────────────────── */
 .insight-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
 .ins-header{display:flex;align-items:center;gap:8px;margin-bottom:2px}
-.ins-num{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;color:var(--muted);background:var(--s3);padding:2px 7px;border-radius:4px;flex-shrink:0}
+.ins-num{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:var(--muted);background:var(--s3);padding:2px 7px;border-radius:4px;flex-shrink:0}
 .ins-title{font-size:12px;font-weight:600;color:var(--text);flex:1;line-height:1.3}
 .ins-section{display:flex;flex-direction:column;gap:3px}
-.ins-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.ins-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
 .ins-body{font-size:11px;color:var(--muted2);line-height:1.6}
 .ins-body em{color:var(--text);font-style:italic}
 .ins-body strong{color:var(--text);font-weight:600}
@@ -207,7 +219,7 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
 /* ── SCREENSHOT CAPTURE ──────────────────────────────────────────────── */
 #capture-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;cursor:crosshair;background:rgba(0,0,0,0.35);display:none}
 #capture-overlay.active{display:block}
-#capture-hint{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:rgba(15,18,28,.92);border:1px solid var(--border2);color:var(--muted2);font-family:'DM Mono',monospace;font-size:11px;padding:6px 16px;border-radius:20px;z-index:10000;pointer-events:none;display:none}
+#capture-hint{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:rgba(15,18,28,.92);border:1px solid var(--border2);color:var(--muted2);font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 16px;border-radius:20px;z-index:10000;pointer-events:none;display:none}
 #capture-hint.active{display:block}
 #capture-rect{position:fixed;border:2px solid var(--accent);background:rgba(77,124,254,.1);z-index:10000;pointer-events:none;display:none}
 #capture-rect.active{display:block}
@@ -225,13 +237,13 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
 .upload-btn.secondary:hover{border-color:var(--accent);color:var(--accent)}
 .col-map{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
 .col-map-item{background:var(--s2);border:1px solid var(--border);border-radius:7px;padding:8px 10px}
-.col-map-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em}
+.col-map-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em}
 .col-map-val{font-size:11px;color:var(--text);font-weight:500}
 .col-map-val.ok{color:var(--act)}
 .col-map-val.miss{color:var(--warn)}
 .progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px}
 .progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s ease;width:0%}
-.log-line{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);padding:2px 0;border-bottom:1px solid var(--border)}
+.log-line{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2);padding:2px 0;border-bottom:1px solid var(--border)}
 .log-line.ok{color:var(--act)}
 .log-line.err{color:var(--crit)}
 .dl-btn{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--s2);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;font-size:12px;font-weight:500}
@@ -240,8 +252,8 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
 /* ── IMPACT TILES (Act view) ─────────────────────────────────────────── */
 .impact-row{display:flex;gap:8px;margin-top:6px}
 .impact-tile{flex:1;background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:8px;text-align:center}
-.impact-tile-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--text)}
-.impact-tile-lbl{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.impact-tile-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text)}
+.impact-tile-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
 
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 </style>
@@ -259,19 +271,19 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
   </div>
   <div class="sidebar-nav">
     <div class="nav-item" onclick="showView('upload')" id="tab-upload">
-      <span class="nav-icon">📂</span><span class="nav-label">Upload Reviews</span>
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span><span class="nav-label">Upload Reviews</span>
     </div>
     <div class="nav-item active" onclick="showView('unify')" id="tab-unify">
-      <span class="nav-icon">🔗</span><span class="nav-label">Data Sources</span><span class="nav-badge badge-u1">UNIFY</span>
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></span><span class="nav-label">Data Sources</span><span class="nav-badge badge-u1">UNIFY</span>
     </div>
     <div class="nav-item" onclick="showView('understand')" id="tab-understand">
-      <span class="nav-icon">🌿</span><span class="nav-label">Taxonomy</span><span class="nav-badge badge-u2">UNDERSTAND</span>
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="nav-label">Taxonomy</span><span class="nav-badge badge-u2">UNDERSTAND</span>
     </div>
     <div class="nav-item" onclick="showView('opportunity')" id="tab-opportunity">
-      <span class="nav-icon">📊</span><span class="nav-label">Opportunities</span><span class="nav-badge badge-u2">SIZE</span>
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span><span class="nav-label">Opportunities</span><span class="nav-badge badge-u2">SIZE</span>
     </div>
     <div class="nav-item" onclick="showView('act')" id="tab-act">
-      <span class="nav-icon">⚡</span><span class="nav-label">Alerts &amp; Agents</span><span class="nav-badge badge-act">ACT</span>
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span class="nav-label">Alerts &amp; Agents</span><span class="nav-badge badge-act">ACT</span>
     </div>
   </div>
   <div class="sidebar-divider"></div>
@@ -308,7 +320,7 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
         <div class="view-title">Unify</div>
         <div class="view-sub">All feedback ingested, enriched, and modelled into a Knowledge Graph</div>
       </div>
-      <div style="margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" id="unified-badge">0 records unified</div>
+      <div style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)" id="unified-badge">0 records unified</div>
     </div>
     <div class="view-body">
       <div class="metric-row">
@@ -330,12 +342,12 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
       </div>
 
       <div class="card">
-        <div class="card-hd"><div class="card-hd-title">Knowledge Graph — Custom Objects</div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">Entities extracted from review metadata</div></div>
+        <div class="card-hd"><div class="card-hd-title">Knowledge Graph — Custom Objects</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Entities extracted from review metadata</div></div>
         <div class="card-bd" id="kg-entities"></div>
       </div>
 
       <div class="card">
-        <div class="card-hd"><div class="card-hd-title">Review Feed</div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">sorted by severity</div></div>
+        <div class="card-hd"><div class="card-hd-title">Review Feed</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">sorted by severity</div></div>
         <div class="card-bd" id="unify-review-feed" style="max-height:340px;overflow-y:auto"></div>
       </div>
     </div>
@@ -353,7 +365,7 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
       <div class="card">
         <div class="card-hd">
           <div class="card-hd-title">Taxonomy Tree — L1 → L2 → L3 → Theme → Subtheme</div>
-          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">Click to expand · auto-generated by HDBSCAN + TF-IDF</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Click to expand · auto-generated by HDBSCAN + TF-IDF</div>
         </div>
         <div class="card-bd" id="tax-tree"></div>
       </div>
@@ -364,13 +376,13 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
         </div>
         <div class="card-bd">
           <div class="metric-row" id="detail-metrics" style="margin-bottom:12px"></div>
-          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">TF-IDF Word Signals</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">TF-IDF Word Signals</div>
           <div class="freq-grid" id="detail-freq"></div>
           <div class="divider"></div>
-          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Repeated Phrases (cross-review)</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Repeated Phrases (cross-review)</div>
           <div class="phrase-wrap" id="detail-phrases"></div>
           <div class="divider"></div>
-          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Reviews in this cluster</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Reviews in this cluster</div>
           <div id="detail-reviews"></div>
         </div>
       </div>
@@ -388,7 +400,7 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
     <div class="view-body">
       <div class="metric-row" id="opp-metrics"></div>
       <div class="card">
-        <div class="card-hd"><div class="card-hd-title">Cluster Opportunity Table</div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">sorted by review count (descending)</div></div>
+        <div class="card-hd"><div class="card-hd-title">Cluster Opportunity Table</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">sorted by review count (descending)</div></div>
         <div class="card-bd" style="padding:0">
           <table class="opp-table" style="width:100%">
             <thead><tr>
@@ -412,7 +424,7 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
         <div class="view-title">Act</div>
         <div class="view-sub">Quality Monitor Agent — multi-insight analysis per cluster</div>
       </div>
-      <div style="margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" id="act-agent-count">0 clusters</div>
+      <div style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)" id="act-agent-count">0 clusters</div>
     </div>
     <div class="view-body" id="alerts-container"></div>
   </div>
@@ -427,7 +439,7 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
     </div>
     <div class="view-body">
       <div class="card">
-        <div class="card-hd"><div class="card-hd-title">Excel Input</div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">Accepts .xlsx · columns auto-detected · no template required</div></div>
+        <div class="card-hd"><div class="card-hd-title">Excel Input</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Accepts .xlsx · columns auto-detected · no template required</div></div>
         <div class="card-bd">
           <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
             ondragover="event.preventDefault();this.classList.add('drag')"
@@ -440,7 +452,7 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
             <button class="upload-btn" onclick="event.stopPropagation();document.getElementById('file-input').click()">Choose File</button>
           </div>
           <div id="col-map-preview" style="display:none;margin-top:14px">
-            <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:8px;letter-spacing:.1em;text-transform:uppercase">Column Detection</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:8px;letter-spacing:.1em;text-transform:uppercase">Column Detection</div>
             <div class="col-map">
               <div class="col-map-item"><div class="col-map-label">Review Text</div><div class="col-map-val" id="cm-text">—</div></div>
               <div class="col-map-item"><div class="col-map-label">Reviewer Name</div><div class="col-map-val" id="cm-name">—</div></div>
@@ -453,8 +465,8 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
           </div>
           <div id="process-progress" style="display:none;margin-top:14px">
             <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)" id="progress-label">Processing…</div>
-              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--accent)" id="progress-pct">0%</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2)" id="progress-label">Processing…</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent)" id="progress-pct">0%</div>
             </div>
             <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
             <div style="margin-top:10px;max-height:140px;overflow-y:auto" id="process-log"></div>
@@ -466,11 +478,11 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
         <div class="card-bd" style="display:flex;flex-direction:column;gap:8px">
           <div style="display:grid;grid-template-columns:120px 1fr;gap:8px;font-size:11px">
             <div style="font-weight:600;color:var(--text)">Review text</div>
-            <div style="color:var(--muted2);font-family:'DM Mono',monospace;font-size:10px">text, review, feedback, comment, body, message</div>
+            <div style="color:var(--muted2);font-family:'JetBrains Mono',monospace;font-size:10px">text, review, feedback, comment, body, message</div>
             <div style="font-weight:600;color:var(--text)">Reviewer name</div>
-            <div style="color:var(--muted2);font-family:'DM Mono',monospace;font-size:10px">name, reviewer, author, user, customer</div>
+            <div style="color:var(--muted2);font-family:'JetBrains Mono',monospace;font-size:10px">name, reviewer, author, user, customer</div>
             <div style="font-weight:600;color:var(--text)">Date</div>
-            <div style="color:var(--muted2);font-family:'DM Mono',monospace;font-size:10px">date, reviewed_on, review_date, submitted, created_at</div>
+            <div style="color:var(--muted2);font-family:'JetBrains Mono',monospace;font-size:10px">date, reviewed_on, review_date, submitted, created_at</div>
           </div>
           <div style="font-size:10px;color:var(--muted);margin-top:4px">Column names are case-insensitive. Partial matches work (e.g. "review_text" matches "text").</div>
         </div>
@@ -478,8 +490,8 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
       <div class="card" id="export-card" style="display:none">
         <div class="card-hd"><div class="card-hd-title">Export Results</div><div class="pill" style="background:rgba(34,201,123,.1);color:var(--act)">Ready</div></div>
         <div class="card-bd" style="display:flex;gap:10px;flex-wrap:wrap">
-          <div class="dl-btn" onclick="exportExcel()">📊 <div><div style="font-size:11px;font-weight:600">Download Analysis Excel</div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">Reviews + Clusters + Taxonomy + CX Metrics</div></div></div>
-          <div class="dl-btn" onclick="exportJSON()">📄 <div><div style="font-size:11px;font-weight:600">Download JSON</div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">Full analysis for pipeline / API use</div></div></div>
+          <div class="dl-btn" onclick="exportExcel()">📊 <div><div style="font-size:11px;font-weight:600">Download Analysis Excel</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Reviews + Clusters + Taxonomy + CX Metrics</div></div></div>
+          <div class="dl-btn" onclick="exportJSON()">📄 <div><div style="font-size:11px;font-weight:600">Download JSON</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Full analysis for pipeline / API use</div></div></div>
         </div>
       </div>
     </div>
@@ -703,7 +715,7 @@ function selectCluster(id) {
         <div class="rev-name">${r.rep ? '★ ' : ''}${r.name}</div>
         <span class="pill" style="background:${sc}22;color:${sc}">${r.sev?.l||'Low'}</span>
         <span class="pill" style="background:${stc}22;color:${stc}">${(r.sent?.c||0) > 0 ? '+' : ''}${(r.sent?.c||0).toFixed(2)}</span>
-        <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">${r.date||''}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">${r.date||''}</span>
       </div>
       <div class="rev-txt">${r.text}</div>
     </div>`;
@@ -736,11 +748,11 @@ function buildOpportunityView() {
     tbody.innerHTML += `<tr>
       <td style="padding-left:14px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${c.color};margin-right:7px;vertical-align:middle"></span>${c.label}</td>
       <td><span class="pill" style="background:${c.color}22;color:${c.color}">${c.count}</span></td>
-      <td><div style="display:flex;align-items:center;gap:6px"><div class="opp-bar-wrap"><div class="opp-bar" style="width:${pctW}%;background:${sc}"></div></div><span style="font-family:'DM Mono',monospace;font-size:10px;color:${sc}">${pctW}</span></div></td>
-      <td style="font-family:'DM Mono',monospace;font-size:10px;color:${c.sentiment>=0?'var(--act)':'var(--crit)'}">${sentVal}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--warn)">${c.hsev||0}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--purple)">${Math.round((c.actionability||0)*100)}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)">${c.signals?.[0]?.term||'—'}</td>
+      <td><div style="display:flex;align-items:center;gap:6px"><div class="opp-bar-wrap"><div class="opp-bar" style="width:${pctW}%;background:${sc}"></div></div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:${sc}">${pctW}</span></div></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:${c.sentiment>=0?'var(--act)':'var(--crit)'}">${sentVal}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--warn)">${c.hsev||0}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--purple)">${Math.round((c.actionability||0)*100)}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2)">${c.signals?.[0]?.term||'—'}</td>
     </tr>`;
   });
 
@@ -752,9 +764,9 @@ function buildOpportunityView() {
     demandEl.innerHTML += `<div style="display:flex;align-items:center;gap:10px">
       <div style="width:160px;font-size:11px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.label}</div>
       <div style="flex:1;height:20px;background:var(--s2);border-radius:5px;overflow:hidden;border:1px solid var(--border)">
-        <div style="height:100%;width:${w}%;background:${c.color};border-radius:5px;display:flex;align-items:center;padding:0 8px;font-family:'DM Mono',monospace;font-size:9px;color:#000;font-weight:600;min-width:40px">${c.count} revs</div>
+        <div style="height:100%;width:${w}%;background:${c.color};border-radius:5px;display:flex;align-items:center;padding:0 8px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#000;font-weight:600;min-width:40px">${c.count} revs</div>
       </div>
-      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);width:40px;text-align:right">P=${Math.round(c.priority*100)}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);width:40px;text-align:right">P=${Math.round(c.priority*100)}</div>
     </div>`;
   });
 }
@@ -782,7 +794,7 @@ function buildActView() {
         <div style="display:flex;align-items:center;gap:8px">
           <div style="width:8px;height:8px;border-radius:50%;background:${c.color}"></div>
           <div class="card-hd-title">${c.label}</div>
-          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">${c.count} reviews · Priority ${Math.round(c.priority*100)}/100</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">${c.count} reviews · Priority ${Math.round(c.priority*100)}/100</div>
         </div>
         <div class="pill" style="background:${sevCls==='crit'?'rgba(240,80,80,.12)':sevCls==='warn'?'rgba(240,160,48,.12)':'rgba(34,201,123,.12)'};color:${sevCls==='crit'?'var(--crit)':sevCls==='warn'?'var(--warn)':'var(--act)'}">${sevL}</div>
       </div>
