@@ -4,954 +4,800 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Review Intelligence Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   REVIEW INTELLIGENCE — DESIGN SYSTEM
-   ============================================================ */
 :root {
-  --bg-base:        #08080A;
-  --bg-surface-1:   #0F0F13;
-  --bg-surface-2:   #141418;
-  --bg-surface-3:   #1A1A20;
-  --grid-color:     rgba(255,255,255,0.03);
-  --border-subtle:  rgba(255,255,255,0.06);
-  --border-default: rgba(255,255,255,0.10);
-  --border-strong:  rgba(255,255,255,0.16);
-  --border-focus:   rgba(59,114,255,0.5);
-  --text-primary:   #F0F0F2;
-  --text-secondary: #8A8A9C;
-  --text-tertiary:  #4E4E60;
-  --blue-400: #6B97FF;
-  --blue-500: #3B72FF;
-  --blue-600: #2558E8;
-  --green:    rgba(74,222,128,0.55);
-  --green-bg: rgba(0,200,83,0.08);
-  --red:      rgba(255,122,122,0.55);
-  --red-bg:   rgba(255,68,68,0.08);
-  --amber:    rgba(245,158,11,0.50);
-  --amber-bg: rgba(245,166,35,0.08);
-  --purple:   #9B6DFF;
-  --purple-bg:rgba(155,109,255,0.08);
-  --semantic-problem: rgba(239,68,68,0.7);
-  --semantic-neutral: rgba(59,114,255,0.7);
-  --semantic-muted:   rgba(138,138,156,0.7);
-  --semantic-problem-bg: rgba(239,68,68,0.15);
-  --semantic-neutral-bg: rgba(59,114,255,0.15);
-  --semantic-muted-bg: rgba(138,138,156,0.15);
-  --font-ui: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --text-2xs: 10px; --text-xs: 11px; --text-sm: 12px; --text-base: 13px; --text-md: 14px; --text-lg: 16px; --text-xl: 18px; --text-2xl: 22px;
-  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 24px;
-  --radius-sm: 4px; --radius-md: 6px; --radius-lg: 8px; --radius-pill: 999px;
-  --ease-fast: 120ms ease;
-  /* Aliases for compat */
-  --bg: var(--bg-base); --s1: var(--bg-surface-1); --s2: var(--bg-surface-2); --s3: var(--bg-surface-3);
-  --border: var(--border-subtle); --border2: var(--border-default);
-  --text: var(--text-primary); --muted: var(--text-secondary); --muted2: var(--text-secondary); --tertiary: var(--text-tertiary);
-  --accent: var(--blue-500); --act: var(--green); --warn: var(--amber); --crit: var(--red);
-  --c0: #FF4444; --c1: #9B6DFF; --c2: #F5A623; --c3: #f07840; --c4: #00C853; --c5: #3B72FF;
+  --bg:        #070809;
+  --s1:        #0e1014;
+  --s2:        #141720;
+  --s3:        #1c2030;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.12);
+  --text:      #dde1ee;
+  --muted:     #5a6080;
+  --muted2:    #8890b0;
+  --accent:    #4d7cfe;
+  --act:       #22c97b;
+  --warn:      #f0a030;
+  --crit:      #f05050;
+  --purple:    #9b70f5;
+  --c0: #f05454; --c1: #9b70f5; --c2: #f0a030;
+  --c3: #f07840; --c4: #3fbe7a; --c5: #4da8f5;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:16px;scroll-behavior:smooth}
-body{
-  font-family:var(--font-ui);font-size:var(--text-base);font-weight:400;line-height:1.5;
-  color:var(--text-primary);background:var(--bg-base);
-  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-  height:100vh;overflow:hidden;display:flex;flex-direction:column;
-  background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
-  background-size:36px 36px;
-  position:relative;
-}
-.glow-1{position:fixed;width:500px;height:380px;top:-100px;left:-80px;background:radial-gradient(ellipse,rgba(37,88,232,0.18) 0%,transparent 70%);pointer-events:none;z-index:0}
-.glow-2{position:fixed;width:340px;height:300px;top:140px;right:60px;background:radial-gradient(ellipse,rgba(59,114,255,0.10) 0%,transparent 65%);pointer-events:none;z-index:0}
-.glow-3{position:fixed;width:220px;height:200px;bottom:80px;left:220px;background:radial-gradient(ellipse,rgba(37,88,232,0.11) 0%,transparent 70%);pointer-events:none;z-index:0}
-.glow-4{position:fixed;width:280px;height:240px;bottom:-40px;right:-60px;background:radial-gradient(ellipse,rgba(59,114,255,0.07) 0%,transparent 65%);pointer-events:none;z-index:0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:row}
 
-/* ─── NAV (Razorpay full-tab blue) ──────────────────────────────────────────── */
-.nav-wrap{font-family:var(--font-ui);background:#08080A;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:stretch;height:44px;overflow:hidden;flex-shrink:0;z-index:100}
-.logo-block{display:flex;align-items:center;padding:0 18px;border-right:1px solid rgba(255,255,255,0.08);flex-shrink:0;gap:5px}
-.logo-slash{font-size:13px;font-weight:700;color:rgba(255,255,255,0.25)}
-.logo-text{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:#F0F0F2}
-.logo-text em{font-style:normal;color:#3B72FF}
-.tabs{display:flex;flex:1;align-items:stretch}
-.tab{display:flex;align-items:center;justify-content:center;padding:0 28px;flex:1;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.35);border-right:1px solid rgba(255,255,255,0.08);cursor:pointer;white-space:nowrap;transition:background 0.15s,color 0.15s}
-.tab:hover{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.7)}
-.tab.active{background:#3B72FF;color:#fff}
-.nav-right{margin-left:auto;display:flex;align-items:center;gap:var(--space-2);padding:0 18px;border-left:1px solid rgba(255,255,255,0.08)}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+/* ── SIDEBAR ─────────────────────────────────────────────────────────── */
+.sidebar{width:240px;min-width:240px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;overflow:hidden;flex-shrink:0}
+.sidebar-logo{height:56px;display:flex;align-items:center;padding:0 16px;flex-shrink:0}
+.sidebar-logo-text{font-family:'Instrument Serif',serif;font-size:16px;color:var(--text);letter-spacing:.01em;font-weight:400}
+.sidebar-logo-text span{color:var(--accent)}
+.sidebar-nav{padding:6px 8px;flex-shrink:0}
+.nav-item{display:flex;align-items:center;gap:9px;padding:7px 10px;cursor:pointer;border-radius:8px;font-size:13px;font-weight:400;color:var(--muted2);transition:background .12s,color .12s;white-space:nowrap;margin:1px 0}
+.nav-item:hover{background:rgba(255,255,255,.06);color:var(--text)}
+.nav-item.active{background:rgba(255,255,255,.08);color:var(--text)}
+.nav-item .nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;opacity:.7}
+.nav-item.active .nav-icon{opacity:1}
+.nav-item .nav-label{flex:1}
+.nav-badge{font-family:'DM Mono',monospace;font-size:8px;padding:1px 5px;border-radius:3px;font-weight:500;opacity:.7}
+.badge-u1{background:rgba(77,124,254,.15);color:var(--accent)}
+.badge-u2{background:rgba(155,112,245,.15);color:var(--purple)}
+.badge-act{background:rgba(34,201,123,.15);color:var(--act)}
+.sidebar-divider{height:1px;background:var(--border);margin:6px 12px}
+.sidebar-body{flex:1;overflow-y:auto;padding:4px 8px}
+.sidebar-body::-webkit-scrollbar{width:2px}
+.sidebar-body::-webkit-scrollbar-thumb{background:var(--s3)}
+.rail-section{padding:10px 8px 4px;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.02em}
+.rail-item{display:flex;align-items:center;gap:8px;padding:5px 10px;cursor:pointer;border-radius:6px;transition:background .12s;margin:1px 0}
+.rail-item:hover{background:rgba(255,255,255,.05)}
+.rail-item.active{background:rgba(255,255,255,.07)}
+.rail-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.rail-label{font-size:12px;color:var(--muted2);flex:1}
+.rail-item.active .rail-label{color:var(--text)}
+.rail-count{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);background:transparent;padding:0}
+.sidebar-footer{padding:12px 12px;flex-shrink:0;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--act);flex-shrink:0}
 .status-dot.pulse{animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.nav-meta{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-tertiary)}
+.nav-meta{font-size:11px;color:var(--muted)}
 
-/* ─── LAYOUT ───────────────────────────────────────────────────────────────── */
-.workspace{display:flex;flex:1;overflow:hidden;position:relative;z-index:1}
-.center{flex:1;overflow-y:auto;display:flex;flex-direction:column}
-.center::-webkit-scrollbar{width:5px}
-.center::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}
-.center::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.14)}
-.right-rail{width:260px;backdrop-filter:blur(4px);background:rgba(20,20,24,0.7);border-left:0.5px solid var(--border-subtle);display:flex;flex-direction:column;flex-shrink:0}
-
-/* ─── CLUSTER CHIPS ───────────────────────────────────────────────────────── */
-.cluster-chips-wrap{display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:center}
-.cluster-chip{display:flex;align-items:center;gap:var(--space-2);padding:5px 12px;border-radius:var(--radius-pill);border:0.5px solid var(--border-default);background:var(--bg-surface-2);font-size:var(--text-sm);color:var(--text-secondary);cursor:pointer;transition:all var(--ease-fast)}
-.cluster-chip:hover{background:var(--bg-surface-3);color:var(--text-primary);border-color:var(--border-strong)}
-.cluster-chip.active{background:rgba(59,114,255,0.1);border-color:rgba(59,114,255,0.3);color:var(--blue-400)}
-.cluster-chip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.cluster-chip-label{font-weight:500}
-.cluster-chip-count{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-tertiary);margin-left:2px}
-.cluster-chip.active .cluster-chip-count{color:rgba(107,151,255,0.7)}
-
-/* ─── RAIL ─────────────────────────────────────────────────────────────────── */
-.rail-section{padding:14px 14px 6px;font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:500;color:var(--text-tertiary);letter-spacing:0.08em;text-transform:uppercase}
-.rail-item{padding:8px 14px;cursor:pointer;border-left:2px solid transparent;transition:background var(--ease-fast),border-color var(--ease-fast);display:flex;align-items:center;gap:var(--space-2)}
-.rail-item:hover{background:var(--bg-surface-2)}
-.rail-item.active{background:rgba(59,114,255,0.08);border-left-color:var(--blue-500)}
-.rail-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.rail-label{font-size:var(--text-sm);font-weight:500;color:var(--text-primary);flex:1}
-.rail-count{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-tertiary);background:var(--bg-surface-3);padding:2px 6px;border-radius:var(--radius-md)}
-
-/* ─── VIEW / SECTION ───────────────────────────────────────────────────────── */
+/* ── CENTER COLUMN ───────────────────────────────────────────────────── */
+.center-col{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.content-area{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.content-area::-webkit-scrollbar{width:3px}
+.content-area::-webkit-scrollbar-thumb{background:var(--s3)}
 .view{display:none;flex-direction:column;gap:0}
 .view.active{display:flex}
-.view-header{padding:var(--space-4) var(--space-5);border-bottom:0.5px solid var(--border-subtle);display:flex;align-items:flex-end;gap:var(--space-3);flex-shrink:0}
-.view-title{font-size:18px;font-weight:500;line-height:1.3;color:var(--text-primary)}
-.view-sub{font-size:var(--text-sm);color:var(--text-secondary);line-height:1.6;margin-top:4px}
-.view-body{padding:var(--space-4) var(--space-5);display:flex;flex-direction:column;gap:var(--space-4)}
+.view-header{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-end;gap:12px;flex-shrink:0}
+.view-title{font-family:'Instrument Serif',serif;font-size:20px;line-height:1}
+.view-sub{font-size:11px;color:var(--muted2);margin-top:3px}
+.view-body{padding:16px 20px;display:flex;flex-direction:column;gap:14px}
 
-/* ─── CARDS (glass-like, glows bleed through) ───────────────────────────────── */
-.card{backdrop-filter:blur(4px);background:rgba(15,15,19,0.7);border:0.5px solid var(--border-subtle);border-radius:var(--radius-lg);overflow:hidden;transition:border-color var(--ease-fast)}
-.card:hover{border-color:var(--border-default)}
-.card-hd{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);padding:var(--space-2) var(--space-4);border-bottom:0.5px solid var(--border-subtle);background:var(--bg-surface-2);min-height:36px}
-.card-hd-title{font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-tertiary)}
-.card-bd{padding:var(--space-4)}
+/* ── INFERENCE AI ────────────────────────────────────────────────────── */
+.inference-panel{border-top:1px solid var(--border);background:var(--bg);padding:10px 20px 14px;flex-shrink:0;display:flex;flex-direction:column;gap:6px}
+.inf-messages{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;padding:0 0 4px}
+.inf-messages:empty{display:none}
+.inf-messages::-webkit-scrollbar{width:2px}
+.inf-messages::-webkit-scrollbar-thumb{background:var(--s3)}
+.inf-input-wrap{display:flex;align-items:flex-end;gap:8px;background:var(--s2);border:1px solid var(--border2);border-radius:14px;padding:8px 10px 8px 14px;transition:border-color .15s}
+.inf-input-wrap:focus-within{border-color:rgba(255,255,255,.2)}
+.inf-textarea{flex:1;background:transparent;border:none;outline:none;resize:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);line-height:1.5;max-height:120px;overflow-y:auto;padding:0}
+.inf-textarea::placeholder{color:var(--muted)}
+.inf-actions{display:flex;align-items:center;gap:4px;flex-shrink:0;padding-bottom:1px}
+.snap-btn{width:28px;height:28px;background:transparent;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s;padding:0}
+.snap-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+.snap-btn.active{color:var(--accent)}
+.snap-btn svg{width:15px;height:15px}
+.inf-send{width:30px;height:30px;background:var(--text);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:opacity .15s;padding:0;flex-shrink:0}
+.inf-send:hover{opacity:.85}
+.inf-send:disabled{opacity:.3;cursor:default}
+.inf-send svg{width:14px;height:14px;fill:var(--bg)}
+#snap-preview{position:relative;flex-shrink:0;display:none;align-items:center}
+#snap-img{height:28px;border-radius:5px;border:1px solid var(--border2)}
+.snap-remove{position:absolute;top:-5px;right:-5px;width:14px;height:14px;background:var(--s3);border:1px solid var(--border2);border-radius:50%;font-size:8px;color:var(--muted2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.snap-remove:hover{background:var(--crit);color:#fff}
+.inf-msg{font-size:12px;line-height:1.55;max-width:90%}
+.inf-msg.user{align-self:flex-end;background:var(--s2);border:1px solid var(--border);border-radius:12px 12px 3px 12px;padding:7px 11px;color:var(--text)}
+.inf-msg.ai{align-self:flex-start;color:var(--muted2);padding:2px 0}
+.inf-msg.ai strong{color:var(--accent)}
 
-/* ─── METRIC STRIP (unified, 1px dividers) ──────────────────────────────────── */
-.metric-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-bottom:20px;border:0.5px solid rgba(255,255,255,0.07);border-radius:var(--radius-lg);overflow:hidden}
-.metric-tile,.metric{background:#0F0F14;padding:16px 20px;border-right:0.5px solid rgba(255,255,255,0.06)}
-.metric-tile:last-child,.metric:last-child{border-right:none}
-.metric-val{font-family:var(--font-mono);font-size:26px;font-weight:500;line-height:1;margin-bottom:6px;letter-spacing:-0.02em}
-.metric-lbl{font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:#3A3A4C}
-.val-red{color:rgba(239,100,100,0.82)}
-.val-amber{color:rgba(245,158,11,0.78)}
-.val-green{color:rgba(74,222,128,0.72)}
-.val-blue{color:rgba(107,151,255,0.82)}
+/* ── CARDS ────────────────────────────────────────────────────────────── */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.card-hd{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card-hd-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase}
+.card-bd{padding:14px}
+.metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.metric-tile{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.metric-val{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;line-height:1.1;margin-bottom:3px}
+.metric-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.09em;text-transform:uppercase}
 
-/* ─── OPPORTUNITY TABLE ────────────────────────────────────────────────────── */
-.opp-section{background:rgba(15,15,20,0.7);border:0.5px solid rgba(255,255,255,0.06);border-radius:var(--radius-lg);margin-bottom:14px;overflow:hidden;backdrop-filter:blur(4px)}
-.opp-sec-head{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;border-bottom:0.5px solid rgba(255,255,255,0.05);background:rgba(20,20,26,0.6)}
-.opp-sec-lbl{font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:#3A3A50}
-.opp-sec-hint{font-size:10px;color:#2A2A38;font-family:var(--font-mono)}
+/* ── OPPORTUNITY TABLE ───────────────────────────────────────────────── */
 .opp-table{width:100%;border-collapse:collapse}
-.opp-table thead tr{border-bottom:0.5px solid rgba(255,255,255,0.05)}
-.opp-table thead th{padding:8px 16px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:#2A2A38;text-align:left;white-space:nowrap}
-.opp-table thead th.r{text-align:right}
-.opp-table tbody tr{border-bottom:0.5px solid rgba(255,255,255,0.035);transition:background 0.1s}
-.opp-table tbody tr:last-child{border-bottom:none}
-.opp-table tbody tr:hover{background:rgba(255,255,255,0.02)}
-.opp-table tbody td{padding:10px 16px;font-size:12px;vertical-align:middle}
-.opp-table tbody td.r{text-align:right}
-.opp-cluster-name{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:#B0B0C0}
-.opp-cdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.opp-rev-pill{font-family:var(--font-mono);font-size:11px;color:#3A3A50;background:rgba(255,255,255,0.04);padding:2px 7px;border-radius:4px;border:0.5px solid rgba(255,255,255,0.06)}
-.opp-score-cell{display:flex;align-items:center;gap:8px}
-.opp-score-bar-bg{width:56px;height:2px;background:rgba(255,255,255,0.06);border-radius:1px;overflow:hidden}
-.opp-score-bar{height:2px;border-radius:1px}
-.opp-score-num{font-family:var(--font-mono);font-size:11px;color:#5A5A70;min-width:20px}
-.opp-sent-pos{font-family:var(--font-mono);font-size:11px;color:rgba(74,222,128,0.55)}
-.opp-sent-neg{font-family:var(--font-mono);font-size:11px;color:rgba(255,100,100,0.55)}
-.opp-sev-num{font-family:var(--font-mono);font-size:11px;color:#4A4A5E}
-.opp-sev-num.hot{color:rgba(239,100,100,0.62)}
-.opp-act-num{font-family:var(--font-mono);font-size:11px;color:rgba(107,151,255,0.5)}
-.opp-signal-tag{font-family:var(--font-mono);font-size:10px;color:#333344;font-style:italic}
-.opp-bar-wrap{width:56px;height:2px;background:rgba(255,255,255,0.06);border-radius:1px;overflow:hidden}
-.opp-bar{height:100%;border-radius:1px;transition:width var(--ease-fast)}
+.opp-table th{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;text-align:left;padding:0 10px 8px;border-bottom:1px solid var(--border)}
+.opp-table td{padding:9px 10px;border-bottom:1px solid var(--border);font-size:11px;vertical-align:top}
+.opp-table tr:last-child td{border-bottom:none}
+.opp-table tr:hover td{background:rgba(255,255,255,.02)}
+.opp-bar-wrap{width:80px;height:5px;background:var(--s3);border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:6px}
+.opp-bar{height:100%;border-radius:3px}
 
-/* ─── TAXONOMY TREE ─────────────────────────────────────────────────────────── */
+/* ── TAXONOMY TREE ───────────────────────────────────────────────────── */
 .tax-node{margin-bottom:2px}
-.tax-row{display:flex;align-items:center;gap:var(--space-2);padding:4px var(--space-2);border-radius:var(--radius-md);cursor:pointer;transition:background var(--ease-fast);min-height:28px}
-.tax-row:hover{background:var(--bg-surface-3)}
-.tax-row.selected{border-left:2px solid var(--blue-500);padding-left:calc(var(--space-2) - 2px)}
-.tax-chevron{font-size:9px;color:var(--text-tertiary);width:14px;text-align:center;transition:transform .2s}
+.tax-row{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;cursor:pointer;transition:background .15s}
+.tax-row:hover{background:var(--s2)}
+.tax-row.selected{background:rgba(77,124,254,.1);border:1px solid rgba(77,124,254,.2)}
+.tax-chevron{font-size:9px;color:var(--muted);width:10px;text-align:center;transition:transform .2s}
 .tax-chevron.open{transform:rotate(90deg)}
-.tax-pill{font-family:var(--font-mono);font-size:9px;font-weight:700;padding:1px 5px;border-radius:var(--radius-sm);letter-spacing:0.04em}
-.tax-name{font-size:var(--text-sm);font-weight:500;flex:1}
-.tax-cnt{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-tertiary)}
-.tax-children{margin-left:20px;border-left:0.5px solid var(--border-subtle);padding-left:var(--space-2);margin-top:2px;display:none}
+.tax-pill{font-family:'DM Mono',monospace;font-size:9px;padding:2px 6px;border-radius:3px;font-weight:500}
+.tax-name{font-size:11px;font-weight:500;flex:1}
+.tax-cnt{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)}
+.tax-children{margin-left:20px;border-left:1px solid var(--border);padding-left:8px;margin-top:2px;display:none}
 .tax-children.open{display:block}
 
-/* ─── SIGNAL BARS (TF-IDF) ─────────────────────────────────────────────────── */
+/* ── WORD FREQ ───────────────────────────────────────────────────────── */
 .freq-grid{display:flex;flex-direction:column;gap:5px}
-.freq-row{display:grid;grid-template-columns:110px 1fr 36px 44px;align-items:center;gap:var(--space-2);margin-bottom:5px}
-.freq-word{font-size:var(--text-sm);color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.freq-word.rep{color:var(--amber)}
-.freq-track{flex:1;height:3px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
-.freq-fill{height:3px;background:var(--amber);border-radius:2px;transition:width 350ms cubic-bezier(0.16,1,0.3,1)}
-.freq-n,.freq-pct{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-tertiary);min-width:36px;text-align:right}
-.freq-pct{color:var(--blue-400)}
+.freq-row{display:grid;grid-template-columns:110px 1fr 36px 44px;align-items:center;gap:8px}
+.freq-word{font-family:'DM Mono',monospace;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.freq-word.rep{color:#f0c454}
+.freq-track{height:5px;background:var(--s3);border-radius:3px;overflow:hidden}
+.freq-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.freq-n{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-align:right}
+.freq-pct{font-family:'DM Mono',monospace;font-size:9px;color:var(--accent);text-align:right}
 
-/* ─── REVIEW CARDS (quiet, recedes into background) ────────────────────────── */
-.rev-card{padding:var(--space-3) 0;border-bottom:0.5px solid rgba(255,255,255,0.04)}
-.rev-card:last-child{border-bottom:none}
-.rev-card.rep{padding-left:var(--space-4);border-left:1px solid rgba(255,255,255,0.07);margin-left:0}
-.rev-hd{font-size:var(--text-xs);color:rgba(255,255,255,0.35);margin-bottom:3px;line-height:1.4}
-.rev-hd .rev-meta-sep{opacity:0.5;margin:0 4px}
-.rev-txt{font-size:12px;font-weight:400;color:#5A5A70;line-height:1.5}
-.pill{display:inline-flex;align-items:center;font-family:var(--font-mono);font-size:var(--text-2xs);padding:2px var(--space-2);border-radius:var(--radius-pill);font-weight:500;background:var(--bg-surface-3);color:var(--text-secondary);border:0.5px solid var(--border-default)}
-.chip{font-family:var(--font-mono);font-size:var(--text-2xs);padding:3px 8px;border-radius:var(--radius-pill);border:0.5px solid;display:inline-block;margin:2px 4px 2px 0}
+/* ── REVIEW CARDS ────────────────────────────────────────────────────── */
+.rev-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;transition:border-color .15s}
+.rev-card:hover{border-color:var(--border2)}
+.rev-card.rep{border-color:rgba(77,124,254,.35)}
+.rev-hd{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.rev-name{font-size:11px;font-weight:600;flex:1}
+.rev-txt{font-size:11px;color:var(--muted2);line-height:1.5}
+.pill{display:inline-flex;align-items:center;font-family:'DM Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;font-weight:500}
+.chip{font-family:'DM Mono',monospace;font-size:9px;padding:3px 8px;border-radius:20px;border:1px solid;display:inline-block;margin:2px 3px 2px 0}
+.phrase-wrap{display:flex;flex-wrap:wrap;gap:5px;padding-top:4px}
+.phrase-chip{font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;border-radius:20px;background:rgba(240,196,84,.08);border:1px solid rgba(240,196,84,.25);color:#f0c454}
+.phrase-chip span{color:var(--muted);margin-left:4px}
 
-/* ─── PHRASE TAGS ───────────────────────────────────────────────────────────── */
-.phrase-wrap{display:flex;flex-wrap:wrap;gap:var(--space-2);padding-top:6px}
-.phrase-chip{display:inline-block;padding:3px 10px;border-radius:var(--radius-pill);background:rgba(255,255,255,0.04);border:0.5px solid var(--border-subtle);font-size:var(--text-xs);color:var(--text-secondary);font-family:var(--font-mono);transition:all var(--ease-fast)}
-.phrase-chip:hover{background:rgba(255,255,255,0.07);color:var(--text-primary)}
-.phrase-chip span{color:var(--text-tertiary);margin-left:4px}
+/* ── ACT PANEL ───────────────────────────────────────────────────────── */
+.alert-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px}
+.alert-card.crit{border-left:3px solid var(--crit)}
+.alert-card.warn{border-left:3px solid var(--warn)}
+.alert-card.ok{border-left:3px solid var(--act)}
+.alert-hd{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.alert-icon{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.alert-title{font-size:12px;font-weight:600}
+.alert-body{font-size:11px;color:var(--muted2);line-height:1.5}
+.alert-actions{display:flex;gap:6px;margin-top:8px}
+.act-btn{font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;border-radius:5px;border:1px solid var(--border2);background:transparent;color:var(--muted2);cursor:pointer;transition:all .15s}
+.act-btn:hover{border-color:var(--accent);color:var(--text)}
+.act-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.act-btn.primary:hover{opacity:.85}
 
-/* ─── ALERT CARDS (2px left border) ─────────────────────────────────────────── */
-.alert-card{backdrop-filter:blur(4px);background:rgba(15,15,19,0.7);border:0.5px solid var(--border-subtle);border-radius:var(--radius-lg);padding:var(--space-4) var(--space-5);margin-bottom:var(--space-3);transition:border-color var(--ease-fast)}
-.alert-hd{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2)}
-.alert-icon{width:22px;height:22px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
-.alert-title{font-size:var(--text-md);font-weight:500;flex:1}
-.alert-stats{display:flex;gap:var(--space-2);align-items:center}
-.alert-stat{font-family:var(--font-mono);font-size:var(--text-2xs);padding:2px 8px;border-radius:var(--radius-md);background:var(--bg-surface-3);color:var(--text-secondary)}
-.alert-body{font-size:var(--text-sm);color:var(--text-secondary);line-height:1.6}
-.alert-signals{font-size:11px;color:var(--text-tertiary);margin-bottom:var(--space-3)}
-.alert-sev{font-weight:600}
-.alert-actions{display:flex;gap:var(--space-2);margin-top:var(--space-3);align-items:center}
-.act-btn{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 var(--space-4);font-family:var(--font-ui);font-size:var(--text-sm);font-weight:500;border-radius:var(--radius-lg);border:0.5px solid var(--border-strong);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all var(--ease-fast)}
-.act-btn:hover{background:var(--bg-surface-3);color:var(--text-primary)}
-.act-btn.primary{background:var(--blue-500);color:#fff;border:none;border-top:1px solid rgba(255,255,255,0.15);box-shadow:0 1px 0 rgba(0,0,0,0.4)}
-.act-btn.primary:hover{background:var(--blue-600)}
-.act-btn.gen{background:var(--blue-500);color:#fff;border:none;border-top:1px solid rgba(255,255,255,0.15);height:34px}
-.act-btn.gen:hover{background:var(--blue-600)}
-.act-btn.gen.loading{opacity:.6;pointer-events:none}
+/* ── SOURCE + KG ─────────────────────────────────────────────────────── */
+.source-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.source-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.source-name{font-size:11px;font-weight:600}
+.source-meta{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)}
+.source-status{font-family:'DM Mono',monospace;font-size:9px;padding:2px 6px;border-radius:3px;align-self:flex-start}
+.status-live{background:rgba(34,201,123,.12);color:var(--act)}
+.status-enrich{background:rgba(240,160,48,.12);color:var(--warn)}
+.kg-entity{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;background:var(--s2);border:1px solid var(--border);margin-bottom:5px}
+.kg-type{font-family:'DM Mono',monospace;font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(155,112,245,.12);color:var(--purple)}
+.kg-name{font-size:11px;font-weight:500;flex:1}
+.kg-links{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)}
+div.divider{height:1px;background:var(--border);margin:6px 0}
 
-/* ─── INSIGHT REPORT ───────────────────────────────────────────────────────── */
-.insight-report{margin-top:var(--space-4);border-top:0.5px solid var(--border-subtle);padding-top:var(--space-4);animation:insightFadeIn .4s ease}
-@keyframes insightFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.insight-section{margin-bottom:var(--space-4)}
-.insight-label{font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:4px}
-.insight-text{font-size:var(--text-sm);color:var(--text-secondary);line-height:1.6}
-.insight-text ul{margin:6px 0 6px 16px;padding:0}
-.insight-text li{margin-bottom:4px}
-.insight-text blockquote{border-left:2px solid var(--border-default);margin:8px 0;padding:6px 12px;font-style:italic;color:var(--text-secondary)}
-.insight-priority-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--radius-pill);font-size:var(--text-xs);font-weight:600}
-.insight-priority-badge.crit-bg{background:var(--red-bg);color:#FF7A7A;border:0.5px solid rgba(255,68,68,0.25)}
-.insight-priority-badge.high-bg{background:var(--amber-bg);color:#F5C56A;border:0.5px solid rgba(245,166,35,0.25)}
-.insight-priority-badge.med-bg{background:rgba(59,114,255,0.1);color:var(--blue-400);border:0.5px solid rgba(59,114,255,0.2)}
-.insight-priority-badge.low-bg{background:var(--green-bg);color:#4ADE80;border:0.5px solid rgba(0,200,83,0.2)}
-.insight-actions{display:flex;gap:var(--space-2);margin-top:var(--space-3);padding-top:var(--space-3);border-top:0.5px solid var(--border-subtle)}
-.insight-actions .act-btn{height:28px;padding:0 12px;font-size:11px}
+/* ── INSIGHT CARDS ───────────────────────────────────────────────────── */
+.insight-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.ins-header{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.ins-num{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;color:var(--muted);background:var(--s3);padding:2px 7px;border-radius:4px;flex-shrink:0}
+.ins-title{font-size:12px;font-weight:600;color:var(--text);flex:1;line-height:1.3}
+.ins-section{display:flex;flex-direction:column;gap:3px}
+.ins-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.ins-body{font-size:11px;color:var(--muted2);line-height:1.6}
+.ins-body em{color:var(--text);font-style:italic}
+.ins-body strong{color:var(--text);font-weight:600}
+.ins-actions{display:flex;gap:6px;margin-top:2px;padding-top:8px;border-top:1px solid var(--border)}
 
-/* ─── SLACK COPY BLOCK ─────────────────────────────────────────────────────── */
-.slack-block{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.07);border-radius:var(--radius-lg);padding:var(--space-4);font-family:var(--font-mono);font-size:11px;line-height:1.6;white-space:pre-wrap;color:rgba(255,255,255,0.35);position:relative;margin-top:var(--space-2)}
-.slack-copy-btn{position:absolute;top:8px;right:8px;font-size:var(--text-xs);color:var(--text-secondary);background:var(--bg-surface-3);border:0.5px solid var(--border-default);border-radius:var(--radius-md);padding:2px 8px;cursor:pointer;transition:all var(--ease-fast)}
-.slack-copy-btn:hover{color:var(--text-primary);border-color:var(--border-strong)}
-.slack-copy-btn.copied{background:var(--green);border-color:var(--green);color:#fff}
+/* ── SCREENSHOT CAPTURE ──────────────────────────────────────────────── */
+#capture-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;cursor:crosshair;background:rgba(0,0,0,0.35);display:none}
+#capture-overlay.active{display:block}
+#capture-hint{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:rgba(15,18,28,.92);border:1px solid var(--border2);color:var(--muted2);font-family:'DM Mono',monospace;font-size:11px;padding:6px 16px;border-radius:20px;z-index:10000;pointer-events:none;display:none}
+#capture-hint.active{display:block}
+#capture-rect{position:fixed;border:2px solid var(--accent);background:rgba(77,124,254,.1);z-index:10000;pointer-events:none;display:none}
+#capture-rect.active{display:block}
 
-/* ─── IMPACT / TREND / AGENT ───────────────────────────────────────────────── */
-.impact-row{display:flex;gap:var(--space-3);margin-top:var(--space-2);flex-wrap:wrap}
-.impact-tile{flex:1;min-width:140px;background:var(--bg-surface-2);border:0.5px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3)}
-.impact-tile-val{font-family:var(--font-mono);font-size:var(--text-md);font-weight:500;margin-bottom:4px}
-.impact-tile-lbl{font-size:var(--text-2xs);font-weight:500;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em}
-.trend-row{display:flex;gap:var(--space-3);flex-wrap:wrap;margin-bottom:var(--space-2)}
-.trend-chip{flex:1;min-width:180px;backdrop-filter:blur(4px);background:rgba(15,15,19,0.7);border:0.5px solid var(--border-subtle);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);display:flex;align-items:flex-start;gap:var(--space-2)}
-.trend-icon{font-size:16px;flex-shrink:0;margin-top:1px}
-.trend-body{font-size:var(--text-sm);color:var(--text-primary);line-height:1.4}
-.trend-body strong{color:var(--blue-400)}
-.trend-body .trend-sub{font-size:var(--text-2xs);color:var(--text-tertiary);margin-top:4px;font-family:var(--font-mono)}
-.agent-row{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-4);background:var(--bg-surface-1);border:0.5px solid var(--border-subtle);border-radius:var(--radius-lg);margin-bottom:var(--space-2)}
-.agent-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.agent-dot.live{background:var(--green);box-shadow:0 0 6px rgba(0,200,83,.4)}
-.agent-dot.paused{background:var(--text-tertiary)}
-.agent-name{font-size:var(--text-sm);font-weight:500;flex:1}
-.agent-desc{font-size:var(--text-xs);color:var(--text-secondary);flex:2}
-.agent-ts{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-tertiary)}
-.agent-toggle{width:32px;height:17px;border-radius:9px;background:var(--bg-surface-3);border:0.5px solid var(--border-default);cursor:pointer;position:relative;transition:background var(--ease-fast)}
-.agent-toggle.on{background:rgba(0,200,83,.2);border-color:var(--green)}
-.agent-toggle::after{content:'';position:absolute;width:13px;height:13px;border-radius:50%;background:var(--text-tertiary);top:1px;left:1px;transition:all .2s}
-.agent-toggle.on::after{left:16px;background:var(--green)}
+/* ── UPLOAD VIEW ─────────────────────────────────────────────────────── */
+.upload-zone{border:2px dashed var(--border2);border-radius:12px;padding:40px 24px;text-align:center;cursor:pointer;transition:all .2s;background:var(--s2)}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(77,124,254,.06)}
+.upload-zone input[type=file]{display:none}
+.upload-icon{font-size:32px;margin-bottom:12px}
+.upload-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
+.upload-sub{font-size:11px;color:var(--muted2)}
+.upload-btn{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:8px 18px;background:var(--accent);border:none;border-radius:7px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.upload-btn:hover{opacity:.85}
+.upload-btn.secondary{background:transparent;border:1px solid var(--border2);color:var(--muted2)}
+.upload-btn.secondary:hover{border-color:var(--accent);color:var(--accent)}
+.col-map{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+.col-map-item{background:var(--s2);border:1px solid var(--border);border-radius:7px;padding:8px 10px}
+.col-map-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em}
+.col-map-val{font-size:11px;color:var(--text);font-weight:500}
+.col-map-val.ok{color:var(--act)}
+.col-map-val.miss{color:var(--warn)}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s ease;width:0%}
+.log-line{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);padding:2px 0;border-bottom:1px solid var(--border)}
+.log-line.ok{color:var(--act)}
+.log-line.err{color:var(--crit)}
+.dl-btn{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--s2);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;font-size:12px;font-weight:500}
+.dl-btn:hover{border-color:var(--act);color:var(--act)}
 
-/* ─── CHATBOT SIDEBAR ─────────────────────────────────────────────────────── */
-.chat-header{padding:var(--space-3) var(--space-4);border-bottom:0.5px solid var(--border-subtle);display:flex;align-items:center;gap:var(--space-2);flex-shrink:0}
-.chat-title{font-size:var(--text-md);font-weight:500}
-.chat-model{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-tertiary);margin-left:auto}
-.chat-messages{flex:1;overflow-y:auto;padding:var(--space-3) var(--space-4);display:flex;flex-direction:column;gap:var(--space-2)}
-.chat-messages::-webkit-scrollbar{width:5px}
-.chat-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}
-.msg{max-width:92%;border-radius:var(--radius-lg);padding:var(--space-2) var(--space-3);font-size:var(--text-sm);line-height:1.5}
-.msg.user{background:rgba(59,114,255,.12);border:0.5px solid rgba(59,114,255,.2);align-self:flex-end;color:var(--text-primary)}
-.msg.ai{background:var(--bg-surface-1);border:0.5px solid var(--border-subtle);align-self:flex-start;color:var(--text-primary)}
-.msg.ai strong{color:var(--blue-400);font-weight:500}
-.msg.ai em{color:var(--green);font-style:normal}
-.thinking{align-self:flex-start;background:var(--bg-surface-1);border:0.5px solid var(--border-subtle);border-radius:var(--radius-lg);padding:var(--space-2) var(--space-3);display:flex;gap:4px}
-.td{width:5px;height:5px;border-radius:50%;background:var(--text-tertiary);animation:bob 1.2s infinite}
-.td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
-@keyframes bob{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
-.chat-suggestions{padding:var(--space-2) var(--space-4);border-top:0.5px solid var(--border-subtle);display:flex;flex-wrap:wrap;gap:5px;flex-shrink:0}
-.sug{font-size:var(--text-sm);color:var(--text-secondary);cursor:pointer;transition:background var(--ease-fast);padding:4px 0;background:none;border:none}
-.sug::before{content:'→ ';color:var(--blue-400);opacity:0.7}
-.sug:hover{background:rgba(255,255,255,0.03);color:var(--text-primary)}
-.chat-input-row{display:flex;gap:var(--space-2);padding:var(--space-3) var(--space-4);border-top:0.5px solid var(--border-subtle);flex-shrink:0}
-.chat-inp{flex:1;padding:8px 10px;border-radius:var(--radius-lg);border:0.5px solid var(--border-default);background:var(--bg-surface-1);font-size:var(--text-sm);color:var(--text-primary);font-family:var(--font-ui);outline:none;resize:none;height:32px;transition:border-color var(--ease-fast)}
-.chat-inp::placeholder{color:var(--text-tertiary)}
-.chat-inp:focus{border-color:var(--border-focus);box-shadow:0 0 0 2px rgba(59,114,255,0.12)}
-.send{width:32px;height:32px;border-radius:var(--radius-lg);background:var(--blue-500);color:#fff;border:none;border-top:1px solid rgba(255,255,255,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background var(--ease-fast)}
-.send:hover{background:var(--blue-600)}.send:disabled{opacity:.35;cursor:default}
-.send svg{width:14px;height:14px;fill:#fff}
+/* ── IMPACT TILES (Act view) ─────────────────────────────────────────── */
+.impact-row{display:flex;gap:8px;margin-top:6px}
+.impact-tile{flex:1;background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:8px;text-align:center}
+.impact-tile-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--text)}
+.impact-tile-lbl{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
 
-/* ─── SOURCE CARDS / KG ────────────────────────────────────────────────────── */
-.source-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-2)}
-.source-card{background:var(--bg-surface-2);border:0.5px solid var(--border-subtle);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);display:flex;flex-direction:column;gap:6px}
-.source-name{font-size:var(--text-sm);font-weight:500}
-.source-meta{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-tertiary)}
-.source-status{font-family:var(--font-mono);font-size:var(--text-2xs);padding:2px 8px;border-radius:var(--radius-md);align-self:flex-start}
-.source-connected{border-left:2px solid rgba(0,200,83,0.4);background:rgba(255,255,255,0.02)}
-.source-disconnected{opacity:0.6}
-.status-live{background:var(--green-bg);color:var(--green);border:0.5px solid rgba(0,200,83,0.2)}
-.status-connect{background:transparent;color:var(--text-tertiary);border:0.5px solid var(--border-default)}
-.kg-entity{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);border-radius:var(--radius-lg);background:var(--bg-surface-2);border:0.5px solid var(--border-subtle);margin-bottom:var(--space-2)}
-.kg-type{font-family:var(--font-mono);font-size:10px;color:var(--text-tertiary)}
-.kg-name{font-size:var(--text-sm);font-weight:500;flex:1}
-.kg-links{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-tertiary)}
-
-/* ─── UPLOAD VIEW ──────────────────────────────────────────────────────────── */
-.upload-zone{border:2px dashed var(--border-default);border-radius:var(--radius-lg);padding:48px 24px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s}
-.upload-zone:hover,.upload-zone.drag-over{border-color:var(--blue-500);background:rgba(59,114,255,0.06)}
-.upload-zone-icon{font-size:36px;margin-bottom:12px;opacity:0.5}
-.upload-zone-text{font-size:var(--text-md);color:var(--text-secondary)}
-.upload-zone-hint{font-size:var(--text-xs);color:var(--text-tertiary);margin-top:6px}
-.col-map{display:flex;gap:var(--space-3);flex-wrap:wrap;margin-top:var(--space-3)}
-.col-indicator{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius-pill);border:0.5px solid var(--border-default);background:var(--bg-surface-2);font-size:var(--text-sm)}
-.col-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.col-dot.ok{background:var(--green)}.col-dot.warn{background:var(--amber)}
-.progress-wrap{margin-top:var(--space-4);display:none}
-.progress-bar-bg{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
-.progress-bar-fill{height:6px;width:0%;border-radius:3px;background:var(--blue-500);transition:width .3s}
-.progress-label{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-tertiary);margin-top:4px}
-.log-area{margin-top:var(--space-3);max-height:180px;overflow-y:auto;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-tertiary);background:var(--bg-surface-1);border:0.5px solid var(--border-subtle);border-radius:var(--radius-md);padding:var(--space-3);display:none}
-.export-section{margin-top:var(--space-4);display:none;gap:var(--space-3)}
-.export-btn{padding:8px 20px;border-radius:var(--radius-md);border:0.5px solid var(--border-default);background:var(--bg-surface-2);color:var(--text-primary);font-size:var(--text-sm);font-weight:500;cursor:pointer;transition:all var(--ease-fast)}
-.export-btn:hover{background:var(--bg-surface-3);border-color:var(--border-strong)}
-.export-btn.primary{background:var(--blue-500);border-color:var(--blue-600);color:#fff}
-.export-btn.primary:hover{background:var(--blue-600)}
-.process-btn{margin-top:var(--space-4);padding:10px 28px;border-radius:var(--radius-md);border:none;background:var(--blue-500);color:#fff;font-size:var(--text-sm);font-weight:600;cursor:pointer;transition:background .15s;display:none}
-.process-btn:hover{background:var(--blue-600)}
-.process-btn:disabled{opacity:0.4;cursor:not-allowed}
-
-div.divider{height:0.5px;background:var(--border-subtle);margin:var(--space-4) 0}
-.demand-row{display:flex;align-items:center;gap:0;padding:9px 16px;border-bottom:0.5px solid rgba(255,255,255,0.04)}
-.demand-row:last-child{border-bottom:none}
-.demand-label{font-size:12px;color:#5E5E70;width:180px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.demand-bar-wrap{flex:1;display:flex;align-items:center;gap:10px}
-.demand-rev-count{font-family:var(--font-mono);font-size:10px;color:#2E2E3E;width:42px;flex-shrink:0}
-.demand-bar-bg{flex:1;height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden}
-.demand-bar{height:3px;border-radius:2px}
-.demand-p{font-family:var(--font-mono);font-size:10px;color:#2A2A3A;width:36px;text-align:right;flex-shrink:0}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 </style>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-<div class="glow-1"></div><div class="glow-2"></div><div class="glow-3"></div><div class="glow-4"></div>
 
-<!-- NAV -->
-<nav class="nav-wrap">
-  <div class="logo-block">
-    <span class="logo-slash">/</span>
-    <div class="logo-text"><em>review</em> intel</div>
+<!-- ═══════════════════════════════════════════════════════════════════
+     SIDEBAR
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-text">review <span>intel</span></div>
   </div>
-  <div class="tabs">
-    <div class="tab" data-view="upload" onclick="showView('upload')">Upload Reviews</div>
-    <div class="tab active" data-view="unify" onclick="showView('unify')">Data Sources</div>
-    <div class="tab" data-view="understand" onclick="showView('understand')">Taxonomy</div>
-    <div class="tab" data-view="opportunity" onclick="showView('opportunity')">Opportunities</div>
-    <div class="tab" data-view="act" onclick="showView('act')">Act</div>
+  <div class="sidebar-nav">
+    <div class="nav-item" onclick="showView('upload')" id="tab-upload">
+      <span class="nav-icon">📂</span><span class="nav-label">Upload Reviews</span>
+    </div>
+    <div class="nav-item active" onclick="showView('unify')" id="tab-unify">
+      <span class="nav-icon">🔗</span><span class="nav-label">Data Sources</span><span class="nav-badge badge-u1">UNIFY</span>
+    </div>
+    <div class="nav-item" onclick="showView('understand')" id="tab-understand">
+      <span class="nav-icon">🌿</span><span class="nav-label">Taxonomy</span><span class="nav-badge badge-u2">UNDERSTAND</span>
+    </div>
+    <div class="nav-item" onclick="showView('opportunity')" id="tab-opportunity">
+      <span class="nav-icon">📊</span><span class="nav-label">Opportunities</span><span class="nav-badge badge-u2">SIZE</span>
+    </div>
+    <div class="nav-item" onclick="showView('act')" id="tab-act">
+      <span class="nav-icon">⚡</span><span class="nav-label">Alerts &amp; Agents</span><span class="nav-badge badge-act">ACT</span>
+    </div>
   </div>
-  <div class="nav-right">
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-body">
+    <div class="rail-section">Clusters</div>
+    <div id="rail-clusters"></div>
+    <div class="rail-section" style="margin-top:6px">Filters</div>
+    <div class="rail-item" id="filter-all" onclick="setFilter(-1)">
+      <div class="rail-dot" style="background:var(--muted2)"></div>
+      <div class="rail-label">All clusters</div>
+      <div class="rail-count" id="filter-all-count">0</div>
+    </div>
+    <div class="rail-section" style="margin-top:6px">Severity</div>
+    <div class="rail-item" onclick="filterSev('Critical')"><div class="rail-dot" style="background:var(--crit)"></div><div class="rail-label">Critical</div><div class="rail-count" id="sev-crit-count">0</div></div>
+    <div class="rail-item" onclick="filterSev('High')"><div class="rail-dot" style="background:var(--warn)"></div><div class="rail-label">High</div><div class="rail-count" id="sev-high-count">0</div></div>
+    <div class="rail-item" onclick="filterSev('Medium')"><div class="rail-dot" style="background:#f0c454"></div><div class="rail-label">Medium</div><div class="rail-count" id="sev-med-count">0</div></div>
+  </div>
+  <div class="sidebar-footer">
     <div class="status-dot pulse"></div>
-    <div class="nav-meta" id="nav-meta"></div>
+    <div class="nav-meta" id="nav-meta-text">0 reviews · 0 clusters · live</div>
   </div>
-</nav>
+</div>
 
+<!-- ═══════════════════════════════════════════════════════════════════
+     CENTER COLUMN
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="center-col">
+<div class="content-area">
 
-<div class="workspace">
+  <!-- ── UNIFY VIEW ──────────────────────────────────────────── -->
+  <div class="view active" id="view-unify">
+    <div class="view-header">
+      <div>
+        <div class="view-title">Unify</div>
+        <div class="view-sub">All feedback ingested, enriched, and modelled into a Knowledge Graph</div>
+      </div>
+      <div style="margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" id="unified-badge">0 records unified</div>
+    </div>
+    <div class="view-body">
+      <div class="metric-row">
+        <div class="metric-tile"><div class="metric-val" id="m-total" style="color:var(--accent)">0</div><div class="metric-lbl">Total Records</div></div>
+        <div class="metric-tile"><div class="metric-val" id="m-clusters" style="color:var(--act)">0</div><div class="metric-lbl">Clusters Found</div></div>
+        <div class="metric-tile"><div class="metric-val" id="m-critical" style="color:var(--warn)">0</div><div class="metric-lbl">Critical Issues</div></div>
+        <div class="metric-tile"><div class="metric-val" id="m-signals" style="color:var(--purple)">0</div><div class="metric-lbl">Unique Signals</div></div>
+      </div>
 
-  <!-- CENTER -->
-  <div class="center">
-
-    <!-- ── UPLOAD VIEW ────────────────────────────────────────── -->
-    <div class="view" id="view-upload">
-      <div class="view-header">
-        <div>
-          <div class="view-title">Upload Reviews</div>
-          <div class="view-sub">Drop an Excel file to analyse reviews entirely in your browser — no server upload needed</div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-title">Data Sources</div><div class="pill" style="background:rgba(34,201,123,.1);color:var(--act)">All live</div></div>
+        <div class="card-bd">
+          <div class="source-grid" id="source-grid">
+            <div class="source-card"><div class="source-name" id="src-primary-name">Pipeline Data</div><div class="source-meta" id="src-primary-meta">0 reviews</div><div class="source-status status-live">● LIVE</div></div>
+            <div class="source-card"><div class="source-name">Zendesk Tickets</div><div class="source-meta">0 records · ready</div><div class="source-status status-enrich">○ CONNECT</div></div>
+            <div class="source-card"><div class="source-name">Salesforce CRM</div><div class="source-meta">0 records · ready</div><div class="source-status status-enrich">○ CONNECT</div></div>
+          </div>
         </div>
       </div>
-      <div class="view-body">
 
-        <div class="card">
-          <div class="card-hd"><div class="card-hd-title">Import Excel File</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Supports .xlsx files</div></div>
-          <div class="card-bd">
-            <div class="upload-zone" id="upload-zone">
-              <div class="upload-zone-icon">&#128194;</div>
-              <div class="upload-zone-text">Drag & drop your <strong>.xlsx</strong> file here, or click to browse</div>
-              <div class="upload-zone-hint">The file is read entirely in your browser — nothing is uploaded to any server</div>
-              <input type="file" id="upload-file-input" accept=".xlsx,.xls" style="display:none">
-            </div>
-            <div class="col-map" id="col-map" style="display:none"></div>
-            <div id="upload-file-info" style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-tertiary)"></div>
-            <button class="process-btn" id="process-btn" onclick="processUploadedData()">Process Reviews</button>
-            <div class="progress-wrap" id="progress-wrap">
-              <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
-              <div class="progress-label" id="progress-label">Initialising…</div>
-            </div>
-            <div class="log-area" id="upload-log"></div>
-          </div>
-        </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-title">Knowledge Graph — Custom Objects</div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">Entities extracted from review metadata</div></div>
+        <div class="card-bd" id="kg-entities"></div>
+      </div>
 
-        <div class="card" id="export-card" style="display:none">
-          <div class="card-hd"><div class="card-hd-title">Export Results</div></div>
-          <div class="card-bd" style="display:flex;gap:12px;flex-wrap:wrap">
-            <button class="export-btn primary" onclick="exportExcel()">Download Analysis Excel</button>
-            <button class="export-btn" onclick="exportJSON()">Download JSON</button>
-          </div>
-        </div>
-
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-title">Review Feed</div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">sorted by severity</div></div>
+        <div class="card-bd" id="unify-review-feed" style="max-height:340px;overflow-y:auto"></div>
       </div>
     </div>
+  </div>
 
-    <!-- ── UNIFY VIEW ─────────────────────────────────────────── -->
-    <div class="view active" id="view-unify">
-      <div class="view-header">
-        <div>
-          <div class="view-title">Unify</div>
-          <div class="view-sub">All feedback ingested, enriched, and modelled into a Knowledge Graph</div>
-        </div>
-        <div class="nav-phase phase-u1" style="margin-left:auto" id="unified-badge"></div>
-      </div>
-      <div class="view-body">
-
-        <div class="metric-row">
-          <div class="metric-tile"><div class="metric-val" id="m-total" style="color:var(--accent)">-</div><div class="metric-lbl">Total Reviews</div></div>
-          <div class="metric-tile"><div class="metric-val" id="m-avg-sent" style="color:var(--warn)">-</div><div class="metric-lbl">Avg Sentiment</div></div>
-          <div class="metric-tile"><div class="metric-val" id="m-avg-sev" style="color:var(--crit)">-</div><div class="metric-lbl">Avg Severity</div></div>
-          <div class="metric-tile"><div class="metric-val" id="m-avg-act" style="color:var(--purple)">-</div><div class="metric-lbl">Avg Actionability</div></div>
-          <div class="metric-tile"><div class="metric-val" id="m-clusters" style="color:var(--act)">-</div><div class="metric-lbl">Clusters</div></div>
-        </div>
-
-        <div class="card">
-          <div class="card-hd"><div class="card-hd-title">Data Sources (Simulated)</div><div class="pill" style="background:rgba(34,201,123,.1);color:var(--act)">All live</div></div>
-          <div class="card-bd">
-            <div class="source-grid">
-              <div class="source-card source-connected"><div class="source-name">Google Play Reviews</div><div class="source-meta" id="src-gplay"></div><div class="source-status status-live">● LIVE</div></div>
-              <div class="source-card source-disconnected"><div class="source-name">Zendesk Tickets</div><div class="source-meta">0 records · ready</div><div class="source-status status-connect">CONNECT</div></div>
-              <div class="source-card source-disconnected"><div class="source-name">Salesforce CRM</div><div class="source-meta">0 records · ready</div><div class="source-status status-connect">CONNECT</div></div>
-              <div class="source-card source-disconnected"><div class="source-name">App Store Reviews</div><div class="source-meta">0 records · ready</div><div class="source-status status-connect">CONNECT</div></div>
-              <div class="source-card source-disconnected"><div class="source-name">In-App Surveys</div><div class="source-meta">0 records · ready</div><div class="source-status status-connect">CONNECT</div></div>
-              <div class="source-card source-disconnected"><div class="source-name">Intercom Chats</div><div class="source-meta">0 records · ready</div><div class="source-status status-connect">CONNECT</div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-hd"><div class="card-hd-title">Knowledge Graph — Custom Objects</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Entities extracted from review metadata</div></div>
-          <div class="card-bd" id="kg-entities"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-hd"><div class="card-hd-title">Data Enrichment Workflows</div></div>
-          <div class="card-bd" style="display:flex;flex-direction:column;gap:7px">
-            <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--s2);border-radius:7px;border:1px solid var(--border)">
-              <div class="pill status-live">● DONE</div>
-              <div style="font-size:11px;flex:1"><strong>Language normalisation</strong> — Hinglish, Marathi, Arabic detected and translated</div>
-              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">4 records</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--s2);border-radius:7px;border:1px solid var(--border)">
-              <div class="pill status-live">● DONE</div>
-              <div style="font-size:11px;flex:1"><strong>Severity tagging</strong> — keyword + weight scoring across 4 tiers</div>
-              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)" id="enrich-sev"></div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--s2);border-radius:7px;border:1px solid var(--border)">
-              <div class="pill status-live">● DONE</div>
-              <div style="font-size:11px;flex:1"><strong>Actionability scoring</strong> — specificity + quantity signals extracted</div>
-              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)" id="enrich-act"></div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--s2);border-radius:7px;border:1px solid var(--border)">
-              <div class="pill status-enrich">○ PENDING</div>
-              <div style="font-size:11px;flex:1"><strong>ARR / CSAT enrichment</strong> — link reviews to revenue impact via CRM</div>
-              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">connect Salesforce</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-hd"><div class="card-hd-title">All Reviews</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Sorted by severity</div></div>
-          <div class="card-bd" id="unify-review-feed" style="max-height:600px;overflow-y:auto"></div>
-        </div>
-
+  <!-- ── UNDERSTAND VIEW ─────────────────────────────────────── -->
+  <div class="view" id="view-understand">
+    <div class="view-header">
+      <div>
+        <div class="view-title">Understand</div>
+        <div class="view-sub">Adaptive 5-level taxonomy — auto-detected from review corpus</div>
       </div>
     </div>
-
-    <!-- ── UNDERSTAND VIEW ─────────────────────────────────────── -->
-    <div class="view" id="view-understand">
-      <div class="view-header">
-        <div>
-          <div class="view-title">Understand</div>
-          <div class="view-sub">Adaptive 5-level taxonomy — auto-detected from review corpus</div>
+    <div class="view-body">
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-hd-title">Taxonomy Tree — L1 → L2 → L3 → Theme → Subtheme</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">Click to expand · auto-generated by HDBSCAN + TF-IDF</div>
         </div>
+        <div class="card-bd" id="tax-tree"></div>
       </div>
-      <div class="view-body">
-
-        <div class="card">
-          <div class="card-hd">
-            <div class="card-hd-title">Taxonomy Tree — L1 → L2 → L3 → Theme → Subtheme</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Click to expand · auto-generated by HDBSCAN + TF-IDF</div>
-          </div>
-          <div class="card-bd" id="tax-tree"></div>
-          <div class="card-hd" style="border-top:1px solid var(--border);margin-top:0">
-            <div class="card-hd-title">Cluster Selection</div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Select to view cluster detail</div>
-          </div>
-          <div class="card-bd" style="padding-top:10px">
-            <div class="cluster-chips-wrap" id="understand-clusters"></div>
-          </div>
+      <div class="card" id="cluster-detail-card" style="display:none">
+        <div class="card-hd">
+          <div class="card-hd-title" id="detail-title">—</div>
+          <div id="detail-badges" style="display:flex;gap:5px"></div>
         </div>
-
-        <div class="card" id="cluster-detail-card" style="display:none">
-          <div class="card-hd">
-            <div class="card-hd-title" id="detail-title">—</div>
-            <div id="detail-badges" style="display:flex;gap:5px"></div>
-          </div>
-          <div class="card-bd">
-            <div class="metric-row" id="detail-metrics" style="margin-bottom:12px"></div>
-
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">TF-IDF Word Signals</div>
-            <div class="freq-grid" id="detail-freq"></div>
-
-            <div class="divider"></div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Repeated Phrases (cross-review)</div>
-            <div class="phrase-wrap" id="detail-phrases"></div>
-
-            <div class="divider"></div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Reviews in this cluster</div>
-            <div id="detail-reviews"></div>
-          </div>
+        <div class="card-bd">
+          <div class="metric-row" id="detail-metrics" style="margin-bottom:12px"></div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">TF-IDF Word Signals</div>
+          <div class="freq-grid" id="detail-freq"></div>
+          <div class="divider"></div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Repeated Phrases (cross-review)</div>
+          <div class="phrase-wrap" id="detail-phrases"></div>
+          <div class="divider"></div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Reviews in this cluster</div>
+          <div id="detail-reviews"></div>
         </div>
-
       </div>
     </div>
+  </div>
 
-    <!-- ── OPPORTUNITY VIEW ────────────────────────────────────── -->
-    <div class="view" id="view-opportunity">
-      <div class="view-header">
-        <div>
-          <div class="view-title">Opportunity Sizing</div>
-          <div class="view-sub">Feedback weighted by volume, severity, and revenue signal</div>
-        </div>
+  <!-- ── OPPORTUNITY VIEW ────────────────────────────────────── -->
+  <div class="view" id="view-opportunity">
+    <div class="view-header">
+      <div>
+        <div class="view-title">Opportunity Sizing</div>
+        <div class="view-sub">Feedback weighted by volume, severity, and revenue signal — sorted by review count (descending)</div>
       </div>
-      <div class="view-body">
-
-        <div class="metric-row" id="opp-metrics"></div>
-
-        <div class="opp-section">
-          <div class="opp-sec-head">
-            <span class="opp-sec-lbl">Cluster Opportunity Table</span>
-            <span class="opp-sec-hint">sorted by review count (descending)</span>
-          </div>
-          <table class="opp-table">
+    </div>
+    <div class="view-body">
+      <div class="metric-row" id="opp-metrics"></div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-title">Cluster Opportunity Table</div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">sorted by review count (descending)</div></div>
+        <div class="card-bd" style="padding:0">
+          <table class="opp-table" style="width:100%">
             <thead><tr>
-              <th style="width:220px">Cluster Theme</th>
-              <th>Reviews</th>
-              <th>Priority Score</th>
-              <th>Avg Sentiment</th>
-              <th class="r">High Severity</th>
-              <th class="r">Avg Actionability</th>
-              <th class="r">Top Signal</th>
+              <th style="padding-left:14px">Cluster Theme</th><th>Reviews</th><th>Priority Score</th><th>Avg Sentiment</th><th>High Severity</th><th>Avg Actionability</th><th>Top Signal</th>
             </tr></thead>
             <tbody id="opp-tbody"></tbody>
           </table>
         </div>
-
-        <div class="opp-section">
-          <div class="opp-sec-head">
-            <span class="opp-sec-lbl">Real Demand Data — Opportunity Sizing</span>
-          </div>
-          <div id="demand-bars"></div>
-        </div>
-
       </div>
-    </div>
-
-    <!-- ── ACT VIEW ────────────────────────────────────────────── -->
-    <div class="view" id="view-act">
-      <div class="view-header">
-        <div>
-          <div class="view-title">Act</div>
-          <div class="view-sub">PM-level intelligence — generate structured insights, impact estimates, and ready-to-share summaries</div>
-        </div>
-        <div id="act-agent-count" class="nav-phase phase-a" style="margin-left:auto">0 active agents</div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-title">Real Demand Data — Opportunity Sizing</div></div>
+        <div class="card-bd" style="display:flex;flex-direction:column;gap:8px" id="demand-bars"></div>
       </div>
-      <div class="view-body">
-
-        <div class="card">
-          <div class="card-hd"><div class="card-hd-title">Cluster Alerts — Generate Actionable Insights</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Click "Generate Insight" for a full PM-level report via AI</div></div>
-          <div class="card-bd" id="alerts-container"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-hd"><div class="card-hd-title">Agent Status Panel</div><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)">Monitoring agents watching your review pipeline</div></div>
-          <div class="card-bd" id="agent-panel"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-hd"><div class="card-hd-title">Agent Action Log</div></div>
-          <div class="card-bd" id="action-log" style="display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto">
-            <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">No actions taken yet. Generate insights above to begin.</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div><!-- /center -->
-
-  <!-- RIGHT RAIL: Inference AI chatbot -->
-  <div class="right-rail">
-    <div class="chat-header">
-      <div class="status-dot pulse"></div>
-      <div class="chat-title">Inference AI</div>
-      <div class="chat-model">groq · llama-3.1-8b</div>
-    </div>
-    <div class="chat-messages" id="chat-msgs">
-      <div class="msg ai">
-        I'm <strong>Inference AI</strong> — I have the full analysis: <strong id="chat-count"></strong> reviews, <strong id="chat-clusters"></strong> HDBSCAN clusters, TF-IDF word signals, repeated phrases, severity scores, and actionability ratings.<br><br>
-        Ask me anything about the data. I'll cite specific clusters, scores, and verbatim quotes.
-      </div>
-    </div>
-    <div class="chat-suggestions">
-      <div class="sug" onclick="sug(this)">Which cluster is most urgent?</div>
-      <div class="sug" onclick="sug(this)">What words repeat in billing?</div>
-      <div class="sug" onclick="sug(this)">Show me the top actionable reviews</div>
-      <div class="sug" onclick="sug(this)">What is the AI quality problem?</div>
-      <div class="sug" onclick="sug(this)">What should we fix first?</div>
-      <div class="sug" onclick="sug(this)">Summarise positive reviews</div>
-    </div>
-    <div class="chat-input-row">
-      <textarea class="chat-inp" id="chat-inp" rows="1" placeholder="Ask Inference AI…"
-        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chat()}"></textarea>
-      <button class="send" id="send-btn" onclick="chat()">
-        <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
-      </button>
     </div>
   </div>
 
-</div><!-- /workspace -->
+  <!-- ── ACT VIEW ────────────────────────────────────────────── -->
+  <div class="view" id="view-act">
+    <div class="view-header">
+      <div>
+        <div class="view-title">Act</div>
+        <div class="view-sub">Quality Monitor Agent — multi-insight analysis per cluster</div>
+      </div>
+      <div style="margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)" id="act-agent-count">0 clusters</div>
+    </div>
+    <div class="view-body" id="alerts-container"></div>
+  </div>
+
+  <!-- ── UPLOAD VIEW ─────────────────────────────────────────── -->
+  <div class="view" id="view-upload">
+    <div class="view-header">
+      <div>
+        <div class="view-title">Upload Reviews</div>
+        <div class="view-sub">Import any .xlsx file — columns auto-detected, full ML pipeline runs server-side</div>
+      </div>
+    </div>
+    <div class="view-body">
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-title">Excel Input</div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">Accepts .xlsx · columns auto-detected · no template required</div></div>
+        <div class="card-bd">
+          <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()"
+            ondragover="event.preventDefault();this.classList.add('drag')"
+            ondragleave="this.classList.remove('drag')"
+            ondrop="handleDrop(event)">
+            <input type="file" id="file-input" accept=".xlsx" onchange="handleFile(this.files[0])">
+            <div class="upload-icon">📊</div>
+            <div class="upload-title">Drop your Excel file here or click to browse</div>
+            <div class="upload-sub">Any .xlsx with a review/text/feedback column · name and date columns optional</div>
+            <button class="upload-btn" onclick="event.stopPropagation();document.getElementById('file-input').click()">Choose File</button>
+          </div>
+          <div id="col-map-preview" style="display:none;margin-top:14px">
+            <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);margin-bottom:8px;letter-spacing:.1em;text-transform:uppercase">Column Detection</div>
+            <div class="col-map">
+              <div class="col-map-item"><div class="col-map-label">Review Text</div><div class="col-map-val" id="cm-text">—</div></div>
+              <div class="col-map-item"><div class="col-map-label">Reviewer Name</div><div class="col-map-val" id="cm-name">—</div></div>
+              <div class="col-map-item"><div class="col-map-label">Date</div><div class="col-map-val" id="cm-date">—</div></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+              <button class="upload-btn" onclick="processUploadedData()" id="process-btn">⚡ Process Reviews</button>
+              <button class="upload-btn secondary" onclick="resetUpload()">✕ Clear</button>
+            </div>
+          </div>
+          <div id="process-progress" style="display:none;margin-top:14px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)" id="progress-label">Processing…</div>
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--accent)" id="progress-pct">0%</div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+            <div style="margin-top:10px;max-height:140px;overflow-y:auto" id="process-log"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-title">Accepted Column Names</div></div>
+        <div class="card-bd" style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:grid;grid-template-columns:120px 1fr;gap:8px;font-size:11px">
+            <div style="font-weight:600;color:var(--text)">Review text</div>
+            <div style="color:var(--muted2);font-family:'DM Mono',monospace;font-size:10px">text, review, feedback, comment, body, message</div>
+            <div style="font-weight:600;color:var(--text)">Reviewer name</div>
+            <div style="color:var(--muted2);font-family:'DM Mono',monospace;font-size:10px">name, reviewer, author, user, customer</div>
+            <div style="font-weight:600;color:var(--text)">Date</div>
+            <div style="color:var(--muted2);font-family:'DM Mono',monospace;font-size:10px">date, reviewed_on, review_date, submitted, created_at</div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px">Column names are case-insensitive. Partial matches work (e.g. "review_text" matches "text").</div>
+        </div>
+      </div>
+      <div class="card" id="export-card" style="display:none">
+        <div class="card-hd"><div class="card-hd-title">Export Results</div><div class="pill" style="background:rgba(34,201,123,.1);color:var(--act)">Ready</div></div>
+        <div class="card-bd" style="display:flex;gap:10px;flex-wrap:wrap">
+          <div class="dl-btn" onclick="exportExcel()">📊 <div><div style="font-size:11px;font-weight:600">Download Analysis Excel</div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">Reviews + Clusters + Taxonomy + CX Metrics</div></div></div>
+          <div class="dl-btn" onclick="exportJSON()">📄 <div><div style="font-size:11px;font-weight:600">Download JSON</div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">Full analysis for pipeline / API use</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content-area -->
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       INFERENCE AI — fixed at bottom of center column
+       ═══════════════════════════════════════════════════════════════ -->
+  <div class="inference-panel" id="inference-panel">
+    <div class="inf-messages" id="chat-msgs"></div>
+    <div class="inf-input-wrap">
+      <div id="snap-preview">
+        <img id="snap-img" onclick="removeSnap()" title="Click to remove"/>
+        <div class="snap-remove" onclick="removeSnap()">✕</div>
+      </div>
+      <textarea class="inf-textarea" id="chat-inp" rows="1"
+        placeholder="Ask a question about the data…"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chat()}"
+        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
+      <div class="inf-actions">
+        <button class="snap-btn" id="snap-btn" onclick="startCapture()" title="Select a region to ask about">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </button>
+        <button class="inf-send" id="send-btn" onclick="chat()">
+          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /center-col -->
+
+<!-- Screenshot overlay elements -->
+<div id="capture-overlay"></div>
+<div id="capture-hint">Click and drag to select a region</div>
+<div id="capture-rect"></div>
 
 <script>
-// ── DATA (injected from server) ──────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// DATA (injected from server via Jinja2)
+// ══════════════════════════════════════════════════════════════════════════════
 const CLUSTERS = {{ clusters_json | safe }};
 const REVIEWS  = {{ reviews_json | safe }};
 
-// ── DYNAMIC COUNTS ───────────────────────────────────────────────────────────
-document.getElementById('nav-meta').textContent = `${REVIEWS.length} reviews · ${CLUSTERS.length} clusters · live`;
+let activeFilter = -1;
+const insightCache = {};
+
+// ── DYNAMIC COUNTS ──────────────────────────────────────────────────────────
+const critCount = REVIEWS.filter(r => r.sev && r.sev.l === 'Critical').length;
+const highCount = REVIEWS.filter(r => r.sev && r.sev.l === 'High').length;
+const medCount  = REVIEWS.filter(r => r.sev && r.sev.l === 'Medium').length;
+document.getElementById('filter-all-count').textContent = REVIEWS.length;
+document.getElementById('sev-crit-count').textContent = critCount;
+document.getElementById('sev-high-count').textContent = highCount;
+document.getElementById('sev-med-count').textContent = medCount;
+document.getElementById('nav-meta-text').textContent = `${REVIEWS.length} reviews · ${CLUSTERS.length} clusters · live`;
+
+// ── UNIFY METRICS ───────────────────────────────────────────────────────────
 document.getElementById('m-total').textContent = REVIEWS.length;
 document.getElementById('m-clusters').textContent = CLUSTERS.length;
-const avgSent = REVIEWS.length ? (REVIEWS.reduce((a,r) => a + r.sent.c, 0) / REVIEWS.length) : 0;
-const avgSev = REVIEWS.length ? (REVIEWS.reduce((a,r) => a + r.sev.s, 0) / REVIEWS.length) : 0;
-const avgAct = REVIEWS.length ? (REVIEWS.reduce((a,r) => a + r.act.s, 0) / REVIEWS.length) : 0;
-document.getElementById('m-avg-sent').textContent = avgSent.toFixed(2);
-document.getElementById('m-avg-sent').style.color = avgSent >= 0 ? 'var(--act)' : 'var(--crit)';
-document.getElementById('m-avg-sev').textContent = avgSev.toFixed(1);
-document.getElementById('m-avg-act').textContent = avgAct.toFixed(2);
+document.getElementById('m-critical').textContent = critCount;
+document.getElementById('m-signals').textContent = CLUSTERS.reduce((s,c) => s + (c.signals ? c.signals.length : 0), 0);
 document.getElementById('unified-badge').textContent = `${REVIEWS.length} records unified`;
-document.getElementById('src-gplay').textContent = `${REVIEWS.length} reviews · Mar 7–12 2026`;
-document.getElementById('enrich-sev').textContent = `${REVIEWS.length} records`;
-document.getElementById('enrich-act').textContent = `${REVIEWS.length} records`;
-document.getElementById('chat-count').textContent = REVIEWS.length;
-document.getElementById('chat-clusters').textContent = CLUSTERS.length;
+document.getElementById('src-primary-meta').textContent = `${REVIEWS.length} reviews`;
 
-// ── UNIFY REVIEW FEED ────────────────────────────────────────────────────────
-const clusterMap = {};
-CLUSTERS.forEach(c => { clusterMap[c.id] = c; });
-const unifyFeed = document.getElementById('unify-review-feed');
-[...REVIEWS].sort((a,b) => b.sev.s - a.sev.s).forEach(r => {
-  const cl = clusterMap[r.cid];
-  const clLabel = cl ? cl.label : "Unclustered";
-  const clShort = clLabel.split(' ').slice(0,2).join(' ');
-  const sentVal = r.sent.c > 0 ? "+" : "" + r.sent.c.toFixed(2);
-  unifyFeed.innerHTML += `<div class="rev-card ${r.rep ? "rep" : ""}">
-    <div class="rev-hd">${r.rep ? "★ " : ""}${r.name} · ${clShort} · ${r.sev.l} · ${sentVal}</div>
-    <div class="rev-txt">${r.text}</div>
-  </div>`;
-});
-
-// ── KNOWLEDGE GRAPH ENTITIES ─────────────────────────────────────────────────
+// ── KNOWLEDGE GRAPH ─────────────────────────────────────────────────────────
 const kgEl = document.getElementById('kg-entities');
 const kgData = [
-  {type: 'PLATFORM', name: 'Android / Google Play', links: `linked to ${REVIEWS.length} reviews`},
-  ...CLUSTERS.filter(c => c.id !== 5).map(c => ({
-    type: 'FEATURE', name: c.l3 || c.label, links: `linked to ${c.count} reviews · ${c.label} cluster`
-  })),
+  {type:'PLATFORM', name:'Review Dataset', links:`linked to ${REVIEWS.length} reviews`},
+  ...CLUSTERS.map(c => ({type:'FEATURE', name: c.l3 || c.label, links:`linked to ${c.count} reviews · ${c.label} cluster`}))
 ];
 kgData.forEach(kg => {
   kgEl.innerHTML += `<div class="kg-entity"><div class="kg-type">${kg.type}</div><div class="kg-name">${kg.name}</div><div class="kg-links">${kg.links}</div></div>`;
 });
 
-function clusterSemanticColor(c) {
-  const lbl = (c.label || '').toLowerCase();
-  if (lbl.includes('billing') || lbl.includes('credit') || lbl.includes('payment') || c.priority > 0.5) return {fg:'var(--semantic-problem)',bg:'var(--semantic-problem-bg)'};
-  if (lbl.includes('positive') || lbl.includes('short') || c.sentiment > 0.3) return {fg:'var(--semantic-neutral)',bg:'var(--semantic-neutral-bg)'};
-  return {fg:'var(--semantic-muted)',bg:'var(--semantic-muted-bg)'};
-}
-let activeClusterId = -1;
-const understandClustersEl = document.getElementById("understand-clusters");
-[...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach((c, i) => {
-  const chip = document.createElement("div");
-  chip.className = "cluster-chip" + (i === 0 ? " active" : "");
-  chip.dataset.id = c.id;
-  const sc = clusterSemanticColor(c);
-  chip.innerHTML = `<div class="cluster-chip-dot" style="background:${sc.fg}"></div><span class="cluster-chip-label">${c.label.split(' ').slice(0,2).join(' ')}</span><span class="cluster-chip-count">${c.count}</span>`;
-  chip.onclick = () => {
-    document.querySelectorAll(".cluster-chip").forEach(ch => ch.classList.remove("active"));
-    chip.classList.add("active");
-    activeClusterId = c.id;
-    showView("understand");
-    selectCluster(c.id);
-  };
-  understandClustersEl.appendChild(chip);
+// ── REVIEW FEED ─────────────────────────────────────────────────────────────
+const feedEl = document.getElementById('unify-review-feed');
+[...REVIEWS].sort((a,b) => (b.sev?.s||0) - (a.sev?.s||0)).slice(0, 50).forEach(r => {
+  const cl = CLUSTERS.find(c => c.id === r.cid);
+  const clShort = cl ? cl.label.split(' ').slice(0,2).join(' ') : 'Unclustered';
+  const sentVal = (r.sent?.c > 0 ? '+' : '') + (r.sent?.c||0).toFixed(2);
+  feedEl.innerHTML += `<div class="rev-card ${r.rep?'rep':''}"><div class="rev-hd"><div class="rev-name">${r.rep?'★ ':''}${r.name}</div><span class="pill" style="background:var(--s3);color:var(--muted2)">${clShort}</span><span class="pill" style="background:var(--s3);color:var(--muted2)">${r.sev?.l||'Low'}</span></div><div class="rev-txt">${r.text}</div></div>`;
+});
+
+// ── LEFT RAIL CLUSTERS ──────────────────────────────────────────────────────
+const rail = document.getElementById('rail-clusters');
+CLUSTERS.forEach(c => {
+  const el = document.createElement('div');
+  el.className = 'rail-item'; el.id = `rail-${c.id}`;
+  el.innerHTML = `<div class="rail-dot" style="background:${c.color}"></div><div class="rail-label">${c.label.split(' ').slice(0,2).join(' ')}</div><div class="rail-count">${c.count}</div>`;
+  el.onclick = () => setFilter(c.id);
+  rail.appendChild(el);
 });
 
 function setFilter(id) {
-  activeClusterId = id;
-  document.querySelectorAll(".cluster-chip").forEach(ch => {
-    ch.classList.toggle("active", parseInt(ch.dataset.id) === id);
-  });
-  if (id >= 0) { showView("understand"); selectCluster(id); }
+  activeFilter = id;
+  document.querySelectorAll('.rail-item').forEach(el => el.classList.remove('active'));
+  if (id === -1) document.getElementById('filter-all').classList.add('active');
+  else { const el = document.getElementById(`rail-${id}`); if (el) el.classList.add('active'); }
+  if (id >= 0) { showView('understand'); selectCluster(id); }
 }
 
 function filterSev(sev) {
-  const revs = REVIEWS.filter(r => r.sev.l === sev);
-  alert(`${revs.length} reviews with severity "${sev}":\n\n` + revs.map(r => `• ${r.name}: ${r.text.slice(0,60)}…`).join("\n"));
+  const revs = REVIEWS.filter(r => r.sev && r.sev.l === sev);
+  alert(`${revs.length} reviews with severity "${sev}":\n\n` + revs.map(r => `• ${r.name}: ${r.text.slice(0,60)}…`).join('\n'));
 }
 
-// ── VIEW SWITCHING ────────────────────────────────────────────────────────────
+// ── VIEW SWITCHING ──────────────────────────────────────────────────────────
 function showView(name) {
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  document.getElementById(`view-${name}`).classList.add("active");
-  document.querySelectorAll(".tab").forEach(t => { t.classList.toggle("active", t.dataset.view === name); });
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const view = document.getElementById(`view-${name}`);
+  if (view) view.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
+  const tab = document.getElementById(`tab-${name}`);
+  if (tab) tab.classList.add('active');
 }
 
-// ── TAXONOMY TREE (merged L3s to avoid repetition) ─────────────────────────────
-const taxTree = document.getElementById("tax-tree");
-const l1Groups = {};
-CLUSTERS.forEach(c => {
-  const l1 = c.l1 || 'Uncategorized';
-  const l2 = c.l2 || 'Uncategorized';
-  const l3 = c.l3 || c.label || 'Uncategorized';
-  if (!l1Groups[l1]) l1Groups[l1] = {};
-  if (!l1Groups[l1][l2]) l1Groups[l1][l2] = {};
-  if (!l1Groups[l1][l2][l3]) l1Groups[l1][l2][l3] = [];
-  l1Groups[l1][l2][l3].push(c);
-});
-
-Object.entries(l1Groups).forEach(([l1, l2s]) => {
-  const l1Node = document.createElement("div"); l1Node.className = "tax-node";
-  const l1Row = document.createElement("div"); l1Row.className = "tax-row";
-  const l1Total = Object.values(l2s).flatMap(l2obj => Object.values(l2obj).flat()).reduce((a,c) => a + c.count, 0);
-  l1Row.innerHTML = `<span class="tax-chevron open">▶</span><span class="tax-pill" style="background:rgba(77,124,254,.12);color:var(--accent)">L1</span><span class="tax-name">${l1}</span><span class="tax-cnt">${l1Total}</span>`;
-  const l1Children = document.createElement("div"); l1Children.className = "tax-children open";
-  l1Row.onclick = () => { l1Children.classList.toggle("open"); l1Row.querySelector(".tax-chevron").classList.toggle("open"); };
-  l1Node.appendChild(l1Row); l1Node.appendChild(l1Children);
-
-  Object.entries(l2s).forEach(([l2, l3Groups]) => {
-    const l2Node = document.createElement("div"); l2Node.className = "tax-node";
-    const l2Row = document.createElement("div"); l2Row.className = "tax-row";
-    const l2Total = Object.values(l3Groups).flat().reduce((a,c) => a + c.count, 0);
-    l2Row.innerHTML = `<span class="tax-chevron">▶</span><span class="tax-pill" style="background:rgba(155,112,245,.12);color:var(--purple)">L2</span><span class="tax-name">${l2}</span><span class="tax-cnt">${l2Total}</span>`;
-    const l2Children = document.createElement("div"); l2Children.className = "tax-children";
-    l2Row.onclick = (e) => { e.stopPropagation(); l2Children.classList.toggle("open"); l2Row.querySelector(".tax-chevron").classList.toggle("open"); };
-    l2Node.appendChild(l2Row); l2Node.appendChild(l2Children);
-
-    Object.entries(l3Groups).forEach(([l3Label, clusters]) => {
-      const mergedCount = clusters.reduce((a,c) => a + c.count, 0);
-      const primary = clusters.reduce((best, c) => c.count > best.count ? c : best, clusters[0]);
-      const cNode = document.createElement("div"); cNode.className = "tax-node";
-      const cRow = document.createElement("div"); cRow.className = "tax-row";
-      const sc = clusterSemanticColor(primary);
-      cRow.innerHTML = `<span class="tax-chevron" style="opacity:0">▶</span><span class="tax-pill" style="background:${sc.bg};color:${sc.fg}">L3</span><span class="tax-name">${l3Label}</span><span class="tax-cnt">${mergedCount}</span>`;
-
-      const themeDiv = document.createElement("div");
-      themeDiv.className = "tax-children";
-      themeDiv.style.display = "none";
-      themeDiv.innerHTML = `
-        <div class="tax-row" style="cursor:default">
-          <span class="tax-chevron" style="opacity:0">▶</span>
-          <span class="tax-pill" style="background:rgba(34,201,123,.1);color:var(--act)">Theme</span>
-          <span class="tax-name" style="font-size:10px">${primary.theme}</span>
-        </div>
-        <div class="tax-row" style="cursor:default">
-          <span class="tax-chevron" style="opacity:0">▶</span>
-          <span class="tax-pill" style="background:rgba(240,160,48,.1);color:var(--warn)">Sub</span>
-          <span class="tax-name" style="font-size:10px;color:var(--muted2)">${primary.subtheme}</span>
-        </div>`;
-      cRow.onclick = (e) => {
-        e.stopPropagation();
-        const isOpen = themeDiv.style.display !== "none";
-        themeDiv.style.display = isOpen ? "none" : "block";
-        document.querySelectorAll(".tax-row").forEach(r => r.classList.remove("selected"));
-        cRow.classList.add("selected");
-        selectCluster(primary.id);
-      };
-      cNode.appendChild(cRow); cNode.appendChild(themeDiv);
-      l2Children.appendChild(cNode);
-    });
-    l1Children.appendChild(l2Node);
+// ── TAXONOMY TREE ───────────────────────────────────────────────────────────
+function buildTaxTree(targetEl, clusters) {
+  targetEl.innerHTML = '';
+  const l1G = {};
+  clusters.forEach(c => {
+    const l1 = c.l1 || 'Uncategorized', l2 = c.l2 || 'Uncategorized', l3 = c.l3 || c.label || 'Uncategorized';
+    if (!l1G[l1]) l1G[l1] = {};
+    if (!l1G[l1][l2]) l1G[l1][l2] = {};
+    if (!l1G[l1][l2][l3]) l1G[l1][l2][l3] = [];
+    l1G[l1][l2][l3].push(c);
   });
-  taxTree.appendChild(l1Node);
-});
 
-// ── CLUSTER DETAIL ────────────────────────────────────────────────────────────
+  Object.entries(l1G).forEach(([l1, l2s]) => {
+    const l1Node = document.createElement('div'); l1Node.className = 'tax-node';
+    const l1Row = document.createElement('div'); l1Row.className = 'tax-row';
+    const l1Total = Object.values(l2s).flatMap(o => Object.values(o).flat()).reduce((a,c) => a + c.count, 0);
+    l1Row.innerHTML = `<span class="tax-chevron open">▶</span><span class="tax-pill" style="background:rgba(77,124,254,.12);color:var(--accent)">L1</span><span class="tax-name">${l1}</span><span class="tax-cnt">${l1Total}</span>`;
+    const l1Ch = document.createElement('div'); l1Ch.className = 'tax-children open';
+    l1Row.onclick = () => { l1Ch.classList.toggle('open'); l1Row.querySelector('.tax-chevron').classList.toggle('open'); };
+    l1Node.appendChild(l1Row); l1Node.appendChild(l1Ch);
+
+    Object.entries(l2s).forEach(([l2, l3Groups]) => {
+      const l2Node = document.createElement('div'); l2Node.className = 'tax-node';
+      const l2Row = document.createElement('div'); l2Row.className = 'tax-row';
+      const l2Total = Object.values(l3Groups).flat().reduce((a,c) => a + c.count, 0);
+      l2Row.innerHTML = `<span class="tax-chevron">▶</span><span class="tax-pill" style="background:rgba(155,112,245,.12);color:var(--purple)">L2</span><span class="tax-name">${l2}</span><span class="tax-cnt">${l2Total}</span>`;
+      const l2Ch = document.createElement('div'); l2Ch.className = 'tax-children';
+      l2Row.onclick = e => { e.stopPropagation(); l2Ch.classList.toggle('open'); l2Row.querySelector('.tax-chevron').classList.toggle('open'); };
+      l2Node.appendChild(l2Row); l2Node.appendChild(l2Ch);
+
+      Object.entries(l3Groups).forEach(([l3Label, cls]) => {
+        const mCount = cls.reduce((a,c) => a + c.count, 0);
+        const primary = cls.reduce((b,c) => c.count > b.count ? c : b, cls[0]);
+        const cNode = document.createElement('div'); cNode.className = 'tax-node';
+        const cRow = document.createElement('div'); cRow.className = 'tax-row';
+        cRow.innerHTML = `<span class="tax-chevron" style="opacity:0">▶</span><span class="tax-pill" style="background:${primary.color}22;color:${primary.color}">L3</span><span class="tax-name">${l3Label}</span><span class="tax-cnt">${mCount}</span>`;
+
+        const themeDiv = document.createElement('div');
+        themeDiv.className = 'tax-children'; themeDiv.style.display = 'none';
+        themeDiv.innerHTML = `<div class="tax-row" style="cursor:default"><span class="tax-chevron" style="opacity:0">▶</span><span class="tax-pill" style="background:rgba(34,201,123,.1);color:var(--act)">Theme</span><span class="tax-name" style="font-size:10px">${primary.theme||'—'}</span></div><div class="tax-row" style="cursor:default"><span class="tax-chevron" style="opacity:0">▶</span><span class="tax-pill" style="background:rgba(240,160,48,.1);color:var(--warn)">Sub</span><span class="tax-name" style="font-size:10px;color:var(--muted2)">${primary.subtheme||'—'}</span></div>`;
+        cRow.onclick = e => {
+          e.stopPropagation();
+          themeDiv.style.display = themeDiv.style.display === 'none' ? 'block' : 'none';
+          document.querySelectorAll('.tax-row').forEach(r => r.classList.remove('selected'));
+          cRow.classList.add('selected');
+          selectCluster(primary.id);
+        };
+        cNode.appendChild(cRow); cNode.appendChild(themeDiv);
+        l2Ch.appendChild(cNode);
+      });
+      l1Ch.appendChild(l2Node);
+    });
+    targetEl.appendChild(l1Node);
+  });
+}
+buildTaxTree(document.getElementById('tax-tree'), CLUSTERS);
+
+// ── CLUSTER DETAIL ──────────────────────────────────────────────────────────
 function selectCluster(id) {
   const c = CLUSTERS.find(x => x.id === id);
   if (!c) return;
-  activeClusterId = id;
-  document.querySelectorAll(".cluster-chip").forEach(ch => {
-    ch.classList.toggle("active", parseInt(ch.dataset.id) === id);
-  });
-  const revs = REVIEWS.filter(r => r.cid === id).sort((a,b) => b.sev.s - a.sev.s);
-  const detailCard = document.getElementById("cluster-detail-card");
-  detailCard.style.display = "block";
+  const revs = REVIEWS.filter(r => r.cid === id).sort((a,b) => (b.sev?.s||0) - (a.sev?.s||0));
+  const detailCard = document.getElementById('cluster-detail-card');
+  detailCard.style.display = 'block';
+  document.getElementById('detail-title').textContent = c.label;
 
-  document.getElementById("detail-title").textContent = c.label;
-
-  const sentColor = c.sentiment >= 0.05 ? "var(--act)" : c.sentiment <= -0.05 ? "var(--crit)" : "var(--warn)";
-  document.getElementById("detail-metrics").innerHTML = `
-    <div class="metric-tile"><div class="metric-val" style="color:${sentColor}">${c.sentiment > 0 ? "+" : ""}${c.sentiment.toFixed(2)}</div><div class="metric-lbl">Sentiment</div></div>
-    <div class="metric-tile"><div class="metric-val" style="color:${c.severity>0.5?"var(--crit)":c.severity>0.2?"var(--warn)":"var(--accent)"}">${Math.round(c.severity*100)}</div><div class="metric-lbl">Severity/100</div></div>
+  const sentColor = c.sentiment >= 0.05 ? 'var(--act)' : c.sentiment <= -0.05 ? 'var(--crit)' : 'var(--warn)';
+  document.getElementById('detail-metrics').innerHTML = `
+    <div class="metric-tile"><div class="metric-val" style="color:${sentColor}">${c.sentiment > 0 ? '+' : ''}${c.sentiment.toFixed(2)}</div><div class="metric-lbl">Sentiment</div></div>
+    <div class="metric-tile"><div class="metric-val" style="color:${c.severity>0.5?'var(--crit)':c.severity>0.2?'var(--warn)':'var(--accent)'}">${Math.round(c.severity*100)}</div><div class="metric-lbl">Severity/100</div></div>
     <div class="metric-tile"><div class="metric-val" style="color:var(--purple)">${Math.round(c.actionability*100)}</div><div class="metric-lbl">Actionability</div></div>
     <div class="metric-tile"><div class="metric-val" style="color:var(--accent)">${Math.round(c.confidence*100)}%</div><div class="metric-lbl">Confidence</div></div>`;
 
-  const maxTfidf = Math.max(...c.signals.map(s => s.tfidf), 0.01);
-  document.getElementById("detail-freq").innerHTML = c.signals.map(sig => {
-    const isRep = Object.keys(c.phrases).some(p => p.includes(sig.term));
+  const maxTfidf = Math.max(...(c.signals||[]).map(s => s.tfidf), 0.01);
+  document.getElementById('detail-freq').innerHTML = (c.signals||[]).map(sig => {
+    const isRep = Object.keys(c.phrases||{}).some(p => p.includes(sig.term));
     return `<div class="freq-row">
-      <div class="freq-word ${isRep ? "rep" : ""}">${sig.term}${isRep ? " ●" : ""}</div>
-      <div class="freq-track"><div class="freq-fill" style="width:${Math.round(sig.tfidf/maxTfidf*100)}%;background:var(--amber)"></div></div>
+      <div class="freq-word ${isRep ? 'rep' : ''}">${sig.term}${isRep ? ' ●' : ''}</div>
+      <div class="freq-track"><div class="freq-fill" style="width:${Math.round(sig.tfidf/maxTfidf*100)}%;background:${isRep ? '#f0c454' : c.color}"></div></div>
       <div class="freq-n">${sig.raw}×</div>
-      <div class="freq-pct">${sig.pct.toFixed(0)}%</div>
+      <div class="freq-pct">${(sig.pct||0).toFixed(0)}%</div>
     </div>`;
-  }).join("");
+  }).join('');
 
-  document.getElementById("detail-phrases").innerHTML = Object.entries(c.phrases).map(([phrase, cnt]) =>
-    `<div class="phrase-chip">"${phrase}" <span>×${cnt}</span></div>`).join("");
+  document.getElementById('detail-phrases').innerHTML = Object.entries(c.phrases||{}).map(([phrase, cnt]) =>
+    `<div class="phrase-chip">"${phrase}" <span>×${cnt}</span></div>`).join('');
 
-  document.getElementById("detail-reviews").innerHTML = revs.map(r => {
-    const sentVal = (r.sent.c > 0 ? "+" : "") + r.sent.c.toFixed(2);
-    return `<div class="rev-card ${r.rep ? "rep" : ""}">
-      <div class="rev-hd">${r.rep ? "★ " : ""}${r.name} · ${r.sev.l} · ${sentVal}</div>
+  document.getElementById('detail-reviews').innerHTML = revs.map(r => {
+    const sc = r.sev?.l === 'Critical' ? 'var(--crit)' : r.sev?.l === 'High' ? 'var(--warn)' : r.sev?.l === 'Medium' ? '#f0c454' : 'var(--muted)';
+    const stc = r.sent?.l === 'Positive' ? 'var(--act)' : r.sent?.l === 'Negative' ? 'var(--crit)' : 'var(--warn)';
+    return `<div class="rev-card ${r.rep ? 'rep' : ''}">
+      <div class="rev-hd">
+        <div class="rev-name">${r.rep ? '★ ' : ''}${r.name}</div>
+        <span class="pill" style="background:${sc}22;color:${sc}">${r.sev?.l||'Low'}</span>
+        <span class="pill" style="background:${stc}22;color:${stc}">${(r.sent?.c||0) > 0 ? '+' : ''}${(r.sent?.c||0).toFixed(2)}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">${r.date||''}</span>
+      </div>
       <div class="rev-txt">${r.text}</div>
     </div>`;
-  }).join("");
+  }).join('');
 
-  detailCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  detailCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// ── OPPORTUNITY METRICS ───────────────────────────────────────────────────────
-const oppMetrics = document.getElementById('opp-metrics');
-const topCluster = [...CLUSTERS].sort((a,b) => b.priority - a.priority)[0];
-const posRate = Math.round(REVIEWS.filter(r => r.sent.l === 'Positive').length / REVIEWS.length * 100);
-const actionableCount = REVIEWS.filter(r => r.act.s >= 0.3).length;
-const billingLabel = (topCluster?.label||'').toLowerCase().includes('billing') ? 'Billing' : (topCluster?.label||'').split(' ').slice(0,1).join('') || 'Priority';
-oppMetrics.innerHTML = `
-  <div class="metric-tile"><div class="metric-val val-red">P1</div><div class="metric-lbl">Top Priority</div></div>
-  <div class="metric-tile"><div class="metric-val val-amber">${Math.round((topCluster?.priority||0)*100)}</div><div class="metric-lbl">${billingLabel} Score</div></div>
-  <div class="metric-tile"><div class="metric-val val-green">${posRate}%</div><div class="metric-lbl">Positive Rate</div></div>
-  <div class="metric-tile"><div class="metric-val val-blue">${actionableCount}</div><div class="metric-lbl">Actionable Revs</div></div>`;
+// ── OPPORTUNITY TABLE ───────────────────────────────────────────────────────
+function buildOpportunityView() {
+  const sorted = [...CLUSTERS].sort((a,b) => b.count - a.count);
+  const topC = sorted[0];
+  const pR = REVIEWS.length ? Math.round(REVIEWS.filter(r => r.sent?.l === 'Positive').length / REVIEWS.length * 100) : 0;
+  const aC = REVIEWS.filter(r => (r.act?.s||0) >= 0.3).length;
+  const bL = (topC?.label||'').split(' ').slice(0,1).join('') || 'Priority';
 
-// ── OPPORTUNITY TABLE ─────────────────────────────────────────────────────────
-const tbody = document.getElementById("opp-tbody");
-const maxScore = Math.max(...CLUSTERS.map(c => c.priority), 0.01);
-[...CLUSTERS].sort((a,b) => b.count - a.count).forEach(c => {
-  const pctW = Math.round((c.priority / maxScore) * 100);
-  const sc = clusterSemanticColor(c);
-  const sentVal = (c.sentiment >= 0 ? '+' : '') + c.sentiment.toFixed(2);
-  tbody.innerHTML += `<tr>
-    <td><div class="opp-cluster-name"><div class="opp-cdot" style="background:${sc.fg}"></div>${c.label}</div></td>
-    <td><span class="opp-rev-pill">${c.count}</span></td>
-    <td><div class="opp-score-cell"><div class="opp-score-bar-bg"><div class="opp-score-bar" style="width:${pctW}%;background:${sc.fg}"></div></div><span class="opp-score-num">${Math.round(c.priority*100)}</span></div></td>
-    <td><span class="${c.sentiment>=0?'opp-sent-pos':'opp-sent-neg'}">${sentVal}</span></td>
-    <td class="r"><span class="opp-sev-num ${(c.hsev||0)>5?'hot':''}">${c.hsev||0}</span></td>
-    <td class="r"><span class="opp-act-num">${Math.round((c.actionability||0)*100)}</span></td>
-    <td class="r"><span class="opp-signal-tag">${c.signals?.[0]?.term || "—"}</span></td>
-  </tr>`;
-});
+  document.getElementById('opp-metrics').innerHTML = `
+    <div class="metric-tile"><div class="metric-val" style="color:var(--crit)">P1</div><div class="metric-lbl">Top Priority</div></div>
+    <div class="metric-tile"><div class="metric-val" style="color:var(--warn)">${Math.round((topC?.priority||0)*100)}</div><div class="metric-lbl">${bL} Score</div></div>
+    <div class="metric-tile"><div class="metric-val" style="color:var(--act)">${pR}%</div><div class="metric-lbl">Positive Rate</div></div>
+    <div class="metric-tile"><div class="metric-val" style="color:var(--purple)">${aC}</div><div class="metric-lbl">Actionable Revs</div></div>`;
 
-// ── DEMAND BARS ───────────────────────────────────────────────────────────────
-const demandEl = document.getElementById("demand-bars");
-const maxRevs = Math.max(...CLUSTERS.map(c => c.count), 1);
-[...CLUSTERS].sort((a,b) => b.count - a.count).forEach(c => {
-  const pct = Math.round((c.count / maxRevs) * 100);
-  const sc = clusterSemanticColor(c);
-  demandEl.innerHTML += `<div class="demand-row">
-    <div class="demand-label">${c.label}</div>
-    <div class="demand-bar-wrap">
-      <div class="demand-rev-count">${c.count} revs</div>
-      <div class="demand-bar-bg"><div class="demand-bar" style="width:${pct}%;background:${sc.fg}"></div></div>
-      <div class="demand-p">P=${Math.round(c.priority*100)}</div>
-    </div>
-  </div>`;
-});
+  const tbody = document.getElementById('opp-tbody');
+  tbody.innerHTML = '';
+  const maxScore = Math.max(...CLUSTERS.map(c => c.priority), 0.01);
+  sorted.forEach(c => {
+    const pctW = Math.round((c.priority / maxScore) * 100);
+    const sc = c.priority > 0.6 ? 'var(--crit)' : c.priority > 0.3 ? 'var(--warn)' : 'var(--act)';
+    const sentVal = (c.sentiment >= 0 ? '+' : '') + c.sentiment.toFixed(2);
+    tbody.innerHTML += `<tr>
+      <td style="padding-left:14px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${c.color};margin-right:7px;vertical-align:middle"></span>${c.label}</td>
+      <td><span class="pill" style="background:${c.color}22;color:${c.color}">${c.count}</span></td>
+      <td><div style="display:flex;align-items:center;gap:6px"><div class="opp-bar-wrap"><div class="opp-bar" style="width:${pctW}%;background:${sc}"></div></div><span style="font-family:'DM Mono',monospace;font-size:10px;color:${sc}">${pctW}</span></div></td>
+      <td style="font-family:'DM Mono',monospace;font-size:10px;color:${c.sentiment>=0?'var(--act)':'var(--crit)'}">${sentVal}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--warn)">${c.hsev||0}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--purple)">${Math.round((c.actionability||0)*100)}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2)">${c.signals?.[0]?.term||'—'}</td>
+    </tr>`;
+  });
 
-const sortedByCount = [...CLUSTERS].sort((a,b) => b.count - a.count);
-
-// ── ALERT CARDS (ACT VIEW) ───────────────────────────────────────────────────
-const alertsEl = document.getElementById('alerts-container');
-const insightCache = {};
-
-sortedByCount.forEach(c => {
-  let sevLabel; if (c.priority > 0.55) sevLabel = 'CRITICAL'; else if (c.priority > 0.3) sevLabel = 'HIGH'; else sevLabel = 'LOW';
-  const topTerms = c.signals.slice(0, 4).map(s => s.term).join(', ');
-  const pctOfTotal = (c.count / REVIEWS.length * 100).toFixed(1);
-  const ratingImpact = (c.neg / REVIEWS.length * 1.5).toFixed(1);
-  const churnRisk = c.severity > 0.5 ? 'High' : c.severity > 0.25 ? 'Medium' : 'Low';
-
-  alertsEl.innerHTML += `<div class="alert-card" id="alert-${c.id}">
-    <div class="alert-hd">
-      <div class="alert-title">${c.label}</div>
-      <div class="alert-stats">
-        <span class="alert-stat alert-sev">${sevLabel}</span>
-        <span class="alert-stat">${c.count} reviews</span>
-        <span class="alert-stat">P ${Math.round(c.priority*100)}</span>
-        <span class="alert-stat">${c.sentiment > 0 ? '+' : ''}${c.sentiment.toFixed(2)} sent</span>
+  const demandEl = document.getElementById('demand-bars');
+  demandEl.innerHTML = '';
+  const maxCnt = Math.max(...CLUSTERS.map(c => c.count), 1);
+  sorted.forEach(c => {
+    const w = Math.round(c.count / maxCnt * 100);
+    demandEl.innerHTML += `<div style="display:flex;align-items:center;gap:10px">
+      <div style="width:160px;font-size:11px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.label}</div>
+      <div style="flex:1;height:20px;background:var(--s2);border-radius:5px;overflow:hidden;border:1px solid var(--border)">
+        <div style="height:100%;width:${w}%;background:${c.color};border-radius:5px;display:flex;align-items:center;padding:0 8px;font-family:'DM Mono',monospace;font-size:9px;color:#000;font-weight:600;min-width:40px">${c.count} revs</div>
       </div>
-    </div>
-    <div class="alert-signals">${topTerms || '—'}</div>
-    <div class="impact-row">
-      <div class="impact-tile"><div class="impact-tile-val">~${ratingImpact} ★</div><div class="impact-tile-lbl">Est. rating impact</div></div>
-      <div class="impact-tile"><div class="impact-tile-val">${churnRisk}</div><div class="impact-tile-lbl">Churn risk</div></div>
-      <div class="impact-tile"><div class="impact-tile-val">${pctOfTotal}%</div><div class="impact-tile-lbl">Of feedback volume</div></div>
-    </div>
-    <div class="alert-actions">
-      <button class="act-btn gen" id="gen-btn-${c.id}" onclick="generateInsight(${c.id})">⚡ Generate Insight</button>
-    </div>
-    <div id="insight-${c.id}"></div>
-  </div>`;
-});
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);width:40px;text-align:right">P=${Math.round(c.priority*100)}</div>
+    </div>`;
+  });
+}
+buildOpportunityView();
 
-// ── GENERATE INSIGHT ─────────────────────────────────────────────────────────
+// ── ACT VIEW — dynamic alert cards with insight generation ──────────────────
+function buildActView() {
+  const aEl = document.getElementById('alerts-container');
+  aEl.innerHTML = '';
+  document.getElementById('act-agent-count').textContent = `${CLUSTERS.length} clusters`;
+
+  [...CLUSTERS].sort((a,b) => b.count - a.count).forEach(c => {
+    let sevL, sevCls;
+    if (c.priority > 0.55) { sevL = 'CRITICAL'; sevCls = 'crit'; }
+    else if (c.priority > 0.3) { sevL = 'HIGH'; sevCls = 'warn'; }
+    else { sevL = 'LOW'; sevCls = 'ok'; }
+
+    const tT = (c.signals||[]).slice(0,4).map(s => s.term).join(', ');
+    const pT = REVIEWS.length ? (c.count / REVIEWS.length * 100).toFixed(1) : '0';
+    const rI = REVIEWS.length ? (c.neg / REVIEWS.length * 1.5).toFixed(1) : '0';
+    const cR = c.severity > 0.5 ? 'High' : c.severity > 0.25 ? 'Medium' : 'Low';
+
+    aEl.innerHTML += `<div class="card" id="alert-card-${c.id}" style="margin-bottom:12px">
+      <div class="card-hd" style="background:${sevCls==='crit'?'rgba(240,80,80,.04)':sevCls==='warn'?'rgba(240,160,48,.04)':'rgba(63,190,122,.04)'}">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:8px;height:8px;border-radius:50%;background:${c.color}"></div>
+          <div class="card-hd-title">${c.label}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">${c.count} reviews · Priority ${Math.round(c.priority*100)}/100</div>
+        </div>
+        <div class="pill" style="background:${sevCls==='crit'?'rgba(240,80,80,.12)':sevCls==='warn'?'rgba(240,160,48,.12)':'rgba(34,201,123,.12)'};color:${sevCls==='crit'?'var(--crit)':sevCls==='warn'?'var(--warn)':'var(--act)'}">${sevL}</div>
+      </div>
+      <div class="card-bd">
+        <div style="font-size:11px;color:var(--muted2);margin-bottom:8px">Top signals: <strong style="color:var(--text)">${tT||'—'}</strong></div>
+        <div class="impact-row">
+          <div class="impact-tile"><div class="impact-tile-val">~${rI} ★</div><div class="impact-tile-lbl">Est. rating impact</div></div>
+          <div class="impact-tile"><div class="impact-tile-val">${cR}</div><div class="impact-tile-lbl">Churn risk</div></div>
+          <div class="impact-tile"><div class="impact-tile-val">${pT}%</div><div class="impact-tile-lbl">Of feedback volume</div></div>
+        </div>
+        <div class="alert-actions">
+          <button class="act-btn primary" id="gen-btn-${c.id}" onclick="generateInsight(${c.id})">⚡ Generate Insight</button>
+        </div>
+        <div id="insight-${c.id}" style="margin-top:8px"></div>
+      </div>
+    </div>`;
+  });
+}
+buildActView();
+
+// ── INSIGHT GENERATION ──────────────────────────────────────────────────────
 async function generateInsight(clusterId) {
-  const btn = document.getElementById(`gen-btn-${clusterId}`);
-  const target = document.getElementById(`insight-${clusterId}`);
-  if (!btn || !target) return;
-
   if (insightCache[clusterId]) {
-    target.innerHTML = insightCache[clusterId];
-    btn.style.display = 'none';
+    document.getElementById(`insight-${clusterId}`).innerHTML = insightCache[clusterId];
     return;
   }
-
-  btn.classList.add('loading');
-  btn.textContent = '⏳ Generating…';
-  logAction('insight', `Generating insight for cluster ${clusterId}…`);
+  const btn = document.getElementById(`gen-btn-${clusterId}`);
+  btn.disabled = true; btn.textContent = 'Generating…';
 
   try {
     const res = await fetch('/api/generate-insight', {
@@ -960,147 +806,42 @@ async function generateInsight(clusterId) {
       body: JSON.stringify({cluster_id: clusterId})
     });
     const data = await res.json();
+    if (data.error) { btn.textContent = 'Error — Retry'; btn.disabled = false; return; }
 
-    if (data.error) {
-      btn.classList.remove('loading');
-      btn.textContent = '⚡ Generate Insight';
-      target.innerHTML = `<div style="color:var(--crit);font-size:11px;margin-top:8px">Error: ${data.error}</div>`;
-      return;
+    let parsed;
+    try { parsed = JSON.parse(data.insight); } catch { parsed = null; }
+
+    let html;
+    if (parsed && parsed.problem_statement) {
+      const pColor = parsed.priority === 'Critical' ? 'var(--crit)' : parsed.priority === 'High' ? 'var(--warn)' : parsed.priority === 'Medium' ? '#f07840' : 'var(--act)';
+      html = `<div class="insight-card" style="animation:fadeIn .3s">
+        <div class="ins-header">
+          <div class="ins-title">${parsed.problem_statement.slice(0, 120)}</div>
+          <div class="pill" style="background:${pColor}18;color:${pColor}">${parsed.priority||'Medium'}</div>
+        </div>
+        <div class="ins-section"><div class="ins-label">Problem</div><div class="ins-body">${parsed.problem_statement}</div></div>
+        <div class="ins-section"><div class="ins-label">Evidence</div><div class="ins-body">${parsed.evidence}</div></div>
+        <div class="ins-section"><div class="ins-label">Root Cause</div><div class="ins-body">${parsed.root_cause_hypothesis}</div></div>
+        <div class="ins-section"><div class="ins-label">Impact</div><div class="ins-body">${parsed.user_impact}</div></div>
+        <div class="ins-section"><div class="ins-label">Actions</div><div class="ins-body">${(parsed.recommended_actions||[]).map((a,i) => `${i+1}. ${a}`).join('<br>')}</div></div>
+      </div>`;
+    } else {
+      html = `<div class="insight-card" style="animation:fadeIn .3s"><div class="ins-body">${(data.insight||'').replace(/\n/g,'<br>')}</div></div>`;
     }
-
-    let insight;
-    try { insight = JSON.parse(data.insight); } catch(e) {
-      const jsonMatch = data.insight.match(/\{[\s\S]*\}/);
-      if (jsonMatch) { try { insight = JSON.parse(jsonMatch[0]); } catch(e2) { insight = null; } }
-    }
-
-    if (!insight) {
-      btn.classList.remove('loading');
-      btn.textContent = '⚡ Generate Insight';
-      target.innerHTML = `<div style="color:var(--crit);font-size:11px;margin-top:8px">Failed to parse insight. Raw response logged.</div>`;
-      return;
-    }
-
-    const cluster = CLUSTERS.find(c => c.id === clusterId);
-    const priClass = (insight.priority||'').toLowerCase() === 'critical' ? 'crit-bg' : (insight.priority||'').toLowerCase() === 'high' ? 'high-bg' : (insight.priority||'').toLowerCase() === 'medium' ? 'med-bg' : 'low-bg';
-    const priIcon = (insight.priority||'').toLowerCase() === 'critical' ? '🔴' : (insight.priority||'').toLowerCase() === 'high' ? '🟡' : (insight.priority||'').toLowerCase() === 'medium' ? '🟠' : '🟢';
-    const safeStr = (v) => { if (v == null) return '—'; if (typeof v === 'string') return v; if (Array.isArray(v)) return v.map(x => typeof x === 'string' ? x : (x?.text || x?.action || '—')).join(', '); if (typeof v === 'object') return v.text || v.content || v.summary || '—'; return String(v); };
-    const actions = (insight.recommended_actions || []).map(a => typeof a === 'string' ? a : (a?.text || a?.action || '—')).map(a => `<li>${a}</li>`).join('');
-    const slackText = (insight.slack_summary || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    const clusterLabel = cluster ? cluster.label : `Cluster ${clusterId}`;
-
-    const html = `<div class="insight-report">
-      <div class="insight-section">
-        <div class="insight-label">Problem Statement</div>
-        <div class="insight-text">${safeStr(insight.problem_statement)}</div>
-      </div>
-      <div class="insight-section">
-        <div class="insight-label">Evidence</div>
-        <div class="insight-text">${safeStr(insight.evidence)}</div>
-      </div>
-      <div class="insight-section">
-        <div class="insight-label">Root Cause Hypothesis</div>
-        <div class="insight-text">${safeStr(insight.root_cause_hypothesis)}</div>
-      </div>
-      <div class="insight-section">
-        <div class="insight-label">User Impact</div>
-        <div class="insight-text">${safeStr(insight.user_impact)}</div>
-      </div>
-      <div class="insight-section">
-        <div class="insight-label">Recommended Actions</div>
-        <div class="insight-text"><ul>${actions || '<li>—</li>'}</ul></div>
-      </div>
-      <div class="insight-section">
-        <div class="insight-label">Priority</div>
-        <div class="insight-text"><span class="insight-priority-badge ${priClass}">${priIcon} ${insight.priority || '—'}</span></div>
-        <div class="insight-text" style="margin-top:4px;color:var(--muted2)">${safeStr(insight.priority_reasoning)}</div>
-      </div>
-      <div class="insight-section">
-        <div class="insight-label">Slack Summary — Copy & Share</div>
-        <div class="slack-block" id="slack-block-${clusterId}"><button class="slack-copy-btn" onclick="copySlack(${clusterId})">📋 Copy</button>${slackText}</div>
-      </div>
-      <div class="insight-actions">
-        <button class="act-btn primary" onclick="mockAction('jira','${clusterLabel}')">📋 Create Jira Ticket</button>
-        <button class="act-btn" onclick="mockAction('slack','#${clusterLabel.split(' ')[0].toLowerCase()}')">💬 Send to Slack</button>
-        <button class="act-btn" onclick="mockAction('notion','${clusterLabel}')">📓 Log to Notion</button>
-      </div>
-    </div>`;
 
     insightCache[clusterId] = html;
-    target.innerHTML = html;
-    btn.style.display = 'none';
-    logAction('insight', `Insight generated for "${clusterLabel}"`);
+    document.getElementById(`insight-${clusterId}`).innerHTML = html;
+    btn.textContent = '✓ Generated'; btn.disabled = true;
   } catch(e) {
-    btn.classList.remove('loading');
-    btn.textContent = '⚡ Generate Insight';
-    target.innerHTML = `<div style="color:var(--crit);font-size:11px;margin-top:8px">Error: ${e.message}</div>`;
+    btn.textContent = 'Error — Retry'; btn.disabled = false;
   }
 }
 
-function copySlack(clusterId) {
-  const block = document.getElementById(`slack-block-${clusterId}`);
-  if (!block) return;
-  const text = block.innerText.replace('📋 Copy', '').trim();
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = block.querySelector('.slack-copy-btn');
-    btn.classList.add('copied');
-    btn.textContent = '✓ Copied';
-    logAction('clipboard', 'Slack summary copied to clipboard');
-    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '📋 Copy'; }, 2000);
-  });
-}
-
-// ── ACTION LOG ────────────────────────────────────────────────────────────────
-const actionLog = document.getElementById("action-log");
-let actionLogHasEntries = false;
-
-function logAction(type, message) {
-  if (!actionLogHasEntries) { actionLog.innerHTML = ''; actionLogHasEntries = true; }
-  const icons = { jira:'📋', slack:'💬', email:'📧', notion:'📓', insight:'⚡', clipboard:'📎' };
-  const time = new Date().toLocaleTimeString();
-  const el = document.createElement("div");
-  el.style.cssText = "display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--s2);border:1px solid var(--border);border-radius:7px";
-  el.innerHTML = `<span>${icons[type]||'⚡'}</span><span style="font-size:12px;flex:1">${message}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tertiary)">${time}</span><span class="pill" style="background:rgba(0,200,83,.12);color:var(--act)">OK</span>`;
-  actionLog.prepend(el);
-}
-
-function mockAction(type, target) {
-  logAction(type, `${type.toUpperCase()} → <strong>${target}</strong>`);
-}
-
-// ── AGENT STATUS PANEL ───────────────────────────────────────────────────────
-const agentPanel = document.getElementById('agent-panel');
-const agents = [
-  {name:'Quality Monitor Agent', desc:'Watching for severity spikes and sentiment drops', live:false},
-  {name:'Trend Agent', desc:'Detecting week-over-week pattern shifts in clusters', live:false},
-  {name:'Slack Digest Agent', desc:'Sends a weekly rollup of top signals to your channel', live:false}
-];
-const now = new Date();
-agents.forEach((a, i) => {
-  const ts = new Date(now - (i+1)*3600000*Math.random()*5).toLocaleTimeString();
-  agentPanel.innerHTML += `<div class="agent-row">
-    <div class="agent-dot ${a.live ? 'live' : 'paused'}"></div>
-    <div class="agent-name">${a.name}</div>
-    <div class="agent-desc">${a.desc}</div>
-    <div class="agent-ts">Last: ${ts}</div>
-    <div class="agent-toggle ${a.live ? 'on' : ''}" onclick="toggleAgent(this, ${i})" data-idx="${i}"></div>
-  </div>`;
-});
-
-function toggleAgent(el, idx) {
-  const isOn = el.classList.toggle('on');
-  const dot = el.parentElement.querySelector('.agent-dot');
-  dot.classList.toggle('live', isOn);
-  dot.classList.toggle('paused', !isOn);
-  agents[idx].live = isOn;
-  const activeCount = agents.filter(a => a.live).length;
-  document.getElementById('act-agent-count').textContent = `${activeCount} active agent${activeCount !== 1 ? 's' : ''}`;
-  logAction('insight', `${agents[idx].name} ${isOn ? 'resumed' : 'paused'}`);
-}
-
-// ── INFERENCE AI CHATBOT ─────────────────────────────────────────────────────
-const clusterSummary = CLUSTERS.map(c => ({id:c.id,label:c.label,count:c.count,priority:c.priority,sentiment:c.sentiment,neg:c.neg,hsev:c.hsev,topSignals:c.signals.slice(0,4).map(s=>s.term),phrases:Object.keys(c.phrases).slice(0,3)})).slice(0,12);
-const reviewSample = REVIEWS.filter(r=>r.rep).slice(0,15).map(r=>({id:r.id,cluster:r.cid,text:r.text.slice(0,200),sev:r.sev.l,sent:r.sent.c}));
+// ══════════════════════════════════════════════════════════════════════════════
+// INFERENCE AI CHATBOT — via Flask /api/chat (Groq proxy)
+// ══════════════════════════════════════════════════════════════════════════════
+const clusterSummary = CLUSTERS.map(c => ({id:c.id,label:c.label,count:c.count,priority:c.priority,sentiment:c.sentiment,neg:c.neg,hsev:c.hsev,topSignals:(c.signals||[]).slice(0,4).map(s=>s.term),phrases:Object.keys(c.phrases||{}).slice(0,3)})).slice(0,12);
+const reviewSample = REVIEWS.filter(r=>r.rep).slice(0,15).map(r=>({id:r.id,cluster:r.cid,text:r.text.slice(0,200),sev:r.sev?.l,sent:r.sent?.c}));
 let SYSTEM = `You are Inference AI — product intelligence assistant. You have:
 
 CLUSTERS (${CLUSTERS.length}): ${JSON.stringify(clusterSummary)}
@@ -1118,80 +859,161 @@ RULES:
 - When asked what to fix, give a ranked action list based on severity + actionability.`;
 
 const msgs = [];
-const chatMsgs = document.getElementById("chat-msgs");
-
-function sug(el) { document.getElementById("chat-inp").value = (el.textContent || '').replace(/^→\s*/, '').trim(); chat(); }
+const chatMsgs = document.getElementById('chat-msgs');
 
 function appendMsg(role, html) {
-  const d = document.createElement("div");
-  d.className = `msg ${role}`;
+  const d = document.createElement('div');
+  d.className = `inf-msg ${role}`;
   d.innerHTML = html;
   chatMsgs.appendChild(d);
   chatMsgs.scrollTop = chatMsgs.scrollHeight;
+  chatMsgs.style.display = chatMsgs.children.length ? 'flex' : 'none';
   return d;
 }
 
 function showThinking() {
-  const d = document.createElement("div");
-  d.className = "thinking"; d.id = "thinking";
-  d.innerHTML = `<div class="td"></div><div class="td"></div><div class="td"></div>`;
-  chatMsgs.appendChild(d); chatMsgs.scrollTop = chatMsgs.scrollHeight;
+  const d = document.createElement('div');
+  d.className = 'inf-msg ai'; d.id = 'thinking';
+  d.innerHTML = `<span style="letter-spacing:.1em;color:var(--muted)">···</span>`;
+  chatMsgs.appendChild(d);
+  chatMsgs.scrollTop = chatMsgs.scrollHeight;
+  chatMsgs.style.display = 'flex';
 }
 
 async function chat() {
-  const inp = document.getElementById("chat-inp");
-  const text = inp.value.trim(); if (!text) return;
-  inp.value = "";
-  const btn = document.getElementById("send-btn"); btn.disabled = true;
-  document.querySelector(".status-dot").style.background = "var(--warn)";
-  appendMsg("user", text);
-  msgs.push({role:"user", content: text});
+  const inp = document.getElementById('chat-inp');
+  const text = inp.value.trim();
+  if (!text && !_snapDataUrl) return;
+  inp.value = '';
+  inp.style.height = 'auto';
+  const btn = document.getElementById('send-btn'); btn.disabled = true;
+  document.querySelector('.sidebar-footer .status-dot').style.background = 'var(--warn)';
+
+  let userText = text;
+  if (_snapDataUrl) {
+    appendMsg('user', `<img src="${_snapDataUrl}" style="max-width:180px;border-radius:6px;margin-bottom:4px;display:block">${text||'(screenshot)'}`);
+    userText = text || 'Describe what you see in this screenshot and relate it to the review data.';
+    removeSnap();
+  } else {
+    appendMsg('user', text);
+  }
+
+  msgs.push({role:'user', content: userText});
   showThinking();
 
   try {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({model:"llama-3.1-8b-instant", max_tokens:1000, messages:[{role:"system", content:SYSTEM}, ...msgs.slice(-10)]})
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({model:'llama-3.1-8b-instant', max_tokens:1000, messages:[{role:'system', content: SYSTEM}, ...msgs.slice(-10)]})
     });
     const data = await res.json();
-    document.getElementById("thinking")?.remove();
-    const reply = data.choices?.[0]?.message?.content || "I couldn't get a response. Check your XAI_API_KEY.";
-    msgs.push({role:"assistant", content: reply});
-    appendMsg("ai", reply.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\n/g,"<br>"));
+    document.getElementById('thinking')?.remove();
+    const reply = data.choices?.[0]?.message?.content || "I couldn't get a response.";
+    msgs.push({role:'assistant', content: reply});
+    appendMsg('ai', reply.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>'));
   } catch(e) {
-    document.getElementById("thinking")?.remove();
-    appendMsg("ai", `Error: ${e.message}`);
+    document.getElementById('thinking')?.remove();
+    appendMsg('ai', `Error: ${e.message}`);
   }
   btn.disabled = false;
-  document.querySelector(".status-dot").style.background = "var(--act)";
+  document.querySelector('.sidebar-footer .status-dot').style.background = 'var(--act)';
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SCREENSHOT CAPTURE
+// ══════════════════════════════════════════════════════════════════════════════
+let _snapDataUrl = null;
+let _capturing = false;
+let _startX = 0, _startY = 0;
+
+function startCapture() {
+  if (_capturing) { cancelCapture(); return; }
+  _capturing = true;
+  document.getElementById('snap-btn').classList.add('active');
+  document.getElementById('capture-overlay').classList.add('active');
+  document.getElementById('capture-hint').classList.add('active');
+  document.getElementById('capture-overlay').addEventListener('mousedown', _onDown);
+}
+
+function _onDown(e) {
+  _startX = e.clientX; _startY = e.clientY;
+  const rect = document.getElementById('capture-rect');
+  rect.style.left = _startX + 'px'; rect.style.top = _startY + 'px';
+  rect.style.width = '0'; rect.style.height = '0';
+  rect.classList.add('active');
+  document.addEventListener('mousemove', _onMove);
+  document.addEventListener('mouseup', _onUp);
+}
+
+function _onMove(e) {
+  const x = Math.min(e.clientX, _startX), y = Math.min(e.clientY, _startY);
+  const w = Math.abs(e.clientX - _startX), h = Math.abs(e.clientY - _startY);
+  const rect = document.getElementById('capture-rect');
+  rect.style.left = x + 'px'; rect.style.top = y + 'px';
+  rect.style.width = w + 'px'; rect.style.height = h + 'px';
+}
+
+async function _onUp(e) {
+  document.removeEventListener('mousemove', _onMove);
+  document.removeEventListener('mouseup', _onUp);
+  const x = Math.min(e.clientX, _startX), y = Math.min(e.clientY, _startY);
+  const w = Math.abs(e.clientX - _startX), h = Math.abs(e.clientY - _startY);
+  cancelCapture(false);
+  if (w < 10 || h < 10) return;
+
+  try {
+    const canvas = await html2canvas(document.body, {
+      x: window.scrollX, y: window.scrollY,
+      scale: window.devicePixelRatio || 1, useCORS: true, logging: false,
+    });
+    const dpr = window.devicePixelRatio || 1;
+    const cropped = document.createElement('canvas');
+    cropped.width = w * dpr; cropped.height = h * dpr;
+    cropped.getContext('2d').drawImage(canvas, x * dpr, y * dpr, w * dpr, h * dpr, 0, 0, w * dpr, h * dpr);
+    _snapDataUrl = cropped.toDataURL('image/png');
+    document.getElementById('snap-preview').style.display = 'block';
+    document.getElementById('snap-img').src = _snapDataUrl;
+    document.getElementById('chat-inp').placeholder = 'Ask about the selected area…';
+    document.getElementById('chat-inp').focus();
+  } catch(err) { console.error('Capture failed:', err); }
+}
+
+function cancelCapture(clearRect = true) {
+  _capturing = false;
+  document.getElementById('snap-btn').classList.remove('active');
+  document.getElementById('capture-overlay').classList.remove('active');
+  document.getElementById('capture-hint').classList.remove('active');
+  if (clearRect) document.getElementById('capture-rect').classList.remove('active');
+  document.getElementById('capture-overlay').removeEventListener('mousedown', _onDown);
+}
+
+function removeSnap() {
+  _snapDataUrl = null;
+  document.getElementById('snap-preview').style.display = 'none';
+  document.getElementById('snap-img').src = '';
+  document.getElementById('chat-inp').placeholder = 'Ask a question about the data…';
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
 // UPLOAD — SERVER-SIDE ML PIPELINE
 // ══════════════════════════════════════════════════════════════════════════════
-
 let _uploadedFile = null;
 
-// ── File handling (preview only — actual processing happens server-side) ─────
-const uploadZone = document.getElementById('upload-zone');
-const fileInput  = document.getElementById('upload-file-input');
-
-uploadZone.addEventListener('click', () => fileInput.click());
-uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
-uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
-uploadZone.addEventListener('drop', e => {
-  e.preventDefault(); uploadZone.classList.remove('drag-over');
-  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
-});
-fileInput.addEventListener('change', () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file && (file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) handleFile(file);
+  else alert('Please drop an .xlsx file.');
+}
 
 function handleFile(file) {
+  if (!file) return;
   _uploadedFile = file;
   const reader = new FileReader();
   reader.onload = e => {
-    const data = new Uint8Array(e.target.result);
-    const wb = XLSX.read(data, {type:'array'});
+    const wb = XLSX.read(e.target.result, {type:'array'});
     const ws = wb.Sheets[wb.SheetNames[0]];
     const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
     if (!rows.length) { alert('No data found in the first sheet.'); return; }
@@ -1199,25 +1021,28 @@ function handleFile(file) {
     const headers = Object.keys(rows[0]);
     const colMap = detectColumns(headers, rows);
 
-    const mapEl = document.getElementById('col-map');
-    mapEl.style.display = 'flex';
-    mapEl.innerHTML = ['text','name','date'].map(key => {
-      const found = colMap[key];
-      return `<div class="col-indicator"><div class="col-dot ${found?'ok':'warn'}"></div>${key.charAt(0).toUpperCase()+key.slice(1)}: ${found||'not found'}</div>`;
-    }).join('');
+    document.getElementById('col-map-preview').style.display = 'block';
+    const setColUI = (id, col) => {
+      const el = document.getElementById(id);
+      if (col) { el.textContent = col; el.className = 'col-map-val ok'; }
+      else { el.textContent = 'Not found'; el.className = 'col-map-val miss'; }
+    };
+    setColUI('cm-text', colMap.text);
+    setColUI('cm-name', colMap.name);
+    setColUI('cm-date', colMap.date);
 
-    document.getElementById('upload-file-info').textContent = `${file.name} — ${rows.length} rows, ${headers.length} columns`;
-    document.getElementById('process-btn').style.display = 'inline-block';
-    document.getElementById('export-card').style.display = 'none';
+    if (!colMap.text) alert('Could not find a review text column.\nPlease rename your column to one of: text, review, feedback, comment, body, message');
+    addLog(`✓ Loaded ${rows.length} rows from "${file.name}"`, 'ok');
+    addLog(`  Text column: ${colMap.text || 'NOT FOUND'}`, colMap.text ? 'ok' : 'err');
   };
   reader.readAsArrayBuffer(file);
 }
 
 function detectColumns(headers, rows) {
   const map = {text:null, name:null, date:null};
-  const textPat  = /review|text|comment|feedback|description|content|message/i;
-  const namePat  = /name|reviewer|author|user|customer/i;
-  const datePat  = /date|time|created|posted|timestamp/i;
+  const textPat = /review|text|comment|feedback|description|content|message/i;
+  const namePat = /name|reviewer|author|user|customer/i;
+  const datePat = /date|time|created|posted|timestamp/i;
   for (const h of headers) {
     if (!map.text && textPat.test(h)) map.text = h;
     if (!map.name && namePat.test(h)) map.name = h;
@@ -1233,198 +1058,133 @@ function detectColumns(headers, rows) {
   return map;
 }
 
-// ── Process: upload file to server → full ML pipeline ────────────────────────
+function resetUpload() {
+  _uploadedFile = null;
+  document.getElementById('col-map-preview').style.display = 'none';
+  document.getElementById('process-progress').style.display = 'none';
+  document.getElementById('export-card').style.display = 'none';
+  document.getElementById('process-log').innerHTML = '';
+  document.getElementById('file-input').value = '';
+}
+
+function addLog(msg, type) {
+  const log = document.getElementById('process-log');
+  const el = document.createElement('div');
+  el.className = 'log-line ' + (type||'');
+  el.textContent = msg;
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+}
+
+function setProgress(pct, label) {
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-label').textContent = label;
+}
+
 async function processUploadedData() {
   if (!_uploadedFile) return;
   const btn = document.getElementById('process-btn');
   btn.disabled = true; btn.textContent = 'Processing…';
-  const progressWrap = document.getElementById('progress-wrap');
-  const progressFill = document.getElementById('progress-fill');
-  const progressLabel = document.getElementById('progress-label');
-  const logArea = document.getElementById('upload-log');
-  progressWrap.style.display = 'block';
-  logArea.style.display = 'block';
-  logArea.innerHTML = '';
-  const log = msg => { logArea.innerHTML += msg + '\n'; logArea.scrollTop = logArea.scrollHeight; };
-  const prog = (pct, label) => { progressFill.style.width = pct + '%'; progressLabel.textContent = label; };
+  document.getElementById('process-progress').style.display = 'block';
+  document.getElementById('process-log').innerHTML = '';
 
-  log(`Uploading ${_uploadedFile.name} to server…`);
-  prog(10, 'Uploading…');
+  setProgress(10, 'Uploading…');
+  addLog(`Uploading ${_uploadedFile.name} to server…`, '');
 
   try {
     const formData = new FormData();
     formData.append('file', _uploadedFile);
 
-    prog(20, 'Running ML pipeline on server (VADER + HDBSCAN + TF-IDF)…');
-    log('Server is running the full ML pipeline: VADER sentiment, severity scoring, HDBSCAN clustering, TF-IDF signals…');
+    setProgress(20, 'Running ML pipeline on server…');
+    addLog('Server is running the full ML pipeline: VADER sentiment, severity scoring, HDBSCAN clustering, TF-IDF signals…', '');
 
     const res = await fetch('/api/upload', { method: 'POST', body: formData });
     const data = await res.json();
 
     if (!res.ok || data.error) {
-      log('Error: ' + (data.error || 'Server error'));
-      prog(0, 'Failed');
-      btn.disabled = false; btn.textContent = 'Process Reviews';
+      addLog('Error: ' + (data.error || 'Server error'), 'err');
+      setProgress(0, 'Failed');
+      btn.disabled = false; btn.textContent = '⚡ Process Reviews';
       return;
     }
 
-    prog(80, 'Rebuilding dashboard…');
-    log(`Pipeline complete: ${data.meta.total_reviews} reviews → ${data.meta.n_clusters} clusters.`);
-    log('Rebuilding dashboard…');
+    setProgress(80, 'Rebuilding dashboard…');
+    addLog(`✓ Pipeline complete: ${data.meta.total_reviews} reviews → ${data.meta.n_clusters} clusters.`, 'ok');
 
     rebuildDashboard(data.clusters, data.reviews);
 
-    prog(100, 'Done');
-    log(`Dashboard updated. ${data.meta.total_reviews} reviews, ${data.meta.n_clusters} clusters with full VADER sentiment, HDBSCAN clustering, and TF-IDF signals.`);
-    btn.textContent = 'Process Reviews';
-    btn.disabled = false;
+    setProgress(100, 'Done!');
+    addLog(`✓ Dashboard updated. ${data.meta.total_reviews} reviews, ${data.meta.n_clusters} clusters.`, 'ok');
+    btn.textContent = '⚡ Process Reviews'; btn.disabled = false;
     document.getElementById('export-card').style.display = 'block';
-    showView('unify');
+    setTimeout(() => showView('unify'), 600);
   } catch(e) {
-    log('Error: ' + e.message);
-    prog(0, 'Failed');
-    btn.disabled = false; btn.textContent = 'Process Reviews';
+    addLog('Error: ' + e.message, 'err');
+    setProgress(0, 'Failed');
+    btn.disabled = false; btn.textContent = '⚡ Process Reviews';
   }
 }
 
-// ── Rebuild entire dashboard ─────────────────────────────────────────────────
+// ── REBUILD ENTIRE DASHBOARD ────────────────────────────────────────────────
 function rebuildDashboard(newClusters, newReviews) {
   CLUSTERS.length = 0; CLUSTERS.push(...newClusters);
-  REVIEWS.length  = 0; REVIEWS.push(...newReviews);
+  REVIEWS.length = 0; REVIEWS.push(...newReviews);
 
-  document.getElementById('nav-meta').textContent = `${REVIEWS.length} reviews · ${CLUSTERS.length} clusters · live`;
+  // Sidebar
+  document.getElementById('nav-meta-text').textContent = `${REVIEWS.length} reviews · ${CLUSTERS.length} clusters · live`;
+  document.getElementById('filter-all-count').textContent = REVIEWS.length;
+  document.getElementById('sev-crit-count').textContent = REVIEWS.filter(r => r.sev?.l === 'Critical').length;
+  document.getElementById('sev-high-count').textContent = REVIEWS.filter(r => r.sev?.l === 'High').length;
+  document.getElementById('sev-med-count').textContent = REVIEWS.filter(r => r.sev?.l === 'Medium').length;
+
+  const railEl = document.getElementById('rail-clusters');
+  railEl.innerHTML = '';
+  CLUSTERS.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'rail-item'; el.id = `rail-${c.id}`;
+    el.innerHTML = `<div class="rail-dot" style="background:${c.color}"></div><div class="rail-label">${c.label.split(' ').slice(0,2).join(' ')}</div><div class="rail-count">${c.count}</div>`;
+    el.onclick = () => setFilter(c.id);
+    railEl.appendChild(el);
+  });
+
+  // Unify
   document.getElementById('m-total').textContent = REVIEWS.length;
   document.getElementById('m-clusters').textContent = CLUSTERS.length;
-  const aS = REVIEWS.length ? REVIEWS.reduce((a,r) => a + r.sent.c, 0) / REVIEWS.length : 0;
-  const aSv = REVIEWS.length ? REVIEWS.reduce((a,r) => a + r.sev.s, 0) / REVIEWS.length : 0;
-  const aA = REVIEWS.length ? REVIEWS.reduce((a,r) => a + r.act.s, 0) / REVIEWS.length : 0;
-  document.getElementById('m-avg-sent').textContent = aS.toFixed(2);
-  document.getElementById('m-avg-sent').style.color = aS >= 0 ? 'var(--act)' : 'var(--crit)';
-  document.getElementById('m-avg-sev').textContent = aSv.toFixed(1);
-  document.getElementById('m-avg-act').textContent = aA.toFixed(2);
+  document.getElementById('m-critical').textContent = REVIEWS.filter(r => r.sev?.l === 'Critical').length;
+  document.getElementById('m-signals').textContent = CLUSTERS.reduce((s,c) => s + (c.signals||[]).length, 0);
   document.getElementById('unified-badge').textContent = `${REVIEWS.length} records unified`;
-  document.getElementById('src-gplay').textContent = `${REVIEWS.length} reviews · uploaded`;
-  document.getElementById('enrich-sev').textContent = `${REVIEWS.length} records`;
-  document.getElementById('enrich-act').textContent = `${REVIEWS.length} records`;
-  document.getElementById('chat-count').textContent = REVIEWS.length;
-  document.getElementById('chat-clusters').textContent = CLUSTERS.length;
+  document.getElementById('src-primary-name').textContent = 'Uploaded Excel File';
+  document.getElementById('src-primary-meta').textContent = `${REVIEWS.length} reviews · uploaded`;
 
-  const cMap = {};
-  CLUSTERS.forEach(c => { cMap[c.id] = c; });
-  Object.keys(clusterMap).forEach(k => delete clusterMap[k]);
-  Object.assign(clusterMap, cMap);
+  const kgEl2 = document.getElementById('kg-entities');
+  kgEl2.innerHTML = '';
+  [{type:'PLATFORM',name:'Uploaded Dataset',links:`linked to ${REVIEWS.length} reviews`},
+    ...CLUSTERS.map(c=>({type:'FEATURE',name:c.l3||c.label,links:`linked to ${c.count} reviews · ${c.label} cluster`}))
+  ].forEach(kg => { kgEl2.innerHTML += `<div class="kg-entity"><div class="kg-type">${kg.type}</div><div class="kg-name">${kg.name}</div><div class="kg-links">${kg.links}</div></div>`; });
 
-  const uf = document.getElementById('unify-review-feed');
-  uf.innerHTML = '';
-  [...REVIEWS].sort((a,b) => b.sev.s - a.sev.s).forEach(r => {
-    const cl = clusterMap[r.cid];
-    const clLabel = cl ? cl.label : 'Unclustered';
-    const clShort = clLabel.split(' ').slice(0,2).join(' ');
-    const sentVal = r.sent.c > 0 ? '+' : '' + r.sent.c.toFixed(2);
-    uf.innerHTML += `<div class="rev-card ${r.rep?'rep':''}"><div class="rev-hd">${r.rep?'★ ':''}${r.name} · ${clShort} · ${r.sev.l} · ${sentVal}</div><div class="rev-txt">${r.text}</div></div>`;
+  const feedEl2 = document.getElementById('unify-review-feed');
+  feedEl2.innerHTML = '';
+  [...REVIEWS].sort((a,b) => (b.sev?.s||0) - (a.sev?.s||0)).slice(0, 50).forEach(r => {
+    const cl = CLUSTERS.find(c => c.id === r.cid);
+    const clShort = cl ? cl.label.split(' ').slice(0,2).join(' ') : 'Unclustered';
+    feedEl2.innerHTML += `<div class="rev-card ${r.rep?'rep':''}"><div class="rev-hd"><div class="rev-name">${r.rep?'★ ':''}${r.name}</div><span class="pill" style="background:var(--s3);color:var(--muted2)">${clShort}</span><span class="pill" style="background:var(--s3);color:var(--muted2)">${r.sev?.l||'Low'}</span></div><div class="rev-txt">${r.text}</div></div>`;
   });
 
-  const kgEl = document.getElementById('kg-entities');
-  kgEl.innerHTML = '';
-  const kgData = [{type:'PLATFORM',name:'Uploaded Dataset',links:`linked to ${REVIEWS.length} reviews`},
-    ...CLUSTERS.map(c=>({type:'FEATURE',name:c.l3||c.label,links:`linked to ${c.count} reviews · ${c.label} cluster`}))];
-  kgData.forEach(kg => { kgEl.innerHTML += `<div class="kg-entity"><div class="kg-type">${kg.type}</div><div class="kg-name">${kg.name}</div><div class="kg-links">${kg.links}</div></div>`; });
-
-  const taxTree2 = document.getElementById('tax-tree');
-  taxTree2.innerHTML = '';
-  const l1G = {};
-  CLUSTERS.forEach(c => {
-    const l1 = c.l1 || 'Uncategorized', l2 = c.l2 || 'Uncategorized', l3 = c.l3 || c.label || 'Uncategorized';
-    if (!l1G[l1]) l1G[l1] = {};
-    if (!l1G[l1][l2]) l1G[l1][l2] = {};
-    if (!l1G[l1][l2][l3]) l1G[l1][l2][l3] = [];
-    l1G[l1][l2][l3].push(c);
-  });
-  Object.entries(l1G).forEach(([l1, l2s]) => {
-    const l1Node = document.createElement('div'); l1Node.className = 'tax-node';
-    const l1Row = document.createElement('div'); l1Row.className = 'tax-row';
-    const l1Total = Object.values(l2s).flatMap(o => Object.values(o).flat()).reduce((a,c) => a + c.count, 0);
-    l1Row.innerHTML = `<span class="tax-chevron open">▶</span><span class="tax-pill" style="background:rgba(77,124,254,.12);color:var(--accent)">L1</span><span class="tax-name">${l1}</span><span class="tax-cnt">${l1Total}</span>`;
-    const l1Ch = document.createElement('div'); l1Ch.className = 'tax-children open';
-    l1Row.onclick = () => { l1Ch.classList.toggle('open'); l1Row.querySelector('.tax-chevron').classList.toggle('open'); };
-    l1Node.appendChild(l1Row); l1Node.appendChild(l1Ch);
-    Object.entries(l2s).forEach(([l2, l3Groups]) => {
-      const l2Node = document.createElement('div'); l2Node.className = 'tax-node';
-      const l2Row = document.createElement('div'); l2Row.className = 'tax-row';
-      const l2Total = Object.values(l3Groups).flat().reduce((a,c) => a + c.count, 0);
-      l2Row.innerHTML = `<span class="tax-chevron">▶</span><span class="tax-pill" style="background:rgba(155,112,245,.12);color:var(--purple)">L2</span><span class="tax-name">${l2}</span><span class="tax-cnt">${l2Total}</span>`;
-      const l2Ch = document.createElement('div'); l2Ch.className = 'tax-children';
-      l2Row.onclick = e => { e.stopPropagation(); l2Ch.classList.toggle('open'); l2Row.querySelector('.tax-chevron').classList.toggle('open'); };
-      l2Node.appendChild(l2Row); l2Node.appendChild(l2Ch);
-      Object.entries(l3Groups).forEach(([l3Label, cls]) => {
-        const mCount = cls.reduce((a,c) => a + c.count, 0);
-        const primary = cls.reduce((b,c) => c.count > b.count ? c : b, cls[0]);
-        const cNode = document.createElement('div'); cNode.className = 'tax-node';
-        const cRow = document.createElement('div'); cRow.className = 'tax-row';
-        const sc = clusterSemanticColor(primary);
-        cRow.innerHTML = `<span class="tax-chevron" style="opacity:0">▶</span><span class="tax-pill" style="background:${sc.bg};color:${sc.fg}">L3</span><span class="tax-name">${l3Label}</span><span class="tax-cnt">${mCount}</span>`;
-        const themeDiv = document.createElement('div'); themeDiv.className = 'tax-children'; themeDiv.style.display = 'none';
-        themeDiv.innerHTML = `<div class="tax-row" style="cursor:default"><span class="tax-chevron" style="opacity:0">▶</span><span class="tax-pill" style="background:rgba(34,201,123,.1);color:var(--act)">Theme</span><span class="tax-name" style="font-size:10px">${primary.theme}</span></div><div class="tax-row" style="cursor:default"><span class="tax-chevron" style="opacity:0">▶</span><span class="tax-pill" style="background:rgba(240,160,48,.1);color:var(--warn)">Sub</span><span class="tax-name" style="font-size:10px;color:var(--muted2)">${primary.subtheme||'—'}</span></div>`;
-        cRow.onclick = e => { e.stopPropagation(); themeDiv.style.display = themeDiv.style.display==='none'?'block':'none'; selectCluster(primary.id); };
-        cNode.appendChild(cRow); cNode.appendChild(themeDiv);
-        l2Ch.appendChild(cNode);
-      });
-      l1Ch.appendChild(l2Node);
-    });
-    taxTree2.appendChild(l1Node);
-  });
-
-  const ucEl = document.getElementById('understand-clusters');
-  ucEl.innerHTML = '';
-  [...CLUSTERS].sort((a,b) => b.priority - a.priority).forEach((c,i) => {
-    const chip = document.createElement('div'); chip.className = 'cluster-chip' + (i===0?' active':''); chip.dataset.id = c.id;
-    const sc = clusterSemanticColor(c);
-    chip.innerHTML = `<div class="cluster-chip-dot" style="background:${sc.fg}"></div><span class="cluster-chip-label">${c.label.split(' ').slice(0,2).join(' ')}</span><span class="cluster-chip-count">${c.count}</span>`;
-    chip.onclick = () => { document.querySelectorAll('.cluster-chip').forEach(ch=>ch.classList.remove('active')); chip.classList.add('active'); activeClusterId=c.id; showView('understand'); selectCluster(c.id); };
-    ucEl.appendChild(chip);
-  });
+  // Taxonomy
+  buildTaxTree(document.getElementById('tax-tree'), CLUSTERS);
   document.getElementById('cluster-detail-card').style.display = 'none';
 
-  const oppM = document.getElementById('opp-metrics');
-  const topC = [...CLUSTERS].sort((a,b) => b.priority - a.priority)[0];
-  const pR = Math.round(REVIEWS.filter(r => r.sent.l==='Positive').length / Math.max(REVIEWS.length,1) * 100);
-  const aC = REVIEWS.filter(r => r.act.s >= 0.3).length;
-  const bL = (topC?.label||'').split(' ').slice(0,1).join('') || 'Priority';
-  oppM.innerHTML = `<div class="metric-tile"><div class="metric-val val-red">P1</div><div class="metric-lbl">Top Priority</div></div><div class="metric-tile"><div class="metric-val val-amber">${Math.round((topC?.priority||0)*100)}</div><div class="metric-lbl">${bL} Score</div></div><div class="metric-tile"><div class="metric-val val-green">${pR}%</div><div class="metric-lbl">Positive Rate</div></div><div class="metric-tile"><div class="metric-val val-blue">${aC}</div><div class="metric-lbl">Actionable Revs</div></div>`;
+  // Opportunity
+  buildOpportunityView();
 
-  const tbody2 = document.getElementById('opp-tbody');
-  tbody2.innerHTML = '';
-  const mxS = Math.max(...CLUSTERS.map(c => c.priority), 0.01);
-  [...CLUSTERS].sort((a,b) => b.count - a.count).forEach(c => {
-    const pW = Math.round((c.priority / mxS) * 100);
-    const sc = clusterSemanticColor(c);
-    const sv = (c.sentiment >= 0 ? '+' : '') + c.sentiment.toFixed(2);
-    tbody2.innerHTML += `<tr><td><div class="opp-cluster-name"><div class="opp-cdot" style="background:${sc.fg}"></div>${c.label}</div></td><td><span class="opp-rev-pill">${c.count}</span></td><td><div class="opp-score-cell"><div class="opp-score-bar-bg"><div class="opp-score-bar" style="width:${pW}%;background:${sc.fg}"></div></div><span class="opp-score-num">${Math.round(c.priority*100)}</span></div></td><td><span class="${c.sentiment>=0?'opp-sent-pos':'opp-sent-neg'}">${sv}</span></td><td class="r"><span class="opp-sev-num ${(c.hsev||0)>5?'hot':''}">${c.hsev||0}</span></td><td class="r"><span class="opp-act-num">${Math.round((c.actionability||0)*100)}</span></td><td class="r"><span class="opp-signal-tag">${c.signals?.[0]?.term||'—'}</span></td></tr>`;
-  });
-
-  const dEl = document.getElementById('demand-bars');
-  dEl.innerHTML = '';
-  const mxR = Math.max(...CLUSTERS.map(c => c.count), 1);
-  [...CLUSTERS].sort((a,b) => b.count - a.count).forEach(c => {
-    const pct = Math.round((c.count / mxR) * 100);
-    const sc = clusterSemanticColor(c);
-    dEl.innerHTML += `<div class="demand-row"><div class="demand-label">${c.label}</div><div class="demand-bar-wrap"><div class="demand-rev-count">${c.count} revs</div><div class="demand-bar-bg"><div class="demand-bar" style="width:${pct}%;background:${sc.fg}"></div></div><div class="demand-p">P=${Math.round(c.priority*100)}</div></div></div>`;
-  });
-
-  const aEl = document.getElementById('alerts-container');
-  aEl.innerHTML = '';
+  // Act
   Object.keys(insightCache).forEach(k => delete insightCache[k]);
-  [...CLUSTERS].sort((a,b) => b.count - a.count).forEach(c => {
-    let sevL; if (c.priority > 0.55) sevL='CRITICAL'; else if (c.priority > 0.3) sevL='HIGH'; else sevL='LOW';
-    const tT = c.signals.slice(0,4).map(s=>s.term).join(', ');
-    const pT = (c.count / REVIEWS.length * 100).toFixed(1);
-    const rI = (c.neg / REVIEWS.length * 1.5).toFixed(1);
-    const cR = c.severity > 0.5 ? 'High' : c.severity > 0.25 ? 'Medium' : 'Low';
-    aEl.innerHTML += `<div class="alert-card" id="alert-${c.id}"><div class="alert-hd"><div class="alert-title">${c.label}</div><div class="alert-stats"><span class="alert-stat alert-sev">${sevL}</span><span class="alert-stat">${c.count} reviews</span><span class="alert-stat">P ${Math.round(c.priority*100)}</span><span class="alert-stat">${c.sentiment>0?'+':''}${c.sentiment.toFixed(2)} sent</span></div></div><div class="alert-signals">${tT||'—'}</div><div class="impact-row"><div class="impact-tile"><div class="impact-tile-val">~${rI} ★</div><div class="impact-tile-lbl">Est. rating impact</div></div><div class="impact-tile"><div class="impact-tile-val">${cR}</div><div class="impact-tile-lbl">Churn risk</div></div><div class="impact-tile"><div class="impact-tile-val">${pT}%</div><div class="impact-tile-lbl">Of feedback volume</div></div></div><div class="alert-actions"><button class="act-btn gen" id="gen-btn-${c.id}" onclick="generateInsight(${c.id})">⚡ Generate Insight</button></div><div id="insight-${c.id}"></div></div>`;
-  });
+  buildActView();
 
-  const cSum = CLUSTERS.map(c=>({id:c.id,label:c.label,count:c.count,priority:c.priority,sentiment:c.sentiment,neg:c.neg,hsev:c.hsev,topSignals:c.signals.slice(0,4).map(s=>s.term),phrases:Object.keys(c.phrases).slice(0,3)})).slice(0,12);
-  const rSamp = REVIEWS.filter(r=>r.rep).slice(0,15).map(r=>({id:r.id,cluster:r.cid,text:r.text.slice(0,200),sev:r.sev.l,sent:r.sent.c}));
+  // Update chat system prompt
+  const cSum = CLUSTERS.map(c=>({id:c.id,label:c.label,count:c.count,priority:c.priority,sentiment:c.sentiment,neg:c.neg,hsev:c.hsev,topSignals:(c.signals||[]).slice(0,4).map(s=>s.term),phrases:Object.keys(c.phrases||{}).slice(0,3)})).slice(0,12);
+  const rSamp = REVIEWS.filter(r=>r.rep).slice(0,15).map(r=>({id:r.id,cluster:r.cid,text:r.text.slice(0,200),sev:r.sev?.l,sent:r.sent?.c}));
   SYSTEM = `You are Inference AI — product intelligence assistant. You have:
 
 CLUSTERS (${CLUSTERS.length}): ${JSON.stringify(cSum)}
@@ -1444,16 +1204,15 @@ RULES:
   msgs.length = 0;
 }
 
-// ── Export functions ──────────────────────────────────────────────────────────
+// ── EXPORT ──────────────────────────────────────────────────────────────────
 function exportExcel() {
   if (!CLUSTERS.length) return;
   const wb = XLSX.utils.book_new();
-
   const revRows = REVIEWS.map(r => ({
     ID: r.id, Name: r.name, Date: r.date, Text: r.text,
-    Sentiment: r.sent.c, 'Sentiment Label': r.sent.l,
-    Severity: r.sev.s, 'Severity Label': r.sev.l,
-    Actionability: r.act.s, 'Actionability Label': r.act.l,
+    Sentiment: r.sent?.c, 'Sentiment Label': r.sent?.l,
+    Severity: r.sev?.s, 'Severity Label': r.sev?.l,
+    Actionability: r.act?.s, 'Actionability Label': r.act?.l,
     Cluster: r.cid, Representative: r.rep ? 'Yes' : ''
   }));
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(revRows), 'Reviews');
@@ -1462,7 +1221,7 @@ function exportExcel() {
     ID: c.id, Label: c.label, Reviews: c.count, Priority: c.priority,
     'Avg Sentiment': c.sentiment, 'Avg Severity': c.severity,
     'Avg Actionability': c.actionability, Negative: c.neg, Positive: c.pos,
-    'High Severity': c.hsev, 'Top Signal': c.signals[0]?.term || ''
+    'High Severity': c.hsev, 'Top Signal': c.signals?.[0]?.term || ''
   }));
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(csRows), 'Cluster Summary');
 
@@ -1474,32 +1233,29 @@ function exportExcel() {
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(taxRows), 'Taxonomy Tree');
 
   const total = REVIEWS.length;
-  const avgSent2 = total ? REVIEWS.reduce((s,r) => s + r.sent.c, 0) / total : 0;
-  const posRate2 = total ? REVIEWS.filter(r => r.sent.l === 'Positive').length / total : 0;
-  const negRate2 = total ? REVIEWS.filter(r => r.sent.l === 'Negative').length / total : 0;
-  const detractors = REVIEWS.filter(r => r.sent.c < -0.3).length;
-  const promoters  = REVIEWS.filter(r => r.sent.c > 0.3).length;
-  const nps = total ? Math.round((promoters/total - detractors/total) * 100) : 0;
+  const avgSent = total ? REVIEWS.reduce((s,r) => s + (r.sent?.c||0), 0) / total : 0;
+  const posRate = total ? REVIEWS.filter(r => r.sent?.l === 'Positive').length / total : 0;
+  const negRate = total ? REVIEWS.filter(r => r.sent?.l === 'Negative').length / total : 0;
+  const det = REVIEWS.filter(r => (r.sent?.c||0) < -0.3).length;
+  const pro = REVIEWS.filter(r => (r.sent?.c||0) > 0.3).length;
+  const nps = total ? Math.round((pro/total - det/total) * 100) : 0;
   const cxRows = [
     {Metric: 'Total Reviews', Value: total},
-    {Metric: 'Avg Sentiment', Value: avgSent2.toFixed(3)},
-    {Metric: 'Positive Rate', Value: (posRate2*100).toFixed(1) + '%'},
-    {Metric: 'Negative Rate', Value: (negRate2*100).toFixed(1) + '%'},
+    {Metric: 'Avg Sentiment', Value: avgSent.toFixed(3)},
+    {Metric: 'Positive Rate', Value: (posRate*100).toFixed(1) + '%'},
+    {Metric: 'Negative Rate', Value: (negRate*100).toFixed(1) + '%'},
     {Metric: 'NPS Proxy', Value: nps},
     {Metric: 'Clusters', Value: CLUSTERS.length}
   ];
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(cxRows), 'CX Metrics');
-
   XLSX.writeFile(wb, 'review_analysis.xlsx');
 }
 
 function exportJSON() {
   if (!CLUSTERS.length) return;
   const blob = new Blob([JSON.stringify({clusters: CLUSTERS, reviews: REVIEWS}, null, 2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'review_analysis.json';
-  a.click();
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'review_analysis.json'; a.click();
   URL.revokeObjectURL(a.href);
 }
 </script>
