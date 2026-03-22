@@ -263,6 +263,13 @@ div.divider{height:1px;background:var(--border);margin:10px 0}
 .impact-tile-val{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500;color:var(--text)}
 .impact-tile-lbl{font-family:'Inter',sans-serif;font-size:9px;font-weight:500;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-top:3px}
 
+/* ── COLLAPSIBLE CLUSTER CARDS ────────────────────────────────────────── */
+.card-hd.collapsible{cursor:pointer;user-select:none;transition:background .15s}
+.card-hd.collapsible:hover{background:rgba(255,255,255,.02)}
+.card-collapse-toggle{font-size:12px;color:var(--muted);transition:transform .2s;flex-shrink:0;margin-left:8px}
+.card.collapsed .card-collapse-toggle{transform:rotate(-90deg)}
+.card.collapsed .card-bd{display:none}
+
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -432,7 +439,10 @@ div.divider{height:1px;background:var(--border);margin:10px 0}
         <div class="view-title">Act</div>
         <div class="view-sub">Quality Monitor Agent — multi-insight analysis per cluster</div>
       </div>
-      <div style="margin-left:auto;font-size:12px;font-weight:500;color:var(--muted)" id="act-agent-count">0 clusters</div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:12px">
+        <button class="act-btn" onclick="collapseAllClusterCards()" id="collapse-all-btn" style="font-size:11px;padding:5px 12px">▾ Collapse all</button>
+        <div style="font-size:12px;font-weight:500;color:var(--muted)" id="act-agent-count">0 clusters</div>
+      </div>
     </div>
     <div class="view-body" id="alerts-container"></div>
   </div>
@@ -798,13 +808,16 @@ function buildActView() {
     const cR = c.severity > 0.5 ? 'High' : c.severity > 0.25 ? 'Medium' : 'Low';
 
     aEl.innerHTML += `<div class="card" id="alert-card-${c.id}" style="margin-bottom:14px">
-      <div class="card-hd" style="background:${sevCls==='crit'?'rgba(224,96,80,.03)':sevCls==='warn'?'rgba(224,160,64,.03)':'rgba(92,185,122,.03)'}">
+      <div class="card-hd collapsible" onclick="toggleClusterCard('alert-card-${c.id}')" style="background:${sevCls==='crit'?'rgba(224,96,80,.03)':sevCls==='warn'?'rgba(224,160,64,.03)':'rgba(92,185,122,.03)'}">
         <div style="display:flex;align-items:center;gap:10px">
           <div style="width:8px;height:8px;border-radius:50%;background:${c.color}"></div>
           <div class="card-hd-title">${c.label}</div>
           <div style="font-size:11px;color:var(--muted)">${c.count} reviews · Priority ${Math.round(c.priority*100)}/100</div>
         </div>
-        <div class="pill" style="background:${sevCls==='crit'?'rgba(224,96,80,.10)':sevCls==='warn'?'rgba(224,160,64,.10)':'rgba(92,185,122,.10)'};color:${sevCls==='crit'?'var(--crit)':sevCls==='warn'?'var(--warn)':'var(--act)'}">${sevL}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="pill" style="background:${sevCls==='crit'?'rgba(224,96,80,.10)':sevCls==='warn'?'rgba(224,160,64,.10)':'rgba(92,185,122,.10)'};color:${sevCls==='crit'?'var(--crit)':sevCls==='warn'?'var(--warn)':'var(--act)'}">${sevL}</div>
+          <div class="card-collapse-toggle">▾</div>
+        </div>
       </div>
       <div class="card-bd">
         <div style="font-size:12.5px;color:var(--muted2);margin-bottom:10px">Top signals: <strong style="color:var(--text)">${tT||'—'}</strong></div>
@@ -822,6 +835,26 @@ function buildActView() {
   });
 }
 buildActView();
+
+function toggleClusterCard(cardId) {
+  const card = document.getElementById(cardId);
+  if (card) card.classList.toggle('collapsed');
+  updateCollapseBtn();
+}
+
+function collapseAllClusterCards() {
+  const cards = document.querySelectorAll('#alerts-container > .card');
+  const allCollapsed = [...cards].every(c => c.classList.contains('collapsed'));
+  cards.forEach(c => { if (allCollapsed) c.classList.remove('collapsed'); else c.classList.add('collapsed'); });
+  updateCollapseBtn();
+}
+
+function updateCollapseBtn() {
+  const cards = document.querySelectorAll('#alerts-container > .card');
+  const allCollapsed = [...cards].every(c => c.classList.contains('collapsed'));
+  const btn = document.getElementById('collapse-all-btn');
+  if (btn) btn.textContent = allCollapsed ? '▸ Expand all' : '▾ Collapse all';
+}
 
 // ── INSIGHT GENERATION ──────────────────────────────────────────────────────
 async function generateInsight(clusterId) {
