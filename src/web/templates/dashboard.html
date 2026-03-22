@@ -74,7 +74,14 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;hei
 .view-body{padding:16px 20px;display:flex;flex-direction:column;gap:14px}
 
 /* ── INFERENCE AI ────────────────────────────────────────────────────── */
-.inference-panel{border-top:1px solid var(--border);background:var(--bg);padding:10px 20px 14px;flex-shrink:0;display:flex;flex-direction:column;gap:6px}
+.inference-panel{border-top:1px solid var(--border);background:var(--bg);padding:0;flex-shrink:0;display:flex;flex-direction:column}
+.inf-toggle{display:flex;align-items:center;justify-content:space-between;padding:6px 20px;cursor:pointer;user-select:none;transition:background .15s}
+.inf-toggle:hover{background:rgba(255,255,255,.03)}
+.inf-toggle-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.inf-toggle-arrow{font-size:10px;color:var(--muted);transition:transform .2s}
+.inf-toggle-arrow.collapsed{transform:rotate(180deg)}
+.inf-body{padding:4px 20px 14px;display:flex;flex-direction:column;gap:6px;overflow:hidden;transition:max-height .25s ease,padding .25s ease,opacity .2s ease}
+.inf-body.collapsed{max-height:0;padding-top:0;padding-bottom:0;opacity:0;pointer-events:none}
 .inf-messages{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;padding:0 0 4px}
 .inf-messages:empty{display:none}
 .inf-messages::-webkit-scrollbar{width:2px}
@@ -484,26 +491,32 @@ div.divider{height:1px;background:var(--border);margin:6px 0}
        INFERENCE AI — fixed at bottom of center column
        ═══════════════════════════════════════════════════════════════ -->
   <div class="inference-panel" id="inference-panel">
-    <div class="inf-messages" id="chat-msgs"></div>
-    <div class="inf-input-wrap">
-      <div id="snap-preview">
-        <img id="snap-img" onclick="removeSnap()" title="Click to remove"/>
-        <div class="snap-remove" onclick="removeSnap()">✕</div>
-      </div>
-      <textarea class="inf-textarea" id="chat-inp" rows="1"
-        placeholder="Ask a question about the data…"
-        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chat()}"
-        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
-      <div class="inf-actions">
-        <button class="snap-btn" id="snap-btn" onclick="startCapture()" title="Select a region to ask about">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-            <circle cx="12" cy="13" r="4"/>
-          </svg>
-        </button>
-        <button class="inf-send" id="send-btn" onclick="chat()">
-          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
-        </button>
+    <div class="inf-toggle" onclick="toggleChat()">
+      <div class="inf-toggle-label"><span class="inf-toggle-dot" style="width:6px;height:6px;border-radius:50%;background:var(--act)"></span> Inference AI</div>
+      <span class="inf-toggle-arrow" id="chat-arrow">&#9650;</span>
+    </div>
+    <div class="inf-body" id="chat-body">
+      <div class="inf-messages" id="chat-msgs"></div>
+      <div class="inf-input-wrap">
+        <div id="snap-preview">
+          <img id="snap-img" onclick="removeSnap()" title="Click to remove"/>
+          <div class="snap-remove" onclick="removeSnap()">&#10005;</div>
+        </div>
+        <textarea class="inf-textarea" id="chat-inp" rows="1"
+          placeholder="Ask a question about the data…"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chat()}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';if(_snapDataUrl&&this.value.trim())removeSnap()"></textarea>
+        <div class="inf-actions">
+          <button class="snap-btn" id="snap-btn" onclick="startCapture()" title="Select a region to ask about">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+          </button>
+          <button class="inf-send" id="send-btn" onclick="chat()">
+            <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -993,6 +1006,13 @@ function removeSnap() {
   document.getElementById('snap-preview').style.display = 'none';
   document.getElementById('snap-img').src = '';
   document.getElementById('chat-inp').placeholder = 'Ask a question about the data…';
+}
+
+function toggleChat() {
+  const body = document.getElementById('chat-body');
+  const arrow = document.getElementById('chat-arrow');
+  body.classList.toggle('collapsed');
+  arrow.classList.toggle('collapsed');
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
