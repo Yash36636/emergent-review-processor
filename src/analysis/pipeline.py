@@ -196,6 +196,7 @@ def _aggregate(
 
     summary = []
     color_idx = 0
+    total_n = len(scored)
 
     for cid, indices in clusters.items():
         cr   = [scored[i] for i in indices]
@@ -232,10 +233,11 @@ def _aggregate(
             "negative_review_count": neg,
             "positive_review_count": pos,
             "high_severity_count":   hi_sv,
+            # VoC Priority = 0.5×avg severity + 0.3×negative ratio + 0.2×(cluster size / corpus size)
             "priority_score":        round(
                 0.5 * float(np.mean(sev_scores))
-                + 0.3 * (neg / len(indices))
-                + 0.2 * min(len(indices) / 10, 1.0),
+                + 0.3 * (neg / len(indices) if indices else 0)
+                + 0.2 * (len(indices) / total_n if total_n else 0),
                 4,
             ),
             "signals":  cluster_signals.get(cid, []),
